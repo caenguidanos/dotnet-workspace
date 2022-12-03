@@ -4,6 +4,11 @@ namespace api.Contexts.Ecommerce.Store.Domain.Event
 {
     public class ProductCreatedEvent : INotification
     {
-        public int Id { get; set; }
+        public required string Id { get; set; }
+    }
+
+    public class ProductRemovedEvent : INotification
+    {
+        public required string Id { get; set; }
     }
 }

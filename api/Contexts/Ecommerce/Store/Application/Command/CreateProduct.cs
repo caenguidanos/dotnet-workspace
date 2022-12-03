@@ -1,31 +1,41 @@
 using MediatR;
 using api.Contexts.Ecommerce.Store.Domain.Service;
-using api.Contexts.Ecommerce.Store.Domain.Event;
 
 namespace api.Contexts.Ecommerce.Store.Application.Command
 {
-    public class CreateProductCommand : IRequest<int>
+    public class CreateProductCommand : IRequest<string>
     {
-        public int Id { get; set; }
+        public required string Id { get; set; }
+
+        public required int Price { get; set; }
+
+        public required string Title { get; set; }
+
+        public required string Description { get; set; }
+
+        public required int Status { get; set; }
     }
 
-    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, int>
+    public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, string>
     {
-        private readonly IPublisher _publisher;
         private readonly IProductService _productService;
 
-        public CreateProductCommandHandler(IPublisher publisher, IProductService productService)
+        public CreateProductCommandHandler(IProductService productService)
         {
-            _publisher = publisher;
             _productService = productService;
         }
 
-        public Task<int> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public Task<string> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
-            var productCreatedEvent = new ProductCreatedEvent { Id = 1 };
-            _publisher.Publish<ProductCreatedEvent>(productCreatedEvent);
+            var id = _productService.AddNewProduct(
+                command.Id,
+                command.Title,
+                command.Description,
+                command.Status,
+                command.Price
+            );
 
-            return Task.FromResult(1);
+            return Task.FromResult(id);
         }
     }
 }

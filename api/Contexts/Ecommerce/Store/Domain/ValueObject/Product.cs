@@ -3,15 +3,19 @@ using api.Contexts.Ecommerce.Store.Domain.Model;
 
 namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
 {
-    public class ProductId : ValueObject<int>
+    public class ProductId : ValueObject<string>
     {
-        public ProductId(int value) : base(value) { }
+        public ProductId(string value) : base(value) { }
 
-        public override int validate(int value)
+        public override string validate(string value)
         {
-            if (value < 0)
+            try
             {
-                throw new ArgumentOutOfRangeException(value.ToString());
+                Guid.Parse(value);
+            }
+            catch (System.Exception)
+            {
+                throw new ProductIdInvalidException();
             }
 
             return value;
@@ -27,14 +31,9 @@ namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
             int MIN = 100;
             int MAX = 100_000;
 
-            if (value < MIN)
+            if (value < MIN || value > MAX)
             {
-                throw new ArgumentOutOfRangeException(value.ToString());
-            }
-
-            if (value > MAX)
-            {
-                throw new ArgumentOutOfRangeException(value.ToString());
+                throw new ProductPriceInvalidException(value.ToString());
             }
 
             return value;
@@ -50,14 +49,9 @@ namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
             int MIN_LENGTH = 5;
             int MAX_LENGTH = 600;
 
-            if (value.Length < MIN_LENGTH)
+            if (value.Length < MIN_LENGTH || value.Length > MAX_LENGTH)
             {
-                throw new ArgumentOutOfRangeException(value);
-            }
-
-            if (value.Length > MAX_LENGTH)
-            {
-                throw new ArgumentOutOfRangeException(value);
+                throw new ProductDescriptionInvalidException(value);
             }
 
             return value;
@@ -72,7 +66,7 @@ namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
         {
             if (!Enum.IsDefined<ProductStatusValue>(value))
             {
-                throw new ArgumentOutOfRangeException(value.ToString());
+                throw new ProductStatusInvalidException(value.ToString());
             }
 
             return value;
@@ -88,14 +82,9 @@ namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
             int MIN_LENGTH = 5;
             int MAX_LENGTH = 256;
 
-            if (value.Length < MIN_LENGTH)
+            if (value.Length < MIN_LENGTH || value.Length > MAX_LENGTH)
             {
-                throw new ArgumentOutOfRangeException(value);
-            }
-
-            if (value.Length > MAX_LENGTH)
-            {
-                throw new ArgumentOutOfRangeException(value);
+                throw new ProductTitleInvalidException(value);
             }
 
             return value;

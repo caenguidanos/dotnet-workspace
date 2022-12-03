@@ -11,7 +11,7 @@ namespace api.Contexts.Ecommerce.Store.Domain.Entity
         private readonly ProductStatus _status;
         private readonly ProductPrice _price;
 
-        public int Id
+        public string Id
         {
             get { return _id.GetValue(); }
         }
@@ -36,7 +36,13 @@ namespace api.Contexts.Ecommerce.Store.Domain.Entity
             get { return _status.GetValue(); }
         }
 
-        public Product(ProductId id, ProductTitle title, ProductDescription description, ProductStatus status, ProductPrice price)
+        public Product(
+            ProductId id,
+            ProductTitle title,
+            ProductDescription description,
+            ProductStatus status,
+            ProductPrice price
+            )
         {
             _id = id;
             _title = title;

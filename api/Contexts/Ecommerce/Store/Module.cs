@@ -13,7 +13,7 @@ namespace api.Contexts.Ecommerce.Store
             services.AddMediatR(typeof(EcommerceStoreModule).Assembly);
 
             services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddSingleton<IProductRepository, ProductRepository>();
 
             return services;
         }

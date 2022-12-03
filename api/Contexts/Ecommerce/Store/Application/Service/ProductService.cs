@@ -1,77 +1,49 @@
 ﻿using api.Contexts.Ecommerce.Store.Domain.Entity;
+using api.Contexts.Ecommerce.Store.Domain.Event;
 using api.Contexts.Ecommerce.Store.Domain.Model;
-using api.Contexts.Ecommerce.Store.Domain.ValueObject;
+using api.Contexts.Ecommerce.Store.Domain.Repository;
 using api.Contexts.Ecommerce.Store.Domain.Service;
+using api.Contexts.Ecommerce.Store.Domain.ValueObject;
+using MediatR;
 
 namespace api.Contexts.Ecommerce.Store.Application.Service
 {
     public class ProductService : IProductService
     {
-        public List<Product> Products { get; }
+        private readonly IPublisher _publisher;
+        private readonly IProductRepository _productRepository;
 
-        public ProductService()
+
+        public ProductService(IPublisher publisher, IProductRepository productRepository)
         {
-            Products = new List<Product>
-            {
-                new Product(
-                    new ProductId(1),
-                    new ProductTitle("Titulo 1"),
-                    new ProductDescription("Description 1"),
-                    new ProductStatus(ProductStatusValue.Draft),
-                    new ProductPrice(100)
-                ),
-                new Product(
-                    new ProductId(2),
-                    new ProductTitle("Titulo 2"),
-                    new ProductDescription("Description 2"),
-                    new ProductStatus(ProductStatusValue.Draft),
-                    new ProductPrice(200)
-                ),
-                new Product(
-                    new ProductId(3),
-                    new ProductTitle("Titulo 3"),
-                    new ProductDescription("Description 3"),
-                    new ProductStatus(ProductStatusValue.Draft),
-                    new ProductPrice(300)
-                ),
-                new Product(
-                    new ProductId(4),
-                    new ProductTitle("Titulo 4"),
-                    new ProductDescription("Description 4"),
-                    new ProductStatus(ProductStatusValue.Published),
-                    new ProductPrice(400)
-                ),
-            };
+            _publisher = publisher;
+            _productRepository = productRepository;
         }
 
-        public Product Get(int id)
+        public string AddNewProduct(string id, string title, string description, int status, int price)
         {
-            var product = Products.FirstOrDefault(p => p.Id == id);
-            if (product is null)
-            {
-                throw new ProductNotFoundException();
-            }
+            var newProduct = new Product(
+                new ProductId(id),
+                new ProductTitle(title),
+                new ProductDescription(description),
+                new ProductStatus((ProductStatusValue)status),
+                new ProductPrice(price)
+            );
 
-            return product;
+            _productRepository.Add(newProduct);
+
+            var productCreatedEvent = new ProductCreatedEvent { Id = id };
+            _publisher.Publish<ProductCreatedEvent>(productCreatedEvent);
+
+            return newProduct.Id;
         }
 
-        public List<Product> GetAll()
+        public void DeleteProductById(string id)
         {
-            return Products;
-        }
+            _productRepository.Delete(id);
 
-        public void Add(Product product)
-        {
-            Products.Add(product);
-        }
-
-        public void Delete(int id)
-        {
-            var selectedProduct = Get(id);
-
-            if (selectedProduct is null) return;
-
-            Products.Remove(selectedProduct);
+            var productRemovedEvent = new ProductRemovedEvent { Id = id };
+            _publisher.Publish<ProductRemovedEvent>(productRemovedEvent);
         }
     }
 }
