@@ -1,10 +1,12 @@
-﻿using api.Contexts.Ecommerce.Store;
+﻿using EdgeDB;
+using api.Contexts.Ecommerce.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddEdgeDB();
 
 builder.Services.AddEcommerceStoreModule();
 
