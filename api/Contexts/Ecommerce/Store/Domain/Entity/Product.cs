@@ -15,22 +15,18 @@ namespace api.Contexts.Ecommerce.Store.Domain.Entity
         {
             get { return _id.GetValue(); }
         }
-
         public int Price
         {
             get { return _price.GetValue(); }
         }
-
         public string Title
         {
             get { return _title.GetValue(); }
         }
-
         public string Description
         {
             get { return _description.GetValue(); }
         }
-
         public ProductStatusValue Status
         {
             get { return _status.GetValue(); }
