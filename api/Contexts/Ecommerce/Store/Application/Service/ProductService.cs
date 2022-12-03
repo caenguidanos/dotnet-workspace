@@ -44,9 +44,15 @@ namespace api.Contexts.Ecommerce.Store.Application.Service
             };
         }
 
-        public Product? Get(int id)
+        public Product Get(int id)
         {
-            return Products.FirstOrDefault(p => p.Id == id);
+            var product = Products.FirstOrDefault(p => p.Id == id);
+            if (product is null)
+            {
+                throw new ProductNotFoundException();
+            }
+
+            return product;
         }
 
         public List<Product> GetAll()

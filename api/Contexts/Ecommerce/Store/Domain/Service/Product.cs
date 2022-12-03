@@ -4,7 +4,7 @@ namespace api.Contexts.Ecommerce.Store.Domain.Service
 {
     public interface IProductService
     {
-        public abstract Product? Get(int id);
+        public abstract Product Get(int id);
 
         public abstract List<Product> GetAll();
 

@@ -20,7 +20,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Get(int id)
+    public async Task<IActionResult> Get(int id, CancellationToken cancellationToken)
     {
         try
         {
@@ -29,7 +29,7 @@ public class ProductController : ControllerBase
                 Id = id
             };
 
-            var result = await _mediator.Send(request);
+            var result = await _mediator.Send(request, cancellationToken);
 
             return Ok(result);
         }

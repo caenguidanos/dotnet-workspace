@@ -1,6 +1,5 @@
 using MediatR;
 using api.Contexts.Ecommerce.Store.Domain.Entity;
-using api.Contexts.Ecommerce.Store.Domain.Model;
 using api.Contexts.Ecommerce.Store.Domain.Service;
 
 namespace api.Contexts.Ecommerce.Store.Application.Query
@@ -21,13 +20,9 @@ namespace api.Contexts.Ecommerce.Store.Application.Query
 
         public Task<Product> Handle(GetProductQuery request, CancellationToken cancellationToken)
         {
-            var product = _productService.Get(request.Id);
-            if (product is null)
-            {
-                throw new ProductNotFoundException();
-            }
+            var result = _productService.Get(request.Id);
 
-            return Task.FromResult(product);
+            return Task.FromResult(result);
         }
     }
 }
