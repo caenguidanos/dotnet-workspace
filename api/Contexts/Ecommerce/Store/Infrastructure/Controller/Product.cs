@@ -20,7 +20,7 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         try
@@ -33,14 +33,14 @@ public class ProductController : ControllerBase
         }
         catch (System.Exception)
         {
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
     [HttpGet("{id}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
     {
         try
@@ -61,15 +61,13 @@ public class ProductController : ControllerBase
                 return NotFound();
             }
 
-            Console.WriteLine(exception);
-
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IActionResult> Create([FromBody] CreateProductRequestBodyDTO dto, CancellationToken cancellationToken)
     {
         try
@@ -100,14 +98,14 @@ public class ProductController : ControllerBase
                 return BadRequest();
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
     [HttpDelete("{id}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IActionResult> Delete(string id, CancellationToken cancellationToken)
     {
         try
@@ -128,7 +126,7 @@ public class ProductController : ControllerBase
                 return NotFound();
             }
 
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 }

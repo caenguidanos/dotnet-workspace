@@ -21,17 +21,27 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
             _db = database.client;
         }
 
-        public async Task<string> GenerateID()
+        public async Task<string> GenerateID(CancellationToken cancellationToken)
         {
-            var result = await _db.Query(NewId());
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new HostAbortedException();
+            }
+
+            var result = await _db.Query(NewId(), TimeSpan.FromMilliseconds(500));
 
             IResult<string> id = result.To<string>();
 
             return id.Value;
         }
 
-        public async Task<IEnumerable<Product>> GetAll()
+        public async Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new HostAbortedException();
+            }
+
             var result = await _db.Query(
                 Map(
                     Paginate(
@@ -46,12 +56,13 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
                             Select(Arr("data"), Get(Var("ref")))
                         )
                     )
-                )
+                ),
+                TimeSpan.FromMilliseconds(500)
             );
 
             IEnumerable<GetProductQueryBindModel> products = Decoder.Decode<IEnumerable<GetProductQueryBindModel>>(result.At("data"));
 
-            return products.Select(product =>
+            Func<GetProductQueryBindModel, Product> productsSelector = product =>
             {
                 return new Product(
                     new ProductId(product.Id),
@@ -60,19 +71,27 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
                     new ProductStatus((ProductStatusValue)product.Status),
                     new ProductPrice(product.Price)
                 );
-            });
+            };
+
+            return products.Select(productsSelector);
         }
 
 
-        public async Task<Product> GetById(string id)
+        public async Task<Product> GetById(string id, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new HostAbortedException();
+            }
+
             try
             {
                 var result = await _db.Query(
                     Merge(
                         Obj("id", id),
                         Get(Ref(Collection("Product"), id))
-                    )
+                    ),
+                    TimeSpan.FromMilliseconds(500)
                 );
 
                 GetProductQueryBindModel product = Decoder.Decode<GetProductQueryBindModel>(result.At("data"));
@@ -89,9 +108,10 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
             {
                 throw new ProductNotFoundException(exception.ToString());
             }
+
         }
 
-        public async Task Save(Product product)
+        public async Task Save(Product product, CancellationToken cancellationToken)
         {
             var bind = new SaveProductQueryBindModel(
                 title: product.Title,
@@ -100,20 +120,33 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
                 status: (int)product.Status
             );
 
-            var result = await _db.Query(
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new HostAbortedException();
+            }
+
+            await _db.Query(
                 Create(
                     Ref(Collection("Product"), product.Id),
                     Obj("data", Encoder.Encode(bind))
-                )
+                ),
+                TimeSpan.FromMilliseconds(500)
             );
+
         }
 
-        public async Task DeleteById(string id)
+        public async Task DeleteById(string id, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                throw new HostAbortedException();
+            }
+
             await _db.Query(
                 Delete(
                     Ref(Collection("Product"), id)
-                )
+                ),
+                TimeSpan.FromMilliseconds(500)
             );
         }
     }

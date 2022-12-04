@@ -20,7 +20,7 @@ namespace api.Contexts.Ecommerce.Store.Application.Query
 
         public async Task<Product> Handle(GetByIdQuery query, CancellationToken cancellationToken)
         {
-            var product = await _productRepository.GetById(query.Id);
+            var product = await _productRepository.GetById(query.Id, cancellationToken);
 
             return product;
         }

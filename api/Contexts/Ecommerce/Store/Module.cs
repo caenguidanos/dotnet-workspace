@@ -4,14 +4,15 @@ using api.Contexts.Ecommerce.Store.Infrastructure.Repository;
 using api.Contexts.Ecommerce.Store.Domain.Service;
 using api.Contexts.Ecommerce.Store.Domain.Repository;
 using api.Contexts.Ecommerce.Store.Infrastructure.Persistence;
+using api.Contexts.Ecommerce.Store.Infrastructure.Environment;
 
 namespace api.Contexts.Ecommerce.Store
 {
     public static class EcommerceStoreModule
     {
-        public static IServiceCollection AddEcommerceStoreConfig(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddEcommerceStoreConfig(this IServiceCollection services)
         {
-            services.Configure<DatabaseSettings>(configuration.GetSection("Database"));
+            services.AddSingleton<ConfigurationSettings>();
 
             return services;
         }

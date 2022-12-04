@@ -26,7 +26,8 @@ namespace api.Contexts.Ecommerce.Store.Application.Command
                 command.Title,
                 command.Description,
                 command.Status,
-                command.Price
+                command.Price,
+                cancellationToken
             );
 
             return id;

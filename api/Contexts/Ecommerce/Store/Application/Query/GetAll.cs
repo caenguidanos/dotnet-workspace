@@ -17,7 +17,7 @@ namespace api.Contexts.Ecommerce.Store.Application.Query
 
         public async Task<IEnumerable<Product>> Handle(GetAllQuery query, CancellationToken cancellationToken)
         {
-            var products = await _productRepository.GetAll();
+            var products = await _productRepository.GetAll(cancellationToken);
 
             return products;
         }

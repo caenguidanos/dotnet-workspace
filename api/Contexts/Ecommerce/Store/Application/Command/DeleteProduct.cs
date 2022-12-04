@@ -19,7 +19,7 @@ namespace api.Contexts.Ecommerce.Store.Application.Command
 
         public async Task<string> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
         {
-            await _productService.DeleteProductById(command.Id);
+            await _productService.DeleteProductById(command.Id, cancellationToken);
 
             return command.Id;
         }

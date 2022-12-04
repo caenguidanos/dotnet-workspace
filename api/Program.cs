@@ -2,17 +2,17 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
-builder.Services.AddEcommerceStoreConfig(builder.Configuration);
+builder.Services.AddEcommerceStoreConfig();
 builder.Services.AddEcommerceStoreDependencies();
 
 var app = builder.Build();
-
-builder.Configuration.AddEnvironmentVariables(prefix: "Api_");
 
 if (app.Environment.IsDevelopment())
 {
@@ -24,5 +24,6 @@ app.MapControllers();
 
 app.MapHealthChecks("/healthz");
 
-app.Run();
+app.UseCors();
 
+app.Run();

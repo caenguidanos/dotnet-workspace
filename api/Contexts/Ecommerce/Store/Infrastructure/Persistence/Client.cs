@@ -1,5 +1,5 @@
 using FaunaDB.Client;
-using Microsoft.Extensions.Options;
+using api.Contexts.Ecommerce.Store.Infrastructure.Environment;
 
 namespace api.Contexts.Ecommerce.Store.Infrastructure.Persistence
 {
@@ -7,9 +7,18 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Persistence
     {
         public readonly FaunaClient client;
 
-        public DatabaseClient(IOptions<DatabaseSettings> databaseSettings)
+        public DatabaseClient(ConfigurationSettings configuration)
         {
-            client = new FaunaClient(databaseSettings.Value.EcommerceStoreSecret);
+            var http = new HttpClient();
+
+            http.Timeout = TimeSpan.FromSeconds(20);
+
+            Console.WriteLine(configuration.FaunadbEcommerceStoreSecret);
+
+            client = new FaunaClient(
+                secret: configuration.FaunadbEcommerceStoreSecret,
+                httpClient: http
+            );
         }
     }
 }

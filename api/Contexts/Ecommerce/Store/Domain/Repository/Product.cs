@@ -4,14 +4,14 @@ namespace api.Contexts.Ecommerce.Store.Domain.Repository
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetAll();
+        Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken);
 
-        Task<Product> GetById(string id);
+        Task<Product> GetById(string id, CancellationToken cancellationToken);
 
-        Task Save(Product product);
+        Task Save(Product product, CancellationToken cancellationToken);
 
-        Task DeleteById(string id);
+        Task DeleteById(string id, CancellationToken cancellationToken);
 
-        Task<string> GenerateID();
+        Task<string> GenerateID(CancellationToken cancellationToken);
     }
 }
