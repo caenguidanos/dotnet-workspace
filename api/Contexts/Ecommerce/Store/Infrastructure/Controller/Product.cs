@@ -2,8 +2,8 @@
 using MediatR;
 using api.Contexts.Ecommerce.Store.Application.Query;
 using api.Contexts.Ecommerce.Store.Domain.Model;
-using api.Contexts.Ecommerce.Store.Application.DTO;
 using api.Contexts.Ecommerce.Store.Application.Command;
+using api.Contexts.Ecommerce.Store.Infrastructure.Model;
 
 namespace api.Contexts.Ecommerce.Store.Infrastructure.Controller;
 
@@ -25,9 +25,9 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var request = new GetProductsQuery();
+            var query = new GetAllQuery();
 
-            var result = await _mediator.Send(request, cancellationToken);
+            var result = await _mediator.Send(query, cancellationToken);
 
             return Ok(result);
         }
@@ -41,16 +41,16 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Get(string id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById(string id, CancellationToken cancellationToken)
     {
         try
         {
-            var request = new GetProductQuery
+            var query = new GetByIdQuery
             {
                 Id = id
             };
 
-            var result = await _mediator.Send(request, cancellationToken);
+            var result = await _mediator.Send(query, cancellationToken);
 
             return Ok(result);
         }
@@ -61,6 +61,8 @@ public class ProductController : ControllerBase
                 return NotFound();
             }
 
+            Console.WriteLine(exception);
+
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
@@ -68,20 +70,19 @@ public class ProductController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> Create([FromBody] CreateProductDTO dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] CreateProductRequestBodyDTO dto, CancellationToken cancellationToken)
     {
         try
         {
-            var request = new CreateProductCommand
+            var command = new CreateProductCommand
             {
-                Id = dto.Id,
                 Title = dto.Title,
                 Description = dto.Description,
                 Price = dto.Price,
                 Status = dto.Status
             };
 
-            var result = await _mediator.Send(request, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken);
 
             return Ok(result);
         }
@@ -111,12 +112,12 @@ public class ProductController : ControllerBase
     {
         try
         {
-            var request = new DeleteProductCommand
+            var command = new DeleteProductCommand
             {
                 Id = id
             };
 
-            var result = await _mediator.Send(request, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken);
 
             return Ok(result);
         }

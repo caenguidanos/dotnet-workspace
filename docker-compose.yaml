@@ -1,0 +1,14 @@
+version: "3"
+services:
+  db:
+    image: fauna/faunadb
+    ports:
+      - "8443:8443"
+      - "8084:8084"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8443"]
+      interval: 1s
+      retries: 5
+  api:
+    environment:
+      - Api_Database__EcommerceStoreSecret=

@@ -1,73 +1,120 @@
-using api.Contexts.Ecommerce.Store.Domain.Repository;
 using api.Contexts.Ecommerce.Store.Domain.Entity;
 using api.Contexts.Ecommerce.Store.Domain.Model;
+using api.Contexts.Ecommerce.Store.Domain.Repository;
 using api.Contexts.Ecommerce.Store.Domain.ValueObject;
+using api.Contexts.Ecommerce.Store.Infrastructure.Model;
+using api.Contexts.Ecommerce.Store.Infrastructure.Persistence;
+using FaunaDB.Client;
+using FaunaDB.Types;
+
+using static FaunaDB.Query.Language;
 
 namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
 {
+
     public class ProductRepository : IProductRepository
     {
-        public List<Product> Products { get; }
+        private readonly FaunaClient _db;
 
-        public ProductRepository()
+        public ProductRepository(DatabaseClient database)
         {
-            Products = new List<Product>
-            {
-                new Product(
-                    new ProductId(Guid.NewGuid().ToString()),
-                    new ProductTitle("Titulo 1"),
-                    new ProductDescription("Description 1"),
-                    new ProductStatus(ProductStatusValue.Draft),
-                    new ProductPrice(100)
-                ),
-                new Product(
-                    new ProductId(Guid.NewGuid().ToString()),
-                    new ProductTitle("Titulo 2"),
-                    new ProductDescription("Description 2"),
-                    new ProductStatus(ProductStatusValue.Draft),
-                    new ProductPrice(200)
-                ),
-                new Product(
-                    new ProductId(Guid.NewGuid().ToString()),
-                    new ProductTitle("Titulo 3"),
-                    new ProductDescription("Description 3"),
-                    new ProductStatus(ProductStatusValue.Draft),
-                    new ProductPrice(300)
-                ),
-                new Product(
-                    new ProductId(Guid.NewGuid().ToString()),
-                    new ProductTitle("Titulo 4"),
-                    new ProductDescription("Description 4"),
-                    new ProductStatus(ProductStatusValue.Published),
-                    new ProductPrice(400)
-                ),
-            };
+            _db = database.client;
         }
 
-        public Product Get(string id)
+        public async Task<string> GenerateID()
         {
-            var product = Products.FirstOrDefault(p => p.Id == id);
-            if (product is null)
+            var result = await _db.Query(NewId());
+
+            IResult<string> id = result.To<string>();
+
+            return id.Value;
+        }
+
+        public async Task<IEnumerable<Product>> GetAll()
+        {
+            var result = await _db.Query(
+                Map(
+                    Paginate(
+                        Match(
+                            Index("product_sort_by_ts_desc")
+                        )
+                    ),
+                    Lambda(
+                        Arr("ts", "ref"),
+                        Merge(
+                            Obj("id", Select(Arr("id"), Var("ref"))),
+                            Select(Arr("data"), Get(Var("ref")))
+                        )
+                    )
+                )
+            );
+
+            IEnumerable<GetProductQueryBindModel> products = Decoder.Decode<IEnumerable<GetProductQueryBindModel>>(result.At("data"));
+
+            return products.Select(product =>
             {
-                throw new ProductNotFoundException();
+                return new Product(
+                    new ProductId(product.Id),
+                    new ProductTitle(product.Title),
+                    new ProductDescription(product.Description),
+                    new ProductStatus((ProductStatusValue)product.Status),
+                    new ProductPrice(product.Price)
+                );
+            });
+        }
+
+
+        public async Task<Product> GetById(string id)
+        {
+            try
+            {
+                var result = await _db.Query(
+                    Merge(
+                        Obj("id", id),
+                        Get(Ref(Collection("Product"), id))
+                    )
+                );
+
+                GetProductQueryBindModel product = Decoder.Decode<GetProductQueryBindModel>(result.At("data"));
+
+                return new Product(
+                    new ProductId(product.Id),
+                    new ProductTitle(product.Title),
+                    new ProductDescription(product.Description),
+                    new ProductStatus((ProductStatusValue)product.Status),
+                    new ProductPrice(product.Price)
+                );
             }
-
-            return product;
+            catch (System.Exception exception)
+            {
+                throw new ProductNotFoundException(exception.ToString());
+            }
         }
 
-        public IEnumerable<Product> GetAll()
+        public async Task Save(Product product)
         {
-            return Products;
+            var bind = new SaveProductQueryBindModel(
+                title: product.Title,
+                description: product.Description,
+                price: product.Price,
+                status: (int)product.Status
+            );
+
+            var result = await _db.Query(
+                Create(
+                    Ref(Collection("Product"), product.Id),
+                    Obj("data", Encoder.Encode(bind))
+                )
+            );
         }
 
-        public void Add(Product product)
+        public async Task DeleteById(string id)
         {
-            Products.Add(product);
-        }
-
-        public void Delete(string id)
-        {
-            Products.Remove(Get(id));
+            await _db.Query(
+                Delete(
+                    Ref(Collection("Product"), id)
+                )
+            );
         }
     }
 }

@@ -17,11 +17,11 @@ namespace api.Contexts.Ecommerce.Store.Application.Command
             _productService = productService;
         }
 
-        public Task<string> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
+        public async Task<string> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
         {
-            _productService.DeleteProductById(command.Id);
+            await _productService.DeleteProductById(command.Id);
 
-            return Task.FromResult(command.Id);
+            return command.Id;
         }
     }
 }

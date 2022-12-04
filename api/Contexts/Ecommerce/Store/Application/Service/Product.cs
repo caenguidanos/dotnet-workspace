@@ -20,30 +20,32 @@ namespace api.Contexts.Ecommerce.Store.Application.Service
             _productRepository = productRepository;
         }
 
-        public string AddNewProduct(string id, string title, string description, int status, int price)
+        public async Task<string> AddNewProduct(string title, string description, int status, int price)
         {
+            var newId = await _productRepository.GenerateID();
+
             var newProduct = new Product(
-                new ProductId(id),
+                new ProductId(newId),
                 new ProductTitle(title),
                 new ProductDescription(description),
                 new ProductStatus((ProductStatusValue)status),
                 new ProductPrice(price)
             );
 
-            _productRepository.Add(newProduct);
+            await _productRepository.Save(newProduct);
 
-            var productCreatedEvent = new ProductCreatedEvent { Id = id };
-            _publisher.Publish<ProductCreatedEvent>(productCreatedEvent);
+            var productCreatedEvent = new ProductCreatedEvent { Id = newId };
+            await _publisher.Publish<ProductCreatedEvent>(productCreatedEvent);
 
             return newProduct.Id;
         }
 
-        public void DeleteProductById(string id)
+        public async Task DeleteProductById(string id)
         {
-            _productRepository.Delete(id);
+            await _productRepository.DeleteById(id);
 
             var productRemovedEvent = new ProductRemovedEvent { Id = id };
-            _publisher.Publish<ProductRemovedEvent>(productRemovedEvent);
+            await _publisher.Publish<ProductRemovedEvent>(productRemovedEvent);
         }
     }
 }

@@ -5,7 +5,6 @@ namespace api.Contexts.Ecommerce.Store.Application.Command
 {
     public class CreateProductCommand : IRequest<string>
     {
-        public required string Id { get; set; }
         public required int Price { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
@@ -21,17 +20,16 @@ namespace api.Contexts.Ecommerce.Store.Application.Command
             _productService = productService;
         }
 
-        public Task<string> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
-            var id = _productService.AddNewProduct(
-                command.Id,
+            var id = await _productService.AddNewProduct(
                 command.Title,
                 command.Description,
                 command.Status,
                 command.Price
             );
 
-            return Task.FromResult(id);
+            return id;
         }
     }
 }

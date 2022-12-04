@@ -1,16 +1,18 @@
-﻿using EdgeDB;
-using api.Contexts.Ecommerce.Store;
+﻿using api.Contexts.Ecommerce.Store;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddEdgeDB();
+builder.Services.AddHealthChecks();
 
-builder.Services.AddEcommerceStoreModule();
+builder.Services.AddEcommerceStoreConfig(builder.Configuration);
+builder.Services.AddEcommerceStoreDependencies();
 
 var app = builder.Build();
+
+builder.Configuration.AddEnvironmentVariables(prefix: "Api_");
 
 if (app.Environment.IsDevelopment())
 {
@@ -18,9 +20,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseAuthorization();
-
 app.MapControllers();
+
+app.MapHealthChecks("/healthz");
 
 app.Run();
 

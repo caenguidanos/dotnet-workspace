@@ -1,8 +1,7 @@
-namespace api.Contexts.Ecommerce.Store.Application.DTO
+namespace api.Contexts.Ecommerce.Store.Infrastructure.Model
 {
-    public class CreateProductDTO
+    public class CreateProductRequestBodyDTO
     {
-        public required string Id { get; set; }
         public required int Price { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }

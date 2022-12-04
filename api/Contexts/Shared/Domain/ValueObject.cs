@@ -1,4 +1,4 @@
-namespace api.Contexts.Shared
+namespace api.Contexts.Shared.Domain
 {
     abstract public class ValueObject<Primitive>
     {

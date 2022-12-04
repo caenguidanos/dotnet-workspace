@@ -1,5 +1,5 @@
-﻿using api.Contexts.Shared;
-using api.Contexts.Ecommerce.Store.Domain.Model;
+﻿using api.Contexts.Ecommerce.Store.Domain.Model;
+using api.Contexts.Shared.Domain;
 
 namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
 {
@@ -11,16 +11,18 @@ namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
         {
             try
             {
-                Guid.Parse(value);
-            }
-            catch (System.Exception)
-            {
-                throw new ProductIdInvalidException();
-            }
+                Int64.Parse(value, System.Globalization.NumberStyles.Integer);
 
-            return value;
+                return value;
+            }
+            catch (System.Exception exception)
+            {
+
+                throw new ProductIdInvalidException(exception.ToString());
+            }
         }
     }
+
 
     public class ProductPrice : ValueObject<int>
     {
