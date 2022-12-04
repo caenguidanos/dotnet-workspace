@@ -6,7 +6,7 @@ namespace api.Contexts.Ecommerce.Store.Application.Query
 {
     public class GetByIdQuery : IRequest<Product>
     {
-        public required string Id { get; set; }
+        public required Guid Id { get; set; }
     }
 
     public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, Product>

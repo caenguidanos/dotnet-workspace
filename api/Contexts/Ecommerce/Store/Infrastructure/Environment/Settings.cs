@@ -4,13 +4,13 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Environment
     {
         private readonly IConfiguration _configuration;
 
-        public required string FaunadbEcommerceStoreSecret { get; set; }
+        public required string PostgresConnection { get; set; }
 
         public ConfigurationSettings(IConfiguration configuration)
         {
             _configuration = configuration;
 
-            FaunadbEcommerceStoreSecret = _configuration["Database:FaunadbEcommerceStoreSecret"] ?? throw new InvalidDataException();
+            PostgresConnection = _configuration["Database:PostgresEcommerceStoreConnection"] ?? throw new InvalidDataException();
         }
     }
 }

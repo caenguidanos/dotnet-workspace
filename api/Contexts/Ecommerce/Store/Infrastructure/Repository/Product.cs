@@ -3,66 +3,35 @@ using api.Contexts.Ecommerce.Store.Domain.Model;
 using api.Contexts.Ecommerce.Store.Domain.Repository;
 using api.Contexts.Ecommerce.Store.Domain.ValueObject;
 using api.Contexts.Ecommerce.Store.Infrastructure.Model;
-using api.Contexts.Ecommerce.Store.Infrastructure.Persistence;
-using FaunaDB.Client;
-using FaunaDB.Types;
-
-using static FaunaDB.Query.Language;
+using api.Contexts.Ecommerce.Store.Infrastructure.Environment;
+using Dapper;
+using Npgsql;
 
 namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
 {
-
     public class ProductRepository : IProductRepository
     {
-        private readonly FaunaClient _db;
+        private readonly string _connectionString;
 
-        public ProductRepository(DatabaseClient database)
+        public ProductRepository(ConfigurationSettings configuration)
         {
-            _db = database.client;
-        }
-
-        public async Task<string> GenerateID(CancellationToken cancellationToken)
-        {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                throw new HostAbortedException();
-            }
-
-            var result = await _db.Query(NewId(), TimeSpan.FromMilliseconds(500));
-
-            IResult<string> id = result.To<string>();
-
-            return id.Value;
+            _connectionString = configuration.PostgresConnection;
         }
 
         public async Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync(cancellationToken);
+
+            var command = new CommandDefinition("SELECT * FROM product;", cancellationToken: cancellationToken);
+
+            var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
+            if (result is null)
             {
-                throw new HostAbortedException();
+                return Enumerable.Empty<Product>();
             }
 
-            var result = await _db.Query(
-                Map(
-                    Paginate(
-                        Match(
-                            Index("product_sort_by_ts_desc")
-                        )
-                    ),
-                    Lambda(
-                        Arr("ts", "ref"),
-                        Merge(
-                            Obj("id", Select(Arr("id"), Var("ref"))),
-                            Select(Arr("data"), Get(Var("ref")))
-                        )
-                    )
-                ),
-                TimeSpan.FromMilliseconds(500)
-            );
-
-            IEnumerable<GetProductQueryBindModel> products = Decoder.Decode<IEnumerable<GetProductQueryBindModel>>(result.At("data"));
-
-            Func<GetProductQueryBindModel, Product> productsSelector = product =>
+            Func<ProductPrimitives, Product> productsSelector = product =>
             {
                 return new Product(
                     new ProductId(product.Id),
@@ -73,81 +42,71 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Repository
                 );
             };
 
-            return products.Select(productsSelector);
+            return result.Select(productsSelector);
         }
 
-
-        public async Task<Product> GetById(string id, CancellationToken cancellationToken)
+        public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync(cancellationToken);
+
+            var sql = @"SELECT * FROM product WHERE id = @Id;";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id);
+
+            var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
+
+            var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command).ConfigureAwait(false); ;
+            if (result is null)
             {
-                throw new HostAbortedException();
+                throw new ProductNotFoundException();
             }
 
-            try
-            {
-                var result = await _db.Query(
-                    Merge(
-                        Obj("id", id),
-                        Get(Ref(Collection("Product"), id))
-                    ),
-                    TimeSpan.FromMilliseconds(500)
-                );
-
-                GetProductQueryBindModel product = Decoder.Decode<GetProductQueryBindModel>(result.At("data"));
-
-                return new Product(
-                    new ProductId(product.Id),
-                    new ProductTitle(product.Title),
-                    new ProductDescription(product.Description),
-                    new ProductStatus((ProductStatusValue)product.Status),
-                    new ProductPrice(product.Price)
-                );
-            }
-            catch (System.Exception exception)
-            {
-                throw new ProductNotFoundException(exception.ToString());
-            }
-
+            return new Product(
+                new ProductId(result.Id),
+                new ProductTitle(result.Title),
+                new ProductDescription(result.Description),
+                new ProductStatus((ProductStatusValue)result.Status),
+                new ProductPrice(result.Price)
+            );
         }
 
         public async Task Save(Product product, CancellationToken cancellationToken)
         {
-            var bind = new SaveProductQueryBindModel(
-                title: product.Title,
-                description: product.Description,
-                price: product.Price,
-                status: (int)product.Status
-            );
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync(cancellationToken);
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                throw new HostAbortedException();
-            }
+            var sql = @"
+                INSERT INTO product (id, title, description, price, status)
+                VALUES (@Id, @Title, @Description, @Price, @Status);
+            ";
 
-            await _db.Query(
-                Create(
-                    Ref(Collection("Product"), product.Id),
-                    Obj("data", Encoder.Encode(bind))
-                ),
-                TimeSpan.FromMilliseconds(500)
-            );
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", product.Id);
+            parameters.Add("Title", product.Title);
+            parameters.Add("Description", product.Description);
+            parameters.Add("Price", product.Price);
+            parameters.Add("Status", product.Status);
 
+            var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
+
+            await conn.ExecuteAsync(command).ConfigureAwait(false); ;
         }
 
-        public async Task DeleteById(string id, CancellationToken cancellationToken)
+        public async Task DeleteById(Guid id, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                throw new HostAbortedException();
-            }
+            await using var conn = new NpgsqlConnection(_connectionString);
+            await conn.OpenAsync(cancellationToken);
 
-            await _db.Query(
-                Delete(
-                    Ref(Collection("Product"), id)
-                ),
-                TimeSpan.FromMilliseconds(500)
-            );
+            var sql = @"DELETE FROM product WHERE id = @Id;";
+
+            var parameters = new DynamicParameters();
+            parameters.Add("Id", id);
+
+            var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
+
+            await conn.ExecuteAsync(command).ConfigureAwait(false); ;
         }
     }
 }

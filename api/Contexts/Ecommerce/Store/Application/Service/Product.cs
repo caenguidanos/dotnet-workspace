@@ -20,18 +20,12 @@ namespace api.Contexts.Ecommerce.Store.Application.Service
             _productRepository = productRepository;
         }
 
-        public async Task<string> AddNewProduct(
-            string title,
-            string description,
-            int status,
-            int price,
-            CancellationToken cancellationToken
-            )
+        public async Task<Guid> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
         {
-            var newId = await _productRepository.GenerateID(cancellationToken);
+            var id = Product.NewID();
 
             var newProduct = new Product(
-                new ProductId(newId),
+                new ProductId(id),
                 new ProductTitle(title),
                 new ProductDescription(description),
                 new ProductStatus((ProductStatusValue)status),
@@ -40,13 +34,13 @@ namespace api.Contexts.Ecommerce.Store.Application.Service
 
             await _productRepository.Save(newProduct, cancellationToken);
 
-            var productCreatedEvent = new ProductCreatedEvent { Id = newId };
+            var productCreatedEvent = new ProductCreatedEvent { Id = id };
             await _publisher.Publish<ProductCreatedEvent>(productCreatedEvent);
 
             return newProduct.Id;
         }
 
-        public async Task DeleteProductById(string id, CancellationToken cancellationToken)
+        public async Task DeleteProductById(Guid id, CancellationToken cancellationToken)
         {
             await _productRepository.DeleteById(id, cancellationToken);
 

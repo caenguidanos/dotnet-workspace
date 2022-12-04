@@ -9,8 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
-builder.Services.AddEcommerceStoreConfig();
-builder.Services.AddEcommerceStoreDependencies();
+builder.Services.AddEcommerceStoreModule();
 
 var app = builder.Build();
 

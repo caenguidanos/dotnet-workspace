@@ -3,12 +3,12 @@ using api.Contexts.Ecommerce.Store.Domain.Service;
 
 namespace api.Contexts.Ecommerce.Store.Application.Command
 {
-    public class DeleteProductCommand : IRequest<string>
+    public class DeleteProductCommand : IRequest<Guid>
     {
-        public required string Id { get; set; }
+        public required Guid Id { get; set; }
     }
 
-    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, string>
+    public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Guid>
     {
         private readonly IProductService _productService;
 
@@ -17,7 +17,7 @@ namespace api.Contexts.Ecommerce.Store.Application.Command
             _productService = productService;
         }
 
-        public async Task<string> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
         {
             await _productService.DeleteProductById(command.Id, cancellationToken);
 

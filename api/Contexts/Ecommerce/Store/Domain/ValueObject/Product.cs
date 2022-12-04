@@ -3,23 +3,13 @@ using api.Contexts.Shared.Domain;
 
 namespace api.Contexts.Ecommerce.Store.Domain.ValueObject
 {
-    public class ProductId : ValueObject<string>
+    public class ProductId : ValueObject<Guid>
     {
-        public ProductId(string value) : base(value) { }
+        public ProductId(Guid value) : base(value) { }
 
-        public override string validate(string value)
+        public override Guid validate(Guid value)
         {
-            try
-            {
-                Int64.Parse(value, System.Globalization.NumberStyles.Integer);
-
-                return value;
-            }
-            catch (System.Exception exception)
-            {
-
-                throw new ProductIdInvalidException(exception.ToString());
-            }
+            return value;
         }
     }
 
