@@ -24,7 +24,6 @@ test-results/
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -403,3 +402,6 @@ ASALocalRun/
 
 # Local History for Visual Studio
 .localhistory/
+
+# Environment
+.env

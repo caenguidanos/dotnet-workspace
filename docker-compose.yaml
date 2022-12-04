@@ -11,4 +11,4 @@ services:
       retries: 5
   api:
     environment:
-      - Api_Database__EcommerceStoreSecret=
+      - Api_Database__EcommerceStoreSecret=${Api_Database__EcommerceStoreSecret}
