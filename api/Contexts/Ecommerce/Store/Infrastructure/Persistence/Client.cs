@@ -11,9 +11,7 @@ namespace api.Contexts.Ecommerce.Store.Infrastructure.Persistence
         {
             var http = new HttpClient();
 
-            http.Timeout = TimeSpan.FromSeconds(20);
-
-            Console.WriteLine(configuration.FaunadbEcommerceStoreSecret);
+            http.Timeout = TimeSpan.FromSeconds(10);
 
             client = new FaunaClient(
                 secret: configuration.FaunadbEcommerceStoreSecret,
