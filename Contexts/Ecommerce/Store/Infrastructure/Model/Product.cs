@@ -1,18 +1,10 @@
-﻿// <copyright file="Product.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Infrastructure.Model;
 
 public class ProductPrimitives
 {
-    required public Guid Id { get; set; }
-
-    required public string Title { get; set; }
-
-    required public string Description { get; set; }
-
-    required public int Price { get; set; }
-
-    required public int Status { get; set; }
+    public required Guid Id { get; set; }
+    public required string Title { get; set; }
+    public required string Description { get; set; }
+    public required int Price { get; set; }
+    public required int Status { get; set; }
 }

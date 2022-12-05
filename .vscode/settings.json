@@ -1,0 +1,7 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "ms-dotnettools.csharp",
+  "csharp.format.enable": true,
+  "csharp.inlayHints.parameters.enabled": true,
+  "csharp.semanticHighlighting.enabled": true,
+}

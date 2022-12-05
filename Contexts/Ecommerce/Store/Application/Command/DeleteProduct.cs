@@ -1,29 +1,25 @@
-﻿// <copyright file="DeleteProduct.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Application.Command;
 
 using Ecommerce.Store.Domain.Service;
 
 public class DeleteProductCommand : IRequest<Guid>
 {
-    required public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 }
 
-public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Guid>
+public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Guid>
 {
     private readonly IProductService productService;
 
-    public DeleteProductCommandHandler(IProductService productService)
+    public DeleteProductHandler(IProductService productService)
     {
         this.productService = productService;
     }
 
-    public async Task<Guid> Handle(DeleteProductCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        await this.productService.DeleteProductById(command.Id, cancellationToken);
+        await productService.DeleteProductById(request.Id, cancellationToken);
 
-        return command.Id;
+        return request.Id;
     }
 }

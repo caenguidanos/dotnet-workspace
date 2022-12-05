@@ -1,7 +1,3 @@
-﻿// <copyright file="ProductException.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Domain.Model;
 
 public class ProductNotFoundException : Exception
@@ -10,13 +6,13 @@ public class ProductNotFoundException : Exception
     {
     }
 
-    public ProductNotFoundException(string message)
-        : base(message)
+    public ProductNotFoundException(string paramName)
+        : base(paramName)
     {
     }
 
-    public ProductNotFoundException(string message, Exception inner)
-        : base(message, inner)
+    public ProductNotFoundException(string paramName, Exception inner)
+        : base(paramName, inner)
     {
     }
 }
@@ -27,13 +23,13 @@ public class ProductIdInvalidException : Exception
     {
     }
 
-    public ProductIdInvalidException(string message)
-        : base(message)
+    public ProductIdInvalidException(string paramName)
+        : base(paramName)
     {
     }
 
-    public ProductIdInvalidException(string message, Exception inner)
-        : base(message, inner)
+    public ProductIdInvalidException(string paramName, Exception inner)
+        : base(paramName, inner)
     {
     }
 }
@@ -44,13 +40,13 @@ public class ProductTitleInvalidException : Exception
     {
     }
 
-    public ProductTitleInvalidException(string message)
-        : base(message)
+    public ProductTitleInvalidException(string paramName)
+        : base(paramName)
     {
     }
 
-    public ProductTitleInvalidException(string message, Exception inner)
-        : base(message, inner)
+    public ProductTitleInvalidException(string paramName, Exception inner)
+        : base(paramName, inner)
     {
     }
 }
@@ -61,13 +57,13 @@ public class ProductDescriptionInvalidException : Exception
     {
     }
 
-    public ProductDescriptionInvalidException(string message)
-        : base(message)
+    public ProductDescriptionInvalidException(string paramName)
+        : base(paramName)
     {
     }
 
-    public ProductDescriptionInvalidException(string message, Exception inner)
-        : base(message, inner)
+    public ProductDescriptionInvalidException(string paramName, Exception inner)
+        : base(paramName, inner)
     {
     }
 }
@@ -78,13 +74,13 @@ public class ProductPriceInvalidException : Exception
     {
     }
 
-    public ProductPriceInvalidException(string message)
-        : base(message)
+    public ProductPriceInvalidException(string paramName)
+        : base(paramName)
     {
     }
 
-    public ProductPriceInvalidException(string message, Exception inner)
-        : base(message, inner)
+    public ProductPriceInvalidException(string paramName, Exception inner)
+        : base(paramName, inner)
     {
     }
 }
@@ -95,13 +91,13 @@ public class ProductStatusInvalidException : Exception
     {
     }
 
-    public ProductStatusInvalidException(string message)
-        : base(message)
+    public ProductStatusInvalidException(string paramName)
+        : base(paramName)
     {
     }
 
-    public ProductStatusInvalidException(string message, Exception inner)
-        : base(message, inner)
+    public ProductStatusInvalidException(string paramName, Exception inner)
+        : base(paramName, inner)
     {
     }
 }

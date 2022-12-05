@@ -1,10 +1,6 @@
-﻿// <copyright file="Primitive.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
+namespace Common.Test.Domain.ValueObject;
 
-namespace Shared.Test.Domain.ValueObject;
-
-using Shared.Domain.ValueObject;
+using Common.Domain.ValueObject;
 
 public class Primitive
 {
@@ -30,10 +26,12 @@ public class Primitive
     {
         var primitive = new StringPrimitiveWithValidation("123499");
 
-        Assert.That<string>(primitive.GetValue(), Is.EqualTo("123499"));
+        string actual = primitive.GetValue();
+
+        Assert.That(actual, Is.EqualTo("123499"));
     }
 
-    private class StringPrimitiveWithValidation : ValueObject<string>
+    private sealed class StringPrimitiveWithValidation : ValueObject<string>
     {
         public StringPrimitiveWithValidation(string value)
             : base(value)
@@ -47,7 +45,7 @@ public class Primitive
 
             if (value.Length < minLength || value.Length > maxLength)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(value);
             }
 
             return value;

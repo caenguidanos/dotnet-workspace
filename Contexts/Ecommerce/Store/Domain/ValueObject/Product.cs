@@ -1,9 +1,6 @@
-﻿// <copyright file="Product.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Domain.ValueObject;
 
+using System.Globalization;
 using Ecommerce.Store.Domain.Model;
 
 public class ProductId : ValueObject<Guid>
@@ -33,7 +30,9 @@ public class ProductPrice : ValueObject<int>
 
         if (value < min || value > max)
         {
-            throw new ProductPriceInvalidException(value.ToString());
+            var locale = new CultureInfo("en-US");
+
+            throw new ProductPriceInvalidException(value.ToString(locale));
         }
 
         return value;
@@ -70,7 +69,7 @@ public class ProductStatus : ValueObject<ProductStatusValue>
 
     public override ProductStatusValue Validate(ProductStatusValue value)
     {
-        if (!Enum.IsDefined<ProductStatusValue>(value))
+        if (!Enum.IsDefined(value))
         {
             throw new ProductStatusInvalidException(value.ToString());
         }

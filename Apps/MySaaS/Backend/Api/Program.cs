@@ -1,7 +1,3 @@
-// <copyright file="Program.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 using Ecommerce.Store;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,7 +20,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapControllers();
-
 app.MapHealthChecks("/healthz");
 
 app.UseCors();

@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.Test", "Apps\MySaaS\Bac
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contexts", "Contexts", "{8C316836-99F5-4CC6-AF76-02EADC65E8A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Contexts\Shared\Shared.csproj", "{1F6E0F26-9BCC-4209-A257-6D8B46AAB88E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Contexts\Common\Common.csproj", "{1F6E0F26-9BCC-4209-A257-6D8B46AAB88E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared.Test", "Contexts\Shared.Test\Shared.Test.csproj", "{7D772AF1-57D9-4911-BADF-7E3DA0A82E89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Test", "Contexts\Common.Test\Common.Test.csproj", "{7D772AF1-57D9-4911-BADF-7E3DA0A82E89}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ecommerce", "Ecommerce", "{D1D5115A-88D9-4ED1-88F5-E3C40F62C06F}"
 EndProject

@@ -1,11 +1,7 @@
-﻿// <copyright file="Product.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Application.Service;
 
 using Ecommerce.Store.Domain.Entity;
-using Ecommerce.Store.Domain.Event;
+using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.Repository;
 using Ecommerce.Store.Domain.Service;
@@ -33,19 +29,17 @@ public class ProductService : IProductService
             new ProductStatus((ProductStatusValue)status),
             new ProductPrice(price));
 
-        await this.productRepository.Save(newProduct, cancellationToken);
+        await productRepository.Save(newProduct, cancellationToken);
 
-        var productCreatedEvent = new ProductCreatedEvent { Id = id };
-        await this.publisher.Publish<ProductCreatedEvent>(productCreatedEvent);
+        await publisher.Publish(new ProductCreatedNotification { Id = id }, cancellationToken);
 
         return newProduct.Id;
     }
 
     public async Task DeleteProductById(Guid id, CancellationToken cancellationToken)
     {
-        await this.productRepository.DeleteById(id, cancellationToken);
+        await productRepository.DeleteById(id, cancellationToken);
 
-        var productRemovedEvent = new ProductRemovedEvent { Id = id };
-        await this.publisher.Publish<ProductRemovedEvent>(productRemovedEvent);
+        await publisher.Publish(new ProductRemovedNotification { Id = id }, cancellationToken);
     }
 }

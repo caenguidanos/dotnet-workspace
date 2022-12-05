@@ -1,38 +1,34 @@
-﻿// <copyright file="CreateProduct.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Application.Command;
 
 using Ecommerce.Store.Domain.Service;
 
 public class CreateProductCommand : IRequest<Guid>
 {
-    required public int Price { get; set; }
+    public required int Price { get; set; }
 
-    required public string Title { get; set; }
+    public required string Title { get; set; }
 
-    required public string Description { get; set; }
+    public required string Description { get; set; }
 
-    required public int Status { get; set; }
+    public required int Status { get; set; }
 }
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
+public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
 {
     private readonly IProductService productService;
 
-    public CreateProductCommandHandler(IProductService productService)
+    public CreateProductHandler(IProductService productService)
     {
         this.productService = productService;
     }
 
-    public async Task<Guid> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var id = await this.productService.AddNewProduct(
-            command.Title,
-            command.Description,
-            command.Status,
-            command.Price,
+        var id = await productService.AddNewProduct(
+            request.Title,
+            request.Description,
+            request.Status,
+            request.Price,
             cancellationToken);
 
         return id;

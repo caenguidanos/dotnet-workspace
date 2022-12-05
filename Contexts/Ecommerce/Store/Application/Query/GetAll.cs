@@ -1,7 +1,3 @@
-﻿// <copyright file="GetAll.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Application.Query;
 
 using Ecommerce.Store.Domain.Entity;
@@ -11,18 +7,18 @@ public class GetAllQuery : IRequest<IEnumerable<Product>>
 {
 }
 
-public class GetAllQueryHandler : IRequestHandler<GetAllQuery, IEnumerable<Product>>
+public class GetAllHandler : IRequestHandler<GetAllQuery, IEnumerable<Product>>
 {
     private readonly IProductRepository productRepository;
 
-    public GetAllQueryHandler(IProductRepository productRepository)
+    public GetAllHandler(IProductRepository productRepository)
     {
         this.productRepository = productRepository;
     }
 
-    public async Task<IEnumerable<Product>> Handle(GetAllQuery query, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Product>> Handle(GetAllQuery request, CancellationToken cancellationToken)
     {
-        var products = await this.productRepository.GetAll(cancellationToken);
+        var products = await productRepository.GetAll(cancellationToken);
 
         return products;
     }

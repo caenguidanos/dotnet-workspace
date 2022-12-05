@@ -1,7 +1,3 @@
-﻿// <copyright file="Product.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Infrastructure.Controller;
 
 using Ecommerce.Store.Application.Command;
@@ -29,13 +25,13 @@ public class ProductController : ControllerBase
         {
             var query = new GetAllQuery();
 
-            var result = await this.mediator.Send(query, cancellationToken);
+            var result = await mediator.Send(query, cancellationToken);
 
-            return this.Ok(result);
+            return Ok(result);
         }
-        catch (System.Exception)
+        catch (Exception)
         {
-            return this.StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
@@ -52,18 +48,18 @@ public class ProductController : ControllerBase
                 Id = id,
             };
 
-            var result = await this.mediator.Send(query, cancellationToken);
+            var result = await mediator.Send(query, cancellationToken);
 
-            return this.Ok(result);
+            return Ok(result);
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
             if (exception is ProductNotFoundException)
             {
-                return this.NotFound();
+                return NotFound();
             }
 
-            return this.StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
@@ -83,11 +79,11 @@ public class ProductController : ControllerBase
                 Status = dto.Status,
             };
 
-            var result = await this.mediator.Send(command, cancellationToken);
+            var result = await mediator.Send(command, cancellationToken);
 
-            return this.Ok(result);
+            return Ok(result);
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
             if (
                 exception
@@ -97,10 +93,10 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                return this.BadRequest();
+                return BadRequest();
             }
 
-            return this.StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
@@ -117,18 +113,18 @@ public class ProductController : ControllerBase
                 Id = id,
             };
 
-            var result = await this.mediator.Send(command, cancellationToken);
+            var result = await mediator.Send(command, cancellationToken);
 
-            return this.Ok(result);
+            return Ok(result);
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
             if (exception is ProductNotFoundException)
             {
-                return this.NotFound();
+                return NotFound();
             }
 
-            return this.StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 }

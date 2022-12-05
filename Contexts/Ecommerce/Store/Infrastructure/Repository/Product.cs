@@ -1,7 +1,3 @@
-﻿// <copyright file="Product.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Infrastructure.Repository;
 
 using Ecommerce.Store.Domain.Entity;
@@ -17,12 +13,12 @@ public class ProductRepository : IProductRepository
 
     public ProductRepository(ConfigurationSettings configuration)
     {
-        this.connectionString = configuration.PostgresConnection;
+        connectionString = configuration.PostgresConnection;
     }
 
     public async Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(this.connectionString);
+        await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync(cancellationToken);
 
         var command = new CommandDefinition("SELECT * FROM product;", cancellationToken: cancellationToken);
@@ -48,10 +44,10 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(this.connectionString);
+        await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync(cancellationToken);
 
-        var sql = @"SELECT * FROM product WHERE id = @Id;";
+        string sql = @"SELECT * FROM product WHERE id = @Id;";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);
@@ -74,10 +70,10 @@ public class ProductRepository : IProductRepository
 
     public async Task Save(Product product, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(this.connectionString);
+        await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync(cancellationToken);
 
-        var sql = @"
+        string sql = @"
                 INSERT INTO product (id, title, description, price, status)
                 VALUES (@Id, @Title, @Description, @Price, @Status);
             ";
@@ -96,10 +92,10 @@ public class ProductRepository : IProductRepository
 
     public async Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(this.connectionString);
+        await using var conn = new NpgsqlConnection(connectionString);
         await conn.OpenAsync(cancellationToken);
 
-        var sql = @"DELETE FROM product WHERE id = @Id;";
+        string sql = @"DELETE FROM product WHERE id = @Id;";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);

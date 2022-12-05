@@ -8,15 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Contexts\Shared\Shared.csproj" />
+    <ProjectReference Include="..\..\..\..\Contexts\Common\Common.csproj" />
     <ProjectReference Include="..\..\..\..\Contexts\Ecommerce\Store\Store.csproj" />
   </ItemGroup>
 

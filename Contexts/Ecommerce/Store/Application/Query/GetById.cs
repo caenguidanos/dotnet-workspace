@@ -1,7 +1,3 @@
-﻿// <copyright file="GetById.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Application.Query;
 
 using Ecommerce.Store.Domain.Entity;
@@ -9,21 +5,21 @@ using Ecommerce.Store.Domain.Repository;
 
 public class GetByIdQuery : IRequest<Product>
 {
-    required public Guid Id { get; set; }
+    public required Guid Id { get; set; }
 }
 
-public class GetByIdQueryHandler : IRequestHandler<GetByIdQuery, Product>
+public class GetByIdHandler : IRequestHandler<GetByIdQuery, Product>
 {
     private readonly IProductRepository productRepository;
 
-    public GetByIdQueryHandler(IProductRepository productRepository)
+    public GetByIdHandler(IProductRepository productRepository)
     {
         this.productRepository = productRepository;
     }
 
-    public async Task<Product> Handle(GetByIdQuery query, CancellationToken cancellationToken)
+    public async Task<Product> Handle(GetByIdQuery request, CancellationToken cancellationToken)
     {
-        var product = await this.productRepository.GetById(query.Id, cancellationToken);
+        var product = await productRepository.GetById(request.Id, cancellationToken);
 
         return product;
     }

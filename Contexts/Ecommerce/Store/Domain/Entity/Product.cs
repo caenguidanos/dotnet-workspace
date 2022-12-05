@@ -1,7 +1,3 @@
-﻿// <copyright file="Product.cs" company="PlaceholderCompany">
-// Copyright (c) PlaceholderCompany. All rights reserved.
-// </copyright>
-
 namespace Ecommerce.Store.Domain.Entity;
 
 using Ecommerce.Store.Domain.Model;
@@ -31,27 +27,42 @@ public class Product
 
     public Guid Id
     {
-        get { return this.id.GetValue(); }
+        get
+        {
+            return id.GetValue();
+        }
     }
 
     public int Price
     {
-        get { return this.price.GetValue(); }
+        get
+        {
+            return price.GetValue();
+        }
     }
 
     public string Title
     {
-        get { return this.title.GetValue(); }
+        get
+        {
+            return title.GetValue();
+        }
     }
 
     public string Description
     {
-        get { return this.description.GetValue(); }
+        get
+        {
+            return description.GetValue();
+        }
     }
 
     public ProductStatusValue Status
     {
-        get { return this.status.GetValue(); }
+        get
+        {
+            return status.GetValue();
+        }
     }
 
     public static Guid NewID()
