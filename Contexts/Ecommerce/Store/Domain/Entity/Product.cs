@@ -11,12 +11,7 @@ public class Product
     private readonly ProductStatus status;
     private readonly ProductPrice price;
 
-    public Product(
-        ProductId id,
-        ProductTitle title,
-        ProductDescription description,
-        ProductStatus status,
-        ProductPrice price)
+    public Product(ProductId id, ProductTitle title, ProductDescription description, ProductStatus status, ProductPrice price)
     {
         this.id = id;
         this.title = title;

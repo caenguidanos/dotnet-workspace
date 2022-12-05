@@ -20,10 +20,10 @@ public class ProductService : IProductService
 
     public async Task<Guid> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
-        var id = Product.NewID();
+        var newId = Product.NewID();
 
         var newProduct = new Product(
-            new ProductId(id),
+            new ProductId(newId),
             new ProductTitle(title),
             new ProductDescription(description),
             new ProductStatus((ProductStatusValue)status),
@@ -31,7 +31,8 @@ public class ProductService : IProductService
 
         await productRepository.Save(newProduct, cancellationToken);
 
-        await publisher.Publish(new ProductCreatedNotification { Id = id }, cancellationToken);
+        await publisher.Publish(
+            new ProductCreatedNotification { Id = newId }, cancellationToken);
 
         return newProduct.Id;
     }
@@ -40,6 +41,7 @@ public class ProductService : IProductService
     {
         await productRepository.DeleteById(id, cancellationToken);
 
-        await publisher.Publish(new ProductRemovedNotification { Id = id }, cancellationToken);
+        await publisher.Publish(
+            new ProductRemovedNotification { Id = id }, cancellationToken);
     }
 }

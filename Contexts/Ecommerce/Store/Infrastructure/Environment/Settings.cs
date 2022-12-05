@@ -2,13 +2,9 @@ namespace Ecommerce.Store.Infrastructure.Environment;
 
 public class ConfigurationSettings
 {
-    private readonly IConfiguration configuration;
-
     public ConfigurationSettings(IConfiguration configuration)
     {
-        this.configuration = configuration;
-
-        PostgresConnection = this.configuration["Database:Postgres.Connection.Ecommerce.Store"] ?? throw new InvalidDataException();
+        PostgresConnection = configuration["Database:Postgres.Connection.Ecommerce.Store"] ?? throw new InvalidDataException();
     }
 
     public required string PostgresConnection { get; set; }

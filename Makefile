@@ -20,4 +20,4 @@ webapi-watch:
 	dotnet watch --project Apps/MySaaS/Backend/Api
 
 infra:
-	docker-compose up --force-reacreate
+	docker-compose up

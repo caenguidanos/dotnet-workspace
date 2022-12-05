@@ -7,11 +7,11 @@ public class DeleteProductCommand : IRequest<Guid>
     public required Guid Id { get; set; }
 }
 
-public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, Guid>
+public class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand, Guid>
 {
     private readonly IProductService productService;
 
-    public DeleteProductHandler(IProductService productService)
+    public DeleteProductCommandHandler(IProductService productService)
     {
         this.productService = productService;
     }

@@ -21,6 +21,8 @@ CREATE TABLE IF NOT EXISTS product (
 	PRIMARY KEY (id)
 );
 
+CREATE INDEX product_by_index ON product (id);
+
 CREATE OR REPLACE TRIGGER set_timestamp_to_product BEFORE UPDATE
 ON product
 FOR EACH ROW

@@ -9,19 +9,19 @@ using Ecommerce.Store.Infrastructure.Model;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly string connectionString;
+    private readonly string _connectionString;
 
     public ProductRepository(ConfigurationSettings configuration)
     {
-        connectionString = configuration.PostgresConnection;
+        _connectionString = configuration.PostgresConnection;
     }
 
     public async Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync(cancellationToken);
 
-        var command = new CommandDefinition("SELECT * FROM product;", cancellationToken: cancellationToken);
+        var command = new CommandDefinition("SELECT * FROM product", cancellationToken: cancellationToken);
 
         var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
         if (result is null)
@@ -44,10 +44,10 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync(cancellationToken);
 
-        string sql = @"SELECT * FROM product WHERE id = @Id;";
+        string sql = @"SELECT * FROM product WHERE id = @Id";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);
@@ -70,12 +70,12 @@ public class ProductRepository : IProductRepository
 
     public async Task Save(Product product, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
                 INSERT INTO product (id, title, description, price, status)
-                VALUES (@Id, @Title, @Description, @Price, @Status);
+                VALUES (@Id, @Title, @Description, @Price, @Status)
             ";
 
         var parameters = new DynamicParameters();
@@ -92,16 +92,20 @@ public class ProductRepository : IProductRepository
 
     public async Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(connectionString);
+        await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync(cancellationToken);
 
-        string sql = @"DELETE FROM product WHERE id = @Id;";
+        string sql = @"DELETE FROM product WHERE id = @Id";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);
 
         var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-        await conn.ExecuteAsync(command).ConfigureAwait(false);
+        int result = await conn.ExecuteAsync(command).ConfigureAwait(false);
+        if (result is 0)
+        {
+            throw new ProductNotFoundException();
+        }
     }
 }

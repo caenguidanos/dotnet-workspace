@@ -5,19 +5,16 @@ using Ecommerce.Store.Domain.Service;
 public class CreateProductCommand : IRequest<Guid>
 {
     public required int Price { get; set; }
-
     public required string Title { get; set; }
-
     public required string Description { get; set; }
-
     public required int Status { get; set; }
 }
 
-public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
 {
     private readonly IProductService productService;
 
-    public CreateProductHandler(IProductService productService)
+    public CreateProductCommandHandler(IProductService productService)
     {
         this.productService = productService;
     }
