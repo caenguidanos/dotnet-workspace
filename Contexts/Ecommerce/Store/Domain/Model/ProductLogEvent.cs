@@ -1,4 +1,5 @@
 namespace Ecommerce.Store.Domain.Model;
+
 public class ProductLogEvent
 {
     public const int GetAllNotImplemented = 1000;
