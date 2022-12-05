@@ -42,10 +42,10 @@ public class Primitive
 
         public override string Validate(string value)
         {
-            var mAX_LENGTH = 10;
-            var mIN_LENGTH = 5;
+            var maxLength = 10;
+            var minLength = 5;
 
-            if (value.Length < mIN_LENGTH || value.Length > mAX_LENGTH)
+            if (value.Length < minLength || value.Length > maxLength)
             {
                 throw new ArgumentOutOfRangeException();
             }
