@@ -8,7 +8,7 @@ public class ConfigurationSettings
     {
         this.configuration = configuration;
 
-        PostgresConnection = this.configuration["Database:Postgres.Ecommerce.Store.Connection"] ?? throw new InvalidDataException();
+        PostgresConnection = this.configuration["Database:Postgres.Connection.Ecommerce.Store"] ?? throw new InvalidDataException();
     }
 
     public required string PostgresConnection { get; set; }

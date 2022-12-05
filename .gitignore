@@ -405,3 +405,6 @@ ASALocalRun/
 
 # Environment
 .env
+
+# Build
+/build

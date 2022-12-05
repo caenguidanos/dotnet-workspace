@@ -3,7 +3,7 @@
     "1": {
       "Group": "Servers",
       "Name": "Local DB",
-      "Host": "pg_container",
+      "Host": "postgres",
       "Port": 5432,
       "Username": "root",
       "SSLMode": "prefer",

@@ -1,11 +1,23 @@
-## Start infrastructure
+# dotnet workspace
+
+- .NET 7
+- Dapper
+- Postgres 15
+
+## Start infra
 
 ```bash
-docker-compose up
+make infra
 ```
 
-## Start example backend
+## Start webapi
 
 ```bash
-dotnet watch --project ./Apps/Example/Backend/Example.csproj
+make webapi
+```
+
+## Watch webapi
+
+```bash
+make webapi-watch
 ```

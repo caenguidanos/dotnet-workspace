@@ -1,6 +1,6 @@
 services:
-  db:
-    container_name: pg_container
+  postgres:
+    container_name: postgres
     image: postgres:15-alpine
     restart: always
     environment:
@@ -12,8 +12,10 @@ services:
     volumes:
       - ./Contexts/Ecommerce/Store/Infrastructure/Persistence/Schema.sql:/docker-entrypoint-initdb.d/ecommerce_store_schema.sql
   pgadmin:
-    container_name: pg_admin
+    container_name: pgadmin
     image: dpage/pgadmin4:latest
+    depends_on:
+      - postgres
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
