@@ -40,8 +40,8 @@ public class Primitive
 
         public override string Validate(string value)
         {
-            var maxLength = 10;
-            var minLength = 5;
+            int maxLength = 10;
+            int minLength = 5;
 
             if (value.Length < minLength || value.Length > maxLength)
             {
