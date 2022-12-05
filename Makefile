@@ -3,6 +3,7 @@ check:
 	dotnet restore
 	dotnet format
 	dotnet build
+	dotnet test
 
 webapi:
 	dotnet clean
