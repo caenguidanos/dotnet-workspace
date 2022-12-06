@@ -1,4 +1,4 @@
-namespace Ecommerce.Store.Domain.Model;
+namespace Ecommerce.Store.Domain.Exceptions;
 
 public class ProductNotFoundException : Exception
 {

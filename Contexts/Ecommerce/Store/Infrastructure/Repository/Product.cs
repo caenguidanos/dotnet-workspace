@@ -1,11 +1,12 @@
 namespace Ecommerce.Store.Infrastructure.Repository;
 
 using Ecommerce.Store.Domain.Entity;
+using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.Repository;
 using Ecommerce.Store.Domain.ValueObject;
+using Ecommerce.Store.Infrastructure.DTO;
 using Ecommerce.Store.Infrastructure.Environment;
-using Ecommerce.Store.Infrastructure.Model;
 
 public class ProductRepository : IProductRepository
 {
@@ -23,13 +24,13 @@ public class ProductRepository : IProductRepository
 
         var command = new CommandDefinition("SELECT * FROM product", cancellationToken: cancellationToken);
 
-        var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
+        var result = await conn.QueryAsync<ProductAsPrimitives>(command).ConfigureAwait(false);
         if (result is null)
         {
             return Enumerable.Empty<Product>();
         }
 
-        Func<ProductPrimitives, Product> productsSelector = product =>
+        Func<ProductAsPrimitives, Product> productsSelector = product =>
         {
             return new Product(
                 new ProductId(product.Id),
@@ -54,7 +55,7 @@ public class ProductRepository : IProductRepository
 
         var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-        var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command).ConfigureAwait(false);
+        var result = await conn.QueryFirstOrDefaultAsync<ProductAsPrimitives>(command).ConfigureAwait(false);
         if (result is null)
         {
             throw new ProductNotFoundException();

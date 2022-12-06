@@ -1,6 +1,7 @@
 namespace Ecommerce.Store.Domain.ValueObject;
 
 using System.Globalization;
+using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Domain.Model;
 
 public class ProductId : ValueObject<Guid>

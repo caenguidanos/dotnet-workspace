@@ -2,8 +2,9 @@ namespace Ecommerce.Store.Infrastructure.Controller;
 
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Application.Query;
-using Ecommerce.Store.Domain.Model;
-using Ecommerce.Store.Infrastructure.Model;
+using Ecommerce.Store.Domain.Exceptions;
+using Ecommerce.Store.Domain.LogEvent;
+using Ecommerce.Store.Infrastructure.DTO;
 using Microsoft.Extensions.Logging;
 
 [ApiController]
@@ -36,6 +37,7 @@ public class ProductController : ControllerBase
         catch (Exception exception)
         {
             _logger.LogError(ProductLogEvent.GetAllNotImplemented, exception.Message);
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
@@ -63,10 +65,12 @@ public class ProductController : ControllerBase
             if (exception is ProductNotFoundException)
             {
                 _logger.LogError(ProductLogEvent.GetByIdNotFound, exception.Message);
+
                 return NotFound();
             }
 
             _logger.LogError(ProductLogEvent.GetByIdNotImplemented, exception.Message);
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
@@ -103,10 +107,12 @@ public class ProductController : ControllerBase
                 or ProductStatusInvalidException)
             {
                 _logger.LogError(ProductLogEvent.CreateBadRequest, exception.Message);
+
                 return BadRequest();
             }
 
             _logger.LogError(ProductLogEvent.CreateNotImplemented, exception.Message);
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
@@ -134,10 +140,12 @@ public class ProductController : ControllerBase
             if (exception is ProductNotFoundException)
             {
                 _logger.LogError(ProductLogEvent.DeleteByIdNotFound, exception.Message);
+
                 return NotFound();
             }
 
             _logger.LogError(ProductLogEvent.DeleteByIdNotImplemented, exception.Message);
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }

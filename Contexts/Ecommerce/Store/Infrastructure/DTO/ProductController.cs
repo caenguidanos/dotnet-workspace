@@ -1,8 +1,7 @@
-namespace Ecommerce.Store.Infrastructure.Model;
+namespace Ecommerce.Store.Infrastructure.DTO;
 
-public class ProductPrimitives
+public class NewProduct
 {
-    public required Guid Id { get; set; }
     public required string Title { get; set; }
     public required string Description { get; set; }
     public required int Price { get; set; }

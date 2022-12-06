@@ -1,4 +1,4 @@
-namespace Ecommerce.Store.Domain.Model;
+namespace Ecommerce.Store.Domain.LogEvent;
 
 public class ProductLogEvent
 {
@@ -9,4 +9,6 @@ public class ProductLogEvent
     public const int CreateNotImplemented = 1004;
     public const int DeleteByIdNotFound = 1005;
     public const int DeleteByIdNotImplemented = 1006;
+    public const int CreatedNotification = 1007;
+    public const int DeletedNotification = 1008;
 }
