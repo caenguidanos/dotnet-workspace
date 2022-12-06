@@ -24,7 +24,7 @@ public class Create
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<CreateProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(Product.NewID());
@@ -45,7 +45,7 @@ public class Create
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<CreateProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<ProductIdInvalidException>();
@@ -63,7 +63,7 @@ public class Create
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<CreateProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<ProductTitleInvalidException>();
@@ -88,7 +88,7 @@ public class Create
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<CreateProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<ProductDescriptionInvalidException>();
@@ -113,7 +113,7 @@ public class Create
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<CreateProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<ProductPriceInvalidException>();
@@ -138,7 +138,7 @@ public class Create
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<CreateProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<ProductStatusInvalidException>();
@@ -163,7 +163,7 @@ public class Create
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<CreateProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<Exception>();

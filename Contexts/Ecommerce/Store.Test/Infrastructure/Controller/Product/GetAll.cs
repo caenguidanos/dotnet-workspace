@@ -39,7 +39,7 @@ public class GetAll
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<GetProductsQuery>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(products);
@@ -63,7 +63,7 @@ public class GetAll
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<GetProductsQuery>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(products);
@@ -87,7 +87,7 @@ public class GetAll
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<GetProductsQuery>(),
                 It.IsAny<CancellationToken>()))
             .Throws<Exception>();

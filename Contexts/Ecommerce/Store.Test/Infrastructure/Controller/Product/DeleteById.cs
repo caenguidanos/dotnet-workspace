@@ -23,7 +23,7 @@ public class DeleteById
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<DeleteProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(id);
@@ -47,7 +47,7 @@ public class DeleteById
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<DeleteProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<ProductNotFoundException>();
@@ -72,7 +72,7 @@ public class DeleteById
 
         Mock
             .Get(_mediator)
-            .Setup(self => self.Send(
+            .Setup(mediator => mediator.Send(
                 It.IsAny<DeleteProductCommand>(),
                 It.IsAny<CancellationToken>()))
             .Throws<Exception>();
