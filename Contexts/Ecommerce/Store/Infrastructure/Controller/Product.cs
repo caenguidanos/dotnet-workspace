@@ -45,13 +45,13 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetById([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
     {
         try
         {
             var query = new GetProductByIdQuery
             {
-                Id = id,
+                Id = Id,
             };
 
             var result = await _mediator.Send(query, cancellationToken);
@@ -76,16 +76,16 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> Create([FromBody] CreateProductRequestBodyDTO dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] NewProduct request, CancellationToken cancellationToken)
     {
         try
         {
             var command = new CreateProductCommand
             {
-                Title = dto.Title,
-                Description = dto.Description,
-                Price = dto.Price,
-                Status = dto.Status,
+                Title = request.Title,
+                Description = request.Description,
+                Price = request.Price,
+                Status = request.Status,
             };
 
             var result = await _mediator.Send(command, cancellationToken);
@@ -116,13 +116,13 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> DeleteById(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteById([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
     {
         try
         {
             var command = new DeleteProductCommand
             {
-                Id = id,
+                Id = Id,
             };
 
             var result = await _mediator.Send(command, cancellationToken);

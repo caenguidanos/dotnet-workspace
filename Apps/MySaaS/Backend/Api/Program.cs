@@ -16,7 +16,10 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseExceptionHandler("/error");
+}
+else
+{
+    app.UseExceptionHandler("/Error");
 }
 
 app.MapControllers();
