@@ -2,7 +2,7 @@ namespace Ecommerce.Store.Application.Command;
 
 using Ecommerce.Store.Domain.Service;
 
-public class CreateProductCommand : IRequest<Guid>
+public class CreateProductCommand : IRequest<Unit>
 {
     public required int Price { get; set; }
     public required string Title { get; set; }
@@ -10,7 +10,7 @@ public class CreateProductCommand : IRequest<Guid>
     public required int Status { get; set; }
 }
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Guid>
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Unit>
 {
     private readonly IProductService productService;
 
@@ -19,15 +19,15 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         this.productService = productService;
     }
 
-    public async Task<Guid> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var id = await productService.AddNewProduct(
+        await productService.AddNewProduct(
             request.Title,
             request.Description,
             request.Status,
             request.Price,
             cancellationToken);
 
-        return id;
+        return Unit.Value;
     }
 }

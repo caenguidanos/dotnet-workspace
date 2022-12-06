@@ -43,7 +43,6 @@ public class ProductController : ControllerBase
         try
         {
             var query = new GetProductQuery { Id = Id };
-
             var result = await _sender.Send(query, cancellationToken);
 
             return Ok(result);
@@ -60,7 +59,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IActionResult> Create([FromBody] NewProduct request, CancellationToken cancellationToken)
@@ -74,10 +73,9 @@ public class ProductController : ControllerBase
                 Price = request.Price,
                 Status = request.Status,
             };
+            await _sender.Send(command, cancellationToken);
 
-            var result = await _sender.Send(command, cancellationToken);
-
-            return Ok(result);
+            return Accepted();
         }
         catch (Exception exception)
         {
@@ -104,10 +102,9 @@ public class ProductController : ControllerBase
         try
         {
             var command = new DeleteProductCommand { Id = Id };
+            await _sender.Send(command, cancellationToken);
 
-            var result = await _sender.Send(command, cancellationToken);
-
-            return Ok(result);
+            return Accepted();
         }
         catch (Exception exception)
         {
