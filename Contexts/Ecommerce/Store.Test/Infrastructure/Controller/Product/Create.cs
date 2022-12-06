@@ -1,7 +1,6 @@
 namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 
 using Ecommerce.Store.Application.Command;
-using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Infrastructure.Controller;
 using Ecommerce.Store.Infrastructure.DTO;
