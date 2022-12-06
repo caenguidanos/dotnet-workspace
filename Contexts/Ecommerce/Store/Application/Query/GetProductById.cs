@@ -3,21 +3,21 @@ namespace Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Repository;
 
-public class GetProductByIdQuery : IRequest<Product>
+public class GetProductQuery : IRequest<Product>
 {
     public required Guid Id { get; set; }
 }
 
-public class GetProductByIdQueryHandler : IRequestHandler<GetProductByIdQuery, Product>
+public class GetProductQueryHandler : IRequestHandler<GetProductQuery, Product>
 {
     private readonly IProductRepository productRepository;
 
-    public GetProductByIdQueryHandler(IProductRepository productRepository)
+    public GetProductQueryHandler(IProductRepository productRepository)
     {
         this.productRepository = productRepository;
     }
 
-    public async Task<Product> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Product> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var product = await productRepository.GetById(request.Id, cancellationToken);
 

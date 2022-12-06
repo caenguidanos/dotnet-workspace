@@ -4,11 +4,6 @@ using Common.Domain.ValueObject;
 
 public class Primitive
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
-
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowArgumentOutOfRangeException()
     {

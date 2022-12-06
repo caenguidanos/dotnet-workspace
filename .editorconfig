@@ -51,6 +51,3 @@ dotnet_diagnostic.CA1848.severity = none
 # Exclusions by file/type
 [Usings.cs]
 dotnet_diagnostic.IDE0065.severity = none
-
-[Program.cs]
-dotnet_diagnostic.CA1852.severity = none

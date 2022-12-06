@@ -1,3 +1,4 @@
+using Common;
 using Ecommerce.Store;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+
+builder.Services.AddCommonContext();
 builder.Services.AddEcommerceStoreContext();
 
 var app = builder.Build();
@@ -28,3 +31,5 @@ app.MapHealthChecks("/healthz");
 app.UseCors();
 
 app.Run();
+
+public partial class Program { }
