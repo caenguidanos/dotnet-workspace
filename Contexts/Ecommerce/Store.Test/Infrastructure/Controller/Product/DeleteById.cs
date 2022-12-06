@@ -25,18 +25,12 @@ public class DeleteById
             .Setup(sender => sender
                 .Send(
                     It.IsAny<DeleteProductCommand>(),
-                    It.IsAny<CancellationToken>())).ReturnsAsync(id);
+                    It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
 
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
-
-        var actionResultObject = (OkObjectResult)actionResult;
-        Assert.That(actionResultObject.Value, Is.TypeOf<Guid>());
-
-        var actionResultObjectPayload = (Guid)actionResultObject.Value;
-        Assert.That(actionResultObjectPayload, Is.EqualTo(id));
+        Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
     [Test]

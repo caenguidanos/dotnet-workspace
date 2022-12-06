@@ -26,15 +26,12 @@ public class Create
             .Setup(sender => sender
                 .Send(
                     It.IsAny<CreateProductCommand>(),
-                    It.IsAny<CancellationToken>())).ReturnsAsync(Product.NewID());
+                    It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
 
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
-
-        var actionResultObject = (OkObjectResult)actionResult;
-        Assert.That(actionResultObject.Value, Is.TypeOf<Guid>());
+        Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
     [Test]
