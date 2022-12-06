@@ -31,7 +31,7 @@ public class ProductController : ControllerBase
         }
         catch (Exception exception)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented, exception);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
         }
     }
 
@@ -54,10 +54,10 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                return NotFound(exception);
+                return NotFound(exception.ToString());
             }
 
-            return StatusCode(StatusCodes.Status501NotImplemented, exception);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
         }
     }
 
@@ -91,10 +91,10 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                return BadRequest(exception);
+                return BadRequest(exception.ToString());
             }
 
-            return StatusCode(StatusCodes.Status501NotImplemented, exception);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
         }
     }
 
@@ -117,10 +117,10 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                return NotFound(exception);
+                return NotFound(exception.ToString());
             }
 
-            return StatusCode(StatusCodes.Status501NotImplemented, exception);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
         }
     }
 }

@@ -4,7 +4,8 @@ public class ConfigurationSettings
 {
     public ConfigurationSettings(IConfiguration configuration)
     {
-        PostgresConnection = configuration["Database:Postgres.Connection.Ecommerce.Store"] ?? throw new InvalidDataException();
+        PostgresConnection = configuration["Databases:Postgres:ConnectionString:Ecommerce:Store"]
+            ?? throw new InvalidDataException("Trying to get [Databases:Postgres:ConnectionString:Ecommerce:Store]");
     }
 
     public required string PostgresConnection { get; set; }

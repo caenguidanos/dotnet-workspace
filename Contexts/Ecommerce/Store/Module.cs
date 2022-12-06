@@ -10,11 +10,11 @@ public static class EcommerceStoreModule
 {
     public static IServiceCollection AddEcommerceStoreContext(this IServiceCollection services)
     {
-        services
-            .AddMediatR(typeof(EcommerceStoreModule).Assembly)
-            .AddSingleton<ConfigurationSettings>()
-            .AddSingleton<IProductService, ProductService>()
-            .AddSingleton<IProductRepository, ProductRepository>();
+        services.AddMediatR(typeof(EcommerceStoreModule).Assembly);
+
+        services.AddSingleton<ConfigurationSettings>();
+        services.AddSingleton<IProductService, ProductService>();
+        services.AddSingleton<IProductRepository, ProductRepository>();
 
         return services;
     }

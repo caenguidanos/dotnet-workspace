@@ -10,14 +10,18 @@
 make infra
 ```
 
-## Start webapi
+## Start api
 
 ```bash
-make webapi
+cd Apps/MySaaS/Backend/Api
+
+make start
 ```
 
-## Watch webapi
+## Watch api
 
 ```bash
-make webapi-watch
+cd Apps/MySaaS/Backend/Api
+
+make watch
 ```
