@@ -94,9 +94,9 @@ public class GetAll
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<ObjectResult>());
+        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
-        var actionResultObject = (ObjectResult)actionResult;
+        var actionResultObject = (StatusCodeResult)actionResult;
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
     }
 }

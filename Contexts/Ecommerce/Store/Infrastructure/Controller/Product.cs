@@ -17,7 +17,6 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
@@ -29,14 +28,13 @@ public class ProductController : ControllerBase
 
             return Ok(result);
         }
-        catch (Exception exception)
+        catch (Exception)
         {
-            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
     [HttpGet("{id:guid}")]
-    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
@@ -54,15 +52,14 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                return NotFound(exception.ToString());
+                return NotFound();
             }
 
-            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
     [HttpPost]
-    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
@@ -91,15 +88,14 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                return BadRequest(exception.ToString());
+                return BadRequest();
             }
 
-            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 
     [HttpDelete("{id:guid}")]
-    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
@@ -117,10 +113,10 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                return NotFound(exception.ToString());
+                return NotFound();
             }
 
-            return StatusCode(StatusCodes.Status501NotImplemented, exception.ToString());
+            return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
 }

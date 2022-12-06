@@ -52,7 +52,7 @@ public class Create
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
     [Test]
@@ -70,7 +70,7 @@ public class Create
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
     [Test]
@@ -88,7 +88,7 @@ public class Create
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
     [Test]
@@ -106,7 +106,7 @@ public class Create
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
     [Test]
@@ -124,7 +124,7 @@ public class Create
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<BadRequestObjectResult>());
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
     [Test]
@@ -142,9 +142,9 @@ public class Create
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<ObjectResult>());
+        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
-        var actionResultObject = (ObjectResult)actionResult;
+        var actionResultObject = (StatusCodeResult)actionResult;
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
     }
 }
