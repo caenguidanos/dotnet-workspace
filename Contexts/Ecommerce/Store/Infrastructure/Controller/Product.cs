@@ -3,20 +3,17 @@ namespace Ecommerce.Store.Infrastructure.Controller;
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Exceptions;
-using Ecommerce.Store.Domain.LogEvent;
+using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Infrastructure.DTO;
-using Common.Domain.Service;
 
 [ApiController]
 [Route("[controller]")]
 public class ProductController : ControllerBase
 {
-    private readonly ILoggerService _logger;
     private readonly IMediator _mediator;
 
-    public ProductController(ILoggerService logger, IMediator mediator)
+    public ProductController(IMediator mediator)
     {
-        _logger = logger;
         _mediator = mediator;
     }
 
@@ -36,7 +33,14 @@ public class ProductController : ControllerBase
         }
         catch (Exception exception)
         {
-            _logger.Print(ProductLogEvent.GetAllNotImplemented, exception.Message);
+            await _mediator.Publish(
+                    new ProductLogNotification
+                    {
+                        Event = ProductLog.GetAllNotImplemented,
+                        Message = exception.Message
+                    },
+                    cancellationToken
+            );
 
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
@@ -61,12 +65,26 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                _logger.Print(ProductLogEvent.GetByIdNotFound, exception.Message);
+                await _mediator.Publish(
+                    new ProductLogNotification
+                    {
+                        Event = ProductLog.GetByIdNotFound,
+                        Message = exception.Message
+                    },
+                    cancellationToken
+                );
 
                 return NotFound();
             }
 
-            _logger.Print(ProductLogEvent.GetByIdNotImplemented, exception.Message);
+            await _mediator.Publish(
+                    new ProductLogNotification
+                    {
+                        Event = ProductLog.GetByIdNotImplemented,
+                        Message = exception.Message
+                    },
+                    cancellationToken
+            );
 
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
@@ -102,12 +120,26 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                _logger.Print(ProductLogEvent.CreateBadRequest, exception.Message);
+                await _mediator.Publish(
+                        new ProductLogNotification
+                        {
+                            Event = ProductLog.CreateBadRequest,
+                            Message = exception.Message
+                        },
+                        cancellationToken
+                );
 
                 return BadRequest();
             }
 
-            _logger.Print(ProductLogEvent.CreateNotImplemented, exception.Message);
+            await _mediator.Publish(
+                    new ProductLogNotification
+                    {
+                        Event = ProductLog.CreateNotImplemented,
+                        Message = exception.Message
+                    },
+                    cancellationToken
+            );
 
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
@@ -132,12 +164,26 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                _logger.Print(ProductLogEvent.DeleteByIdNotFound, exception.Message);
+                await _mediator.Publish(
+                        new ProductLogNotification
+                        {
+                            Event = ProductLog.DeleteByIdNotFound,
+                            Message = exception.Message
+                        },
+                        cancellationToken
+                );
 
                 return NotFound();
             }
 
-            _logger.Print(ProductLogEvent.DeleteByIdNotImplemented, exception.Message);
+            await _mediator.Publish(
+                    new ProductLogNotification
+                    {
+                        Event = ProductLog.DeleteByIdNotImplemented,
+                        Message = exception.Message
+                    },
+                    cancellationToken
+            );
 
             return StatusCode(StatusCodes.Status501NotImplemented);
         }

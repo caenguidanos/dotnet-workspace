@@ -1,4 +1,3 @@
-using Common;
 using Ecommerce.Store;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +9,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
-builder.Services.AddCommonContext();
 builder.Services.AddEcommerceStoreContext();
 
 var app = builder.Build();

@@ -3,19 +3,16 @@ namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
+using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Infrastructure.Controller;
-using Common.Domain.Service;
-using Ecommerce.Store.Domain.LogEvent;
 
 public class DeleteById
 {
     private readonly IMediator _mediator = Mock.Of<IMediator>();
-    private readonly ILoggerService _logger = Mock.Of<ILoggerService>();
 
     [SetUp]
     public void BeforeEach()
     {
-        Mock.Get(_logger).Reset();
         Mock.Get(_mediator).Reset();
     }
 
@@ -31,7 +28,7 @@ public class DeleteById
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(id);
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -55,14 +52,17 @@ public class DeleteById
                 It.IsAny<CancellationToken>()))
             .Throws<ProductNotFoundException>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.DeleteByIdNotFound), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.DeleteByIdNotFound),
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -77,7 +77,7 @@ public class DeleteById
                 It.IsAny<CancellationToken>()))
             .Throws<Exception>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
@@ -86,8 +86,11 @@ public class DeleteById
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.DeleteByIdNotImplemented), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.DeleteByIdNotImplemented),
+                It.IsAny<CancellationToken>()));
     }
 }
 

@@ -1,6 +1,6 @@
-namespace Ecommerce.Store.Domain.LogEvent;
+namespace Ecommerce.Store.Domain.Notification;
 
-public class ProductLogEvent
+public class ProductLog
 {
     public const int GetAllNotImplemented = 1000;
     public const int GetByIdNotFound = 1001;
@@ -11,4 +11,11 @@ public class ProductLogEvent
     public const int DeleteByIdNotImplemented = 1006;
     public const int CreatedNotification = 1007;
     public const int DeletedNotification = 1008;
+}
+
+
+public class ProductLogNotification : INotification
+{
+    public required int Event { get; set; }
+    public required string Message { get; set; }
 }

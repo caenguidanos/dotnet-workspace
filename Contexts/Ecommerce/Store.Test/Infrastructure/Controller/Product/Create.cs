@@ -3,20 +3,17 @@ namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
-using Ecommerce.Store.Domain.LogEvent;
+using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Infrastructure.Controller;
 using Ecommerce.Store.Infrastructure.DTO;
-using Common.Domain.Service;
 
 public class Create
 {
     private readonly IMediator _mediator = Mock.Of<IMediator>();
-    private readonly ILoggerService _logger = Mock.Of<ILoggerService>();
 
     [SetUp]
     public void BeforeEach()
     {
-        Mock.Get(_logger).Reset();
         Mock.Get(_mediator).Reset();
     }
 
@@ -32,7 +29,7 @@ public class Create
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(Product.NewID());
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -53,7 +50,7 @@ public class Create
                 It.IsAny<CancellationToken>()))
             .Throws<ProductIdInvalidException>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
@@ -71,14 +68,17 @@ public class Create
                 It.IsAny<CancellationToken>()))
             .Throws<ProductTitleInvalidException>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.CreateBadRequest), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.CreateBadRequest),
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -93,14 +93,17 @@ public class Create
                 It.IsAny<CancellationToken>()))
             .Throws<ProductDescriptionInvalidException>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.CreateBadRequest), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.CreateBadRequest),
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -115,14 +118,17 @@ public class Create
                 It.IsAny<CancellationToken>()))
             .Throws<ProductPriceInvalidException>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.CreateBadRequest), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.CreateBadRequest),
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -137,14 +143,17 @@ public class Create
                 It.IsAny<CancellationToken>()))
             .Throws<ProductStatusInvalidException>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.CreateBadRequest), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.CreateBadRequest),
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -159,7 +168,7 @@ public class Create
                 It.IsAny<CancellationToken>()))
             .Throws<Exception>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
@@ -168,7 +177,10 @@ public class Create
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.CreateNotImplemented), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.CreateNotImplemented),
+                It.IsAny<CancellationToken>()));
     }
 }

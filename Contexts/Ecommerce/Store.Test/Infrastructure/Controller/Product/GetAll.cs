@@ -2,21 +2,18 @@ namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 
 using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Entity;
-using Ecommerce.Store.Domain.ValueObject;
 using Ecommerce.Store.Domain.Model;
+using Ecommerce.Store.Domain.Notification;
+using Ecommerce.Store.Domain.ValueObject;
 using Ecommerce.Store.Infrastructure.Controller;
-using Common.Domain.Service;
-using Ecommerce.Store.Domain.LogEvent;
 
 public class GetAll
 {
     private readonly IMediator _mediator = Mock.Of<IMediator>();
-    private readonly ILoggerService _logger = Mock.Of<ILoggerService>();
 
     [SetUp]
     public void BeforeEach()
     {
-        Mock.Get(_logger).Reset();
         Mock.Get(_mediator).Reset();
     }
 
@@ -47,7 +44,7 @@ public class GetAll
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(products);
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -71,7 +68,7 @@ public class GetAll
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(products);
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -95,7 +92,7 @@ public class GetAll
                 It.IsAny<CancellationToken>()))
             .Throws<Exception>();
 
-        var controller = new ProductController(_logger, _mediator);
+        var controller = new ProductController(_mediator);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
@@ -104,7 +101,10 @@ public class GetAll
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
 
         Mock
-            .Get(_logger)
-            .Verify(logger => logger.Print(It.Is<int>(ev => ev == ProductLogEvent.GetAllNotImplemented), It.IsAny<string>()));
+            .Get(_mediator)
+            .Verify(mediator => mediator.Publish(
+                It.Is<ProductLogNotification>(
+                    notification => notification.Event == ProductLog.GetAllNotImplemented),
+                It.IsAny<CancellationToken>()));
     }
 }
