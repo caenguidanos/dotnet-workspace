@@ -3,23 +3,20 @@ namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
-using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Infrastructure.Controller;
 
 public class DeleteById
 {
     private readonly ISender _sender = Mock.Of<ISender>();
-    private readonly IPublisher _publisher = Mock.Of<IPublisher>();
 
     [SetUp]
     public void BeforeEach()
     {
         Mock.Get(_sender).Reset();
-        Mock.Get(_publisher).Reset();
     }
 
     [Test]
-    public async Task GivenRequestCommand_WhenReturnsIdFromMediator_ThenReplyWithOK()
+    public async Task GivenRequestCommand_WhenReturnsIdFromSender_ThenReplyWithOK()
     {
         var id = Product.NewID();
 
@@ -30,7 +27,7 @@ public class DeleteById
                     It.IsAny<DeleteProductCommand>(),
                     It.IsAny<CancellationToken>())).ReturnsAsync(id);
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -43,7 +40,7 @@ public class DeleteById
     }
 
     [Test]
-    public async Task GivenRequestCommand_WhenThrowsProductNotFoundExceptionFromMediator_ThenReplyWithNotFound()
+    public async Task GivenRequestCommand_WhenThrowsProductNotFoundExceptionFromSender_ThenReplyWithNotFound()
     {
         var id = Product.NewID();
 
@@ -54,22 +51,14 @@ public class DeleteById
                     It.IsAny<DeleteProductCommand>(),
                     It.IsAny<CancellationToken>())).Throws<ProductNotFoundException>();
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
-
-        Mock
-            .Get(_publisher)
-            .Verify(publisher => publisher
-                .Publish(
-                    It.Is<ProductLogNotification>(
-                        notification => notification.Event == ProductLog.ControllerDeleteByIdNotFound),
-                    It.IsAny<CancellationToken>()));
+        Assert.That(actionResult, Is.TypeOf<NotFoundObjectResult>());
     }
 
     [Test]
-    public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromMediator_ThenReplyWithNotImplemented()
+    public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
         var id = Product.NewID();
 
@@ -80,21 +69,13 @@ public class DeleteById
                     It.IsAny<DeleteProductCommand>(),
                     It.IsAny<CancellationToken>())).Throws<Exception>();
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
+        Assert.That(actionResult, Is.TypeOf<ObjectResult>());
 
-        var actionResultObject = (StatusCodeResult)actionResult;
+        var actionResultObject = (ObjectResult)actionResult;
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
-
-        Mock
-            .Get(_publisher)
-            .Verify(publisher => publisher
-                .Publish(
-                    It.Is<ProductLogNotification>(
-                        notification => notification.Event == ProductLog.ControllerDeleteByIdNotImplemented),
-                    It.IsAny<CancellationToken>()));
     }
 }
 

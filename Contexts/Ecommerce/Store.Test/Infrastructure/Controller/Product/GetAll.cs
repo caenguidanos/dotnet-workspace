@@ -3,24 +3,21 @@ namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Model;
-using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Domain.ValueObject;
 using Ecommerce.Store.Infrastructure.Controller;
 
 public class GetAll
 {
     private readonly ISender _sender = Mock.Of<ISender>();
-    private readonly IPublisher _publisher = Mock.Of<IPublisher>();
 
     [SetUp]
     public void BeforeEach()
     {
         Mock.Get(_sender).Reset();
-        Mock.Get(_publisher).Reset();
     }
 
     [Test]
-    public async Task GivenRequestQuery_WhenReturnsProductsFromMediator_ThenReplyWithProducts()
+    public async Task GivenRequestQuery_WhenReturnsProductsFromSender_ThenReplyWithProducts()
     {
         var products = new List<Product>
         {
@@ -46,7 +43,7 @@ public class GetAll
                     It.IsAny<GetProductsQuery>(),
                     It.IsAny<CancellationToken>())).ReturnsAsync(products);
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -59,7 +56,7 @@ public class GetAll
     }
 
     [Test]
-    public async Task GivenRequestQuery_WhenReturnsNoProductsFromMediator_ThenReplyWithEmptyList()
+    public async Task GivenRequestQuery_WhenReturnsNoProductsFromSender_ThenReplyWithEmptyList()
     {
         var products = new List<Product>();
 
@@ -70,7 +67,7 @@ public class GetAll
                     It.IsAny<GetProductsQuery>(),
                     It.IsAny<CancellationToken>())).ReturnsAsync(products);
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -83,7 +80,7 @@ public class GetAll
     }
 
     [Test]
-    public async Task GivenRequestQuery_WhenThrowsAnyExceptionFromMediator_ThenReplyWithNotImplemented()
+    public async Task GivenRequestQuery_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
         var products = Mock.Of<List<Product>>();
 
@@ -94,20 +91,12 @@ public class GetAll
                     It.IsAny<GetProductsQuery>(),
                     It.IsAny<CancellationToken>())).Throws<Exception>();
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
+        Assert.That(actionResult, Is.TypeOf<ObjectResult>());
 
-        var actionResultObject = (StatusCodeResult)actionResult;
+        var actionResultObject = (ObjectResult)actionResult;
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
-
-        Mock
-            .Get(_publisher)
-            .Verify(publisher => publisher
-                .Publish(
-                    It.Is<ProductLogNotification>(
-                        notification => notification.Event == ProductLog.ControllerGetAllNotImplemented),
-                    It.IsAny<CancellationToken>()));
     }
 }

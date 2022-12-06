@@ -1,17 +1,17 @@
 namespace Common.Domain.ValueObject;
 
-public abstract class ValueObject<Primitive>
+public abstract class ValueObject<TPrimitive>
 {
-    private readonly Primitive value;
+    private readonly TPrimitive value;
 
-    public ValueObject(Primitive value)
+    public ValueObject(TPrimitive value)
     {
         this.value = Validate(value);
     }
 
-    public abstract Primitive Validate(Primitive value);
+    public abstract TPrimitive Validate(TPrimitive value);
 
-    public Primitive GetValue()
+    public TPrimitive GetValue()
     {
         return value;
     }

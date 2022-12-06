@@ -4,24 +4,21 @@ using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Domain.Model;
-using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Domain.ValueObject;
 using Ecommerce.Store.Infrastructure.Controller;
 
 public class GetById
 {
     private readonly ISender _sender = Mock.Of<ISender>();
-    private readonly IPublisher _publisher = Mock.Of<IPublisher>();
 
     [SetUp]
     public void BeforeEach()
     {
         Mock.Get(_sender).Reset();
-        Mock.Get(_publisher).Reset();
     }
 
     [Test]
-    public async Task GivenRequestQuery_WhenReturnsProductFromMediator_ThenReplyWithProduct()
+    public async Task GivenRequestQuery_WhenReturnsProductFromSender_ThenReplyWithProduct()
     {
         var product = new Product(
             new ProductId(Product.NewID()),
@@ -37,7 +34,7 @@ public class GetById
                     It.IsAny<GetProductQuery>(),
                     It.IsAny<CancellationToken>())).ReturnsAsync(product);
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.GetById(product.Id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -47,7 +44,7 @@ public class GetById
     }
 
     [Test]
-    public async Task GivenRequestQuery_WhenThrowsAnyExceptionFromMediator_ThenReplyWithNotImplemented()
+    public async Task GivenRequestQuery_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
         Mock
             .Get(_sender)
@@ -56,21 +53,13 @@ public class GetById
                     It.IsAny<GetProductQuery>(),
                     It.IsAny<CancellationToken>())).Throws<Exception>();
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
+        Assert.That(actionResult, Is.TypeOf<ObjectResult>());
 
-        var actionResultObject = (StatusCodeResult)actionResult;
+        var actionResultObject = (ObjectResult)actionResult;
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
-
-        Mock
-            .Get(_publisher)
-            .Verify(publisher => publisher
-                .Publish(
-                    It.Is<ProductLogNotification>(
-                        notification => notification.Event == ProductLog.ControllerGetByIdNotImplemented),
-                    It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -83,17 +72,9 @@ public class GetById
                     It.IsAny<GetProductQuery>(),
                     It.IsAny<CancellationToken>())).Throws<ProductNotFoundException>();
 
-        var controller = new ProductController(_sender, _publisher);
+        var controller = new ProductController(_sender);
 
         var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
-
-        Mock
-            .Get(_publisher)
-            .Verify(publisher => publisher
-                .Publish(
-                    It.Is<ProductLogNotification>(
-                        notification => notification.Event == ProductLog.ControllerGetByIdNotFound),
-                    It.IsAny<CancellationToken>()));
+        Assert.That(actionResult, Is.TypeOf<NotFoundObjectResult>());
     }
 }

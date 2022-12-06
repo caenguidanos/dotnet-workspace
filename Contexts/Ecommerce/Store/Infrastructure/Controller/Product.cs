@@ -3,7 +3,6 @@ namespace Ecommerce.Store.Infrastructure.Controller;
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Exceptions;
-using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Infrastructure.DTO;
 
 [ApiController]
@@ -11,12 +10,10 @@ using Ecommerce.Store.Infrastructure.DTO;
 public class ProductController : ControllerBase
 {
     private readonly ISender _sender;
-    private readonly IPublisher _publisher;
 
-    public ProductController(ISender sender, IPublisher publisher)
+    public ProductController(ISender sender)
     {
         _sender = sender;
-        _publisher = publisher;
     }
 
     [HttpGet]
@@ -28,23 +25,13 @@ public class ProductController : ControllerBase
         try
         {
             var query = new GetProductsQuery();
-
             var result = await _sender.Send(query, cancellationToken);
 
             return Ok(result);
         }
         catch (Exception exception)
         {
-            await _publisher.Publish(
-                    new ProductLogNotification
-                    {
-                        Event = ProductLog.ControllerGetAllNotImplemented,
-                        Message = exception.Message
-                    },
-                    cancellationToken
-            );
-
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception);
         }
     }
 
@@ -67,28 +54,10 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                await _publisher.Publish(
-                    new ProductLogNotification
-                    {
-                        Event = ProductLog.ControllerGetByIdNotFound,
-                        Message = exception.Message
-                    },
-                    cancellationToken
-                );
-
-                return NotFound();
+                return NotFound(exception);
             }
 
-            await _publisher.Publish(
-                    new ProductLogNotification
-                    {
-                        Event = ProductLog.ControllerGetByIdNotImplemented,
-                        Message = exception.Message
-                    },
-                    cancellationToken
-            );
-
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception);
         }
     }
 
@@ -122,28 +91,10 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                await _publisher.Publish(
-                        new ProductLogNotification
-                        {
-                            Event = ProductLog.ControllerCreateBadRequest,
-                            Message = exception.Message
-                        },
-                        cancellationToken
-                );
-
-                return BadRequest();
+                return BadRequest(exception);
             }
 
-            await _publisher.Publish(
-                    new ProductLogNotification
-                    {
-                        Event = ProductLog.ControllerCreateNotImplemented,
-                        Message = exception.Message
-                    },
-                    cancellationToken
-            );
-
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception);
         }
     }
 
@@ -166,28 +117,10 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                await _publisher.Publish(
-                        new ProductLogNotification
-                        {
-                            Event = ProductLog.ControllerDeleteByIdNotFound,
-                            Message = exception.Message
-                        },
-                        cancellationToken
-                );
-
-                return NotFound();
+                return NotFound(exception);
             }
 
-            await _publisher.Publish(
-                    new ProductLogNotification
-                    {
-                        Event = ProductLog.ControllerDeleteByIdNotImplemented,
-                        Message = exception.Message
-                    },
-                    cancellationToken
-            );
-
-            return StatusCode(StatusCodes.Status501NotImplemented);
+            return StatusCode(StatusCodes.Status501NotImplemented, exception);
         }
     }
 }
