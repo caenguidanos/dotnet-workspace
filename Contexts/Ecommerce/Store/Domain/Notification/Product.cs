@@ -1,6 +1,6 @@
 namespace Ecommerce.Store.Domain.Notification;
 
-public class ProductCreatedNotification : INotification
+public class ProductControllerCreatedNotification : INotification
 {
     public required Guid Id { get; set; }
 }

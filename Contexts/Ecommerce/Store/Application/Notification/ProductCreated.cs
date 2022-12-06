@@ -2,9 +2,9 @@ namespace Ecommerce.Store.Application.Notification;
 
 using Ecommerce.Store.Domain.Notification;
 
-public class ProductCreatedNotificationHandler : INotificationHandler<ProductCreatedNotification>
+public class ProductControllerCreatedNotificationHandler : INotificationHandler<ProductControllerCreatedNotification>
 {
-    public Task Handle(ProductCreatedNotification notification, CancellationToken cancellationToken)
+    public Task Handle(ProductControllerCreatedNotification notification, CancellationToken cancellationToken)
     {
         Console.WriteLine($"Product created: {notification.Id}");
 

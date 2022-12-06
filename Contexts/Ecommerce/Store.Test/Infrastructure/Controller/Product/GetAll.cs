@@ -9,12 +9,14 @@ using Ecommerce.Store.Infrastructure.Controller;
 
 public class GetAll
 {
-    private readonly IMediator _mediator = Mock.Of<IMediator>();
+    private readonly ISender _sender = Mock.Of<ISender>();
+    private readonly IPublisher _publisher = Mock.Of<IPublisher>();
 
     [SetUp]
     public void BeforeEach()
     {
-        Mock.Get(_mediator).Reset();
+        Mock.Get(_sender).Reset();
+        Mock.Get(_publisher).Reset();
     }
 
     [Test]
@@ -38,13 +40,13 @@ public class GetAll
         };
 
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<GetProductsQuery>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(products);
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductsQuery>(),
+                    It.IsAny<CancellationToken>())).ReturnsAsync(products);
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -62,13 +64,13 @@ public class GetAll
         var products = new List<Product>();
 
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<GetProductsQuery>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(products);
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductsQuery>(),
+                    It.IsAny<CancellationToken>())).ReturnsAsync(products);
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -86,13 +88,13 @@ public class GetAll
         var products = Mock.Of<List<Product>>();
 
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<GetProductsQuery>(),
-                It.IsAny<CancellationToken>()))
-            .Throws<Exception>();
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductsQuery>(),
+                    It.IsAny<CancellationToken>())).Throws<Exception>();
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.GetAll(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
@@ -101,10 +103,11 @@ public class GetAll
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
 
         Mock
-            .Get(_mediator)
-            .Verify(mediator => mediator.Publish(
-                It.Is<ProductLogNotification>(
-                    notification => notification.Event == ProductLog.GetAllNotImplemented),
-                It.IsAny<CancellationToken>()));
+            .Get(_publisher)
+            .Verify(publisher => publisher
+                .Publish(
+                    It.Is<ProductLogNotification>(
+                        notification => notification.Event == ProductLog.ControllerGetAllNotImplemented),
+                    It.IsAny<CancellationToken>()));
     }
 }

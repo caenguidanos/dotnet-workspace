@@ -31,8 +31,7 @@ public class ProductService : IProductService
 
         await productRepository.Save(newProduct, cancellationToken);
 
-        await publisher.Publish(
-            new ProductCreatedNotification { Id = newId }, cancellationToken);
+        await publisher.Publish(new ProductControllerCreatedNotification { Id = newId }, cancellationToken);
 
         return newProduct.Id;
     }
@@ -41,7 +40,6 @@ public class ProductService : IProductService
     {
         await productRepository.DeleteById(id, cancellationToken);
 
-        await publisher.Publish(
-            new ProductRemovedNotification { Id = id }, cancellationToken);
+        await publisher.Publish(new ProductRemovedNotification { Id = id }, cancellationToken);
     }
 }

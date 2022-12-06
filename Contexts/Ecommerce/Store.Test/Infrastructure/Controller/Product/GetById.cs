@@ -10,12 +10,14 @@ using Ecommerce.Store.Infrastructure.Controller;
 
 public class GetById
 {
-    private readonly IMediator _mediator = Mock.Of<IMediator>();
+    private readonly ISender _sender = Mock.Of<ISender>();
+    private readonly IPublisher _publisher = Mock.Of<IPublisher>();
 
     [SetUp]
     public void BeforeEach()
     {
-        Mock.Get(_mediator).Reset();
+        Mock.Get(_sender).Reset();
+        Mock.Get(_publisher).Reset();
     }
 
     [Test]
@@ -29,13 +31,13 @@ public class GetById
             new ProductPrice(100));
 
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<GetProductQuery>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(product);
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductQuery>(),
+                    It.IsAny<CancellationToken>())).ReturnsAsync(product);
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.GetById(product.Id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -48,13 +50,13 @@ public class GetById
     public async Task GivenRequestQuery_WhenThrowsAnyExceptionFromMediator_ThenReplyWithNotImplemented()
     {
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<GetProductQuery>(),
-                It.IsAny<CancellationToken>()))
-            .Throws<Exception>();
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductQuery>(),
+                    It.IsAny<CancellationToken>())).Throws<Exception>();
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
@@ -63,33 +65,35 @@ public class GetById
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
 
         Mock
-            .Get(_mediator)
-            .Verify(mediator => mediator.Publish(
-                It.Is<ProductLogNotification>(
-                    notification => notification.Event == ProductLog.GetByIdNotImplemented),
-                It.IsAny<CancellationToken>()));
+            .Get(_publisher)
+            .Verify(publisher => publisher
+                .Publish(
+                    It.Is<ProductLogNotification>(
+                        notification => notification.Event == ProductLog.ControllerGetByIdNotImplemented),
+                    It.IsAny<CancellationToken>()));
     }
 
     [Test]
     public async Task GivenRequestQuery_WhenThrowsProductNotFoundException_ThenReplyWithNotFound()
     {
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<GetProductQuery>(),
-                It.IsAny<CancellationToken>()))
-            .Throws<ProductNotFoundException>();
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductQuery>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductNotFoundException>();
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
 
         Mock
-            .Get(_mediator)
-            .Verify(mediator => mediator.Publish(
-                It.Is<ProductLogNotification>(
-                    notification => notification.Event == ProductLog.GetByIdNotFound),
-                It.IsAny<CancellationToken>()));
+            .Get(_publisher)
+            .Verify(publisher => publisher
+                .Publish(
+                    It.Is<ProductLogNotification>(
+                        notification => notification.Event == ProductLog.ControllerGetByIdNotFound),
+                    It.IsAny<CancellationToken>()));
     }
 }

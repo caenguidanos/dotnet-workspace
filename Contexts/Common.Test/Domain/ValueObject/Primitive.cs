@@ -7,13 +7,15 @@ public class Primitive
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowArgumentOutOfRangeException()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(() => new StringPrimitiveWithValidation("1234"));
+        Assert.Throws<ArgumentOutOfRangeException>(
+            () => new StringPrimitiveWithValidation("1234"));
     }
 
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenNotThrowArgumentOutOfRangeException()
     {
-        Assert.DoesNotThrow(() => new StringPrimitiveWithValidation("123456"));
+        Assert.DoesNotThrow(
+            () => new StringPrimitiveWithValidation("123456"));
     }
 
     [Test]
@@ -21,9 +23,7 @@ public class Primitive
     {
         var primitive = new StringPrimitiveWithValidation("123499");
 
-        string actual = primitive.GetValue();
-
-        Assert.That(actual, Is.EqualTo("123499"));
+        Assert.That(primitive.GetValue(), Is.EqualTo("123499"));
     }
 
     private sealed class StringPrimitiveWithValidation : ValueObject<string>

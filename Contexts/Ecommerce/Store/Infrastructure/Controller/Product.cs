@@ -10,11 +10,13 @@ using Ecommerce.Store.Infrastructure.DTO;
 [Route("[controller]")]
 public class ProductController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly ISender _sender;
+    private readonly IPublisher _publisher;
 
-    public ProductController(IMediator mediator)
+    public ProductController(ISender sender, IPublisher publisher)
     {
-        _mediator = mediator;
+        _sender = sender;
+        _publisher = publisher;
     }
 
     [HttpGet]
@@ -27,16 +29,16 @@ public class ProductController : ControllerBase
         {
             var query = new GetProductsQuery();
 
-            var result = await _mediator.Send(query, cancellationToken);
+            var result = await _sender.Send(query, cancellationToken);
 
             return Ok(result);
         }
         catch (Exception exception)
         {
-            await _mediator.Publish(
+            await _publisher.Publish(
                     new ProductLogNotification
                     {
-                        Event = ProductLog.GetAllNotImplemented,
+                        Event = ProductLog.ControllerGetAllNotImplemented,
                         Message = exception.Message
                     },
                     cancellationToken
@@ -57,7 +59,7 @@ public class ProductController : ControllerBase
         {
             var query = new GetProductQuery { Id = Id };
 
-            var result = await _mediator.Send(query, cancellationToken);
+            var result = await _sender.Send(query, cancellationToken);
 
             return Ok(result);
         }
@@ -65,10 +67,10 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                await _mediator.Publish(
+                await _publisher.Publish(
                     new ProductLogNotification
                     {
-                        Event = ProductLog.GetByIdNotFound,
+                        Event = ProductLog.ControllerGetByIdNotFound,
                         Message = exception.Message
                     },
                     cancellationToken
@@ -77,10 +79,10 @@ public class ProductController : ControllerBase
                 return NotFound();
             }
 
-            await _mediator.Publish(
+            await _publisher.Publish(
                     new ProductLogNotification
                     {
-                        Event = ProductLog.GetByIdNotImplemented,
+                        Event = ProductLog.ControllerGetByIdNotImplemented,
                         Message = exception.Message
                     },
                     cancellationToken
@@ -107,7 +109,7 @@ public class ProductController : ControllerBase
                 Status = request.Status,
             };
 
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await _sender.Send(command, cancellationToken);
 
             return Ok(result);
         }
@@ -120,10 +122,10 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                await _mediator.Publish(
+                await _publisher.Publish(
                         new ProductLogNotification
                         {
-                            Event = ProductLog.CreateBadRequest,
+                            Event = ProductLog.ControllerCreateBadRequest,
                             Message = exception.Message
                         },
                         cancellationToken
@@ -132,10 +134,10 @@ public class ProductController : ControllerBase
                 return BadRequest();
             }
 
-            await _mediator.Publish(
+            await _publisher.Publish(
                     new ProductLogNotification
                     {
-                        Event = ProductLog.CreateNotImplemented,
+                        Event = ProductLog.ControllerCreateNotImplemented,
                         Message = exception.Message
                     },
                     cancellationToken
@@ -156,7 +158,7 @@ public class ProductController : ControllerBase
         {
             var command = new DeleteProductCommand { Id = Id };
 
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await _sender.Send(command, cancellationToken);
 
             return Ok(result);
         }
@@ -164,10 +166,10 @@ public class ProductController : ControllerBase
         {
             if (exception is ProductNotFoundException)
             {
-                await _mediator.Publish(
+                await _publisher.Publish(
                         new ProductLogNotification
                         {
-                            Event = ProductLog.DeleteByIdNotFound,
+                            Event = ProductLog.ControllerDeleteByIdNotFound,
                             Message = exception.Message
                         },
                         cancellationToken
@@ -176,10 +178,10 @@ public class ProductController : ControllerBase
                 return NotFound();
             }
 
-            await _mediator.Publish(
+            await _publisher.Publish(
                     new ProductLogNotification
                     {
-                        Event = ProductLog.DeleteByIdNotImplemented,
+                        Event = ProductLog.ControllerDeleteByIdNotImplemented,
                         Message = exception.Message
                     },
                     cancellationToken

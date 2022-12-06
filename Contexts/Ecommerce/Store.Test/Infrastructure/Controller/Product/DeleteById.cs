@@ -8,12 +8,14 @@ using Ecommerce.Store.Infrastructure.Controller;
 
 public class DeleteById
 {
-    private readonly IMediator _mediator = Mock.Of<IMediator>();
+    private readonly ISender _sender = Mock.Of<ISender>();
+    private readonly IPublisher _publisher = Mock.Of<IPublisher>();
 
     [SetUp]
     public void BeforeEach()
     {
-        Mock.Get(_mediator).Reset();
+        Mock.Get(_sender).Reset();
+        Mock.Get(_publisher).Reset();
     }
 
     [Test]
@@ -22,13 +24,13 @@ public class DeleteById
         var id = Product.NewID();
 
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<DeleteProductCommand>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(id);
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<DeleteProductCommand>(),
+                    It.IsAny<CancellationToken>())).ReturnsAsync(id);
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
@@ -46,23 +48,24 @@ public class DeleteById
         var id = Product.NewID();
 
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<DeleteProductCommand>(),
-                It.IsAny<CancellationToken>()))
-            .Throws<ProductNotFoundException>();
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<DeleteProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductNotFoundException>();
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
 
         Mock
-            .Get(_mediator)
-            .Verify(mediator => mediator.Publish(
-                It.Is<ProductLogNotification>(
-                    notification => notification.Event == ProductLog.DeleteByIdNotFound),
-                It.IsAny<CancellationToken>()));
+            .Get(_publisher)
+            .Verify(publisher => publisher
+                .Publish(
+                    It.Is<ProductLogNotification>(
+                        notification => notification.Event == ProductLog.ControllerDeleteByIdNotFound),
+                    It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -71,13 +74,13 @@ public class DeleteById
         var id = Product.NewID();
 
         Mock
-            .Get(_mediator)
-            .Setup(mediator => mediator.Send(
-                It.IsAny<DeleteProductCommand>(),
-                It.IsAny<CancellationToken>()))
-            .Throws<Exception>();
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<DeleteProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<Exception>();
 
-        var controller = new ProductController(_mediator);
+        var controller = new ProductController(_sender, _publisher);
 
         var actionResult = await controller.DeleteById(id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
@@ -86,11 +89,12 @@ public class DeleteById
         Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
 
         Mock
-            .Get(_mediator)
-            .Verify(mediator => mediator.Publish(
-                It.Is<ProductLogNotification>(
-                    notification => notification.Event == ProductLog.DeleteByIdNotImplemented),
-                It.IsAny<CancellationToken>()));
+            .Get(_publisher)
+            .Verify(publisher => publisher
+                .Publish(
+                    It.Is<ProductLogNotification>(
+                        notification => notification.Event == ProductLog.ControllerDeleteByIdNotImplemented),
+                    It.IsAny<CancellationToken>()));
     }
 }
 

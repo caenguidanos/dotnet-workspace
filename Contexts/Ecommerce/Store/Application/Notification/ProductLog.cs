@@ -6,7 +6,7 @@ public class ProductLogNotificationHandler : INotificationHandler<ProductLogNoti
 {
     public Task Handle(ProductLogNotification notification, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"Product::Log::{notification.Event} - {notification.Message}");
+        Console.WriteLine($"Log [Product] {notification.Event} - {notification.Message}");
 
         return Task.CompletedTask;
     }

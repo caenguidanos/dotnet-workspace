@@ -2,15 +2,13 @@ namespace Ecommerce.Store.Domain.Notification;
 
 public class ProductLog
 {
-    public const int GetAllNotImplemented = 1000;
-    public const int GetByIdNotFound = 1001;
-    public const int GetByIdNotImplemented = 1002;
-    public const int CreateBadRequest = 1003;
-    public const int CreateNotImplemented = 1004;
-    public const int DeleteByIdNotFound = 1005;
-    public const int DeleteByIdNotImplemented = 1006;
-    public const int CreatedNotification = 1007;
-    public const int DeletedNotification = 1008;
+    public const int ControllerGetAllNotImplemented = 1000;
+    public const int ControllerGetByIdNotFound = 1001;
+    public const int ControllerGetByIdNotImplemented = 1002;
+    public const int ControllerCreateBadRequest = 1003;
+    public const int ControllerCreateNotImplemented = 1004;
+    public const int ControllerDeleteByIdNotFound = 1005;
+    public const int ControllerDeleteByIdNotImplemented = 1006;
 }
 
 
