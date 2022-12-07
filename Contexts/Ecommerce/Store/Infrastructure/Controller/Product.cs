@@ -172,8 +172,6 @@ public class ProductController : ControllerBase
                 return BadRequest();
             }
 
-
-
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }

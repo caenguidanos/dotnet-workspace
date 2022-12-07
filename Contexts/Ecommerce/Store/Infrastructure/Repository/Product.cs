@@ -6,23 +6,23 @@ using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.Repository;
 using Ecommerce.Store.Domain.ValueObject;
 using Ecommerce.Store.Infrastructure.DataTransfer;
-using Ecommerce.Store.Infrastructure.Environment;
+using Ecommerce.Store.Infrastructure.Persistence;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly string _connectionString;
+    private readonly DbContext _db;
 
-    public ProductRepository(EnvironmentSettings environment)
+    public ProductRepository(DbContext dbContext)
     {
-        _connectionString = environment.PostgresConnection;
+        _db = dbContext;
     }
 
     public async Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
-        var command = new CommandDefinition("SELECT * FROM product", cancellationToken: cancellationToken);
+        var command = new CommandDefinition("SELECT * FROM ecommerce_store.product", cancellationToken: cancellationToken);
 
         var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
         if (result is null)
@@ -49,12 +49,12 @@ public class ProductRepository : IProductRepository
 
     public async Task<IEnumerable<ProductEvent>> GetAllEvents(CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
                 SELECT *
-                FROM event
+                FROM ecommerce_store.event
                 WHERE to_tsvector(name) @@ to_tsquery('ecommerce_store_product')
             ";
 
@@ -83,10 +83,10 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
-        string sql = @"SELECT * FROM product WHERE id = @Id";
+        string sql = @"SELECT * FROM ecommerce_store.product WHERE id = @Id";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);
@@ -113,11 +113,11 @@ public class ProductRepository : IProductRepository
 
     public async Task Save(Product product, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
-                INSERT INTO product (id, title, description, price, status)
+                INSERT INTO ecommerce_store.product (id, title, description, price, status)
                 VALUES (@Id, @Title, @Description, @Price, @Status)
             ";
 
@@ -135,11 +135,11 @@ public class ProductRepository : IProductRepository
 
     public async Task SaveEvent(ProductEvent ev, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
-                INSERT INTO event (id, name, owner)
+                INSERT INTO ecommerce_store.event (id, name, owner)
                 VALUES (@Id, @Name, @Owner)
             ";
 
@@ -155,10 +155,10 @@ public class ProductRepository : IProductRepository
 
     public async Task DeleteById(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
-        string sql = @"DELETE FROM product WHERE id = @Id";
+        string sql = @"DELETE FROM ecommerce_store.product WHERE id = @Id";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);
@@ -174,11 +174,11 @@ public class ProductRepository : IProductRepository
 
     public async Task Update(Product product, CancellationToken cancellationToken)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
-            UPDATE product
+            UPDATE ecommerce_store.product
             SET title = @Title, description = @Description, price = @Price, status = @Status
             WHERE id = @Id";
 
