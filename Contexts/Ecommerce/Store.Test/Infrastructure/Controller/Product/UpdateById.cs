@@ -4,8 +4,9 @@ using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Infrastructure.Controller;
+using Ecommerce.Store.Infrastructure.DataTransfer;
 
-public class DeleteById
+public class UpdateById
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 
@@ -18,18 +19,16 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenReturnsNothingFromSender_ThenReplyWithAccepted()
     {
-        var id = Product.NewID();
-
         Mock
             .Get(_sender)
             .Setup(sender => sender
                 .Send(
-                    It.IsAny<DeleteProductCommand>(),
+                    It.IsAny<UpdateProductCommand>(),
                     It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(id, CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<PartialProduct>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
@@ -42,12 +41,12 @@ public class DeleteById
             .Get(_sender)
             .Setup(sender => sender
                 .Send(
-                    It.IsAny<DeleteProductCommand>(),
+                    It.IsAny<UpdateProductCommand>(),
                     It.IsAny<CancellationToken>())).Throws<ProductNotFoundException>();
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(id, CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<PartialProduct>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 
@@ -60,12 +59,12 @@ public class DeleteById
             .Get(_sender)
             .Setup(sender => sender
                 .Send(
-                    It.IsAny<DeleteProductCommand>(),
+                    It.IsAny<UpdateProductCommand>(),
                     It.IsAny<CancellationToken>())).Throws<Exception>();
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(id, CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<PartialProduct>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

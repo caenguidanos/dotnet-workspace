@@ -5,7 +5,7 @@ using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.Repository;
 using Ecommerce.Store.Domain.ValueObject;
-using Ecommerce.Store.Infrastructure.DTO;
+using Ecommerce.Store.Infrastructure.DataTransfer;
 using Ecommerce.Store.Infrastructure.Environment;
 
 public class ProductRepository : IProductRepository
@@ -108,5 +108,27 @@ public class ProductRepository : IProductRepository
         {
             throw new ProductNotFoundException();
         }
+    }
+
+    public async Task Update(Product product, CancellationToken cancellationToken)
+    {
+        await using var conn = new NpgsqlConnection(_connectionString);
+        await conn.OpenAsync(cancellationToken);
+
+        string sql = @"
+            UPDATE product
+            SET title = @Title, description = @Description, price = @Price, status = @Status
+            WHERE id = @Id";
+
+        var parameters = new DynamicParameters();
+        parameters.Add("Id", product.Id);
+        parameters.Add("Title", product.Title);
+        parameters.Add("Description", product.Description);
+        parameters.Add("Price", product.Price);
+        parameters.Add("Status", product.Status);
+
+        var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
+
+        await conn.ExecuteAsync(command).ConfigureAwait(false);
     }
 }

@@ -17,23 +17,6 @@ public class ProductNotFoundException : Exception
     }
 }
 
-public class ProductIdInvalidException : Exception
-{
-    public ProductIdInvalidException()
-    {
-    }
-
-    public ProductIdInvalidException(string paramName)
-        : base(paramName)
-    {
-    }
-
-    public ProductIdInvalidException(string paramName, Exception inner)
-        : base(paramName, inner)
-    {
-    }
-}
-
 public class ProductTitleInvalidException : Exception
 {
     public ProductTitleInvalidException()

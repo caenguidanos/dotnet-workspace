@@ -3,7 +3,7 @@ namespace Ecommerce.Store.Infrastructure.Controller;
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Exceptions;
-using Ecommerce.Store.Infrastructure.DTO;
+using Ecommerce.Store.Infrastructure.DataTransfer;
 
 [ApiController]
 [Route("[controller]")]
@@ -73,15 +73,15 @@ public class ProductController : ControllerBase
                 Price = request.Price,
                 Status = request.Status,
             };
-            await _sender.Send(command, cancellationToken);
 
-            return Accepted();
+            var ack = await _sender.Send(command, cancellationToken);
+
+            return Accepted(ack);
         }
         catch (Exception exception)
         {
             if (exception
-                is ProductIdInvalidException
-                or ProductTitleInvalidException
+                is ProductTitleInvalidException
                 or ProductDescriptionInvalidException
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
@@ -111,6 +111,46 @@ public class ProductController : ControllerBase
             if (exception is ProductNotFoundException)
             {
                 return NotFound();
+            }
+
+            return StatusCode(StatusCodes.Status501NotImplemented);
+        }
+    }
+
+    [HttpPatch("{id:guid}")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    public async Task<IActionResult> UpdateById([FromRoute(Name = "id")] Guid Id, [FromBody] PartialProduct partialProduct, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var command = new UpdateProductCommand
+            {
+                Id = Id,
+                Title = partialProduct.Title,
+                Description = partialProduct.Description,
+                Price = partialProduct.Price,
+                Status = partialProduct.Status
+            };
+            await _sender.Send(command, cancellationToken);
+
+            return Accepted();
+        }
+        catch (Exception exception)
+        {
+            if (exception is ProductNotFoundException)
+            {
+                return NotFound();
+            }
+
+            if (exception
+                is ProductTitleInvalidException
+                or ProductDescriptionInvalidException
+                or ProductPriceInvalidException
+                or ProductStatusInvalidException)
+            {
+                return BadRequest();
             }
 
             return StatusCode(StatusCodes.Status501NotImplemented);

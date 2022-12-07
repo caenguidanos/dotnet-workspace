@@ -3,7 +3,7 @@ namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Infrastructure.Controller;
-using Ecommerce.Store.Infrastructure.DTO;
+using Ecommerce.Store.Infrastructure.DataTransfer;
 
 public class Create
 {
@@ -16,7 +16,7 @@ public class Create
     }
 
     [Test]
-    public async Task GivenRequestCommand_WhenReturnsProductIdFromSender_ThenReplyOK()
+    public async Task GivenRequestCommand_WhenReturnsProductAckFromSender_ThenReplyAccepted()
     {
         var newProduct = Mock.Of<NewProduct>();
 
@@ -25,30 +25,15 @@ public class Create
             .Setup(sender => sender
                 .Send(
                     It.IsAny<CreateProductCommand>(),
-                    It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
+                    It.IsAny<CancellationToken>())).ReturnsAsync(new ProductAck { Id = Guid.NewGuid() });
 
         var controller = new ProductController(_sender);
 
         var actionResult = await controller.Create(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
-    }
 
-    [Test]
-    public async Task GivenRequestCommand_WhenThrowsProductIdInvalidExceptionFromSender_ThenReplyBadRequest()
-    {
-        var newProduct = Mock.Of<NewProduct>();
-
-        Mock
-            .Get(_sender)
-            .Setup(sender => sender
-                .Send(
-                    It.IsAny<CreateProductCommand>(),
-                    It.IsAny<CancellationToken>())).Throws<ProductIdInvalidException>();
-
-        var controller = new ProductController(_sender);
-
-        var actionResult = await controller.Create(newProduct, CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+        var actionResultObject = (AcceptedResult)actionResult;
+        Assert.That(actionResultObject.Value, Is.TypeOf<ProductAck>());
     }
 
     [Test]

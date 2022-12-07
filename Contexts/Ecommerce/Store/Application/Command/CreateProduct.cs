@@ -1,8 +1,9 @@
 namespace Ecommerce.Store.Application.Command;
 
 using Ecommerce.Store.Domain.Service;
+using Ecommerce.Store.Infrastructure.DataTransfer;
 
-public class CreateProductCommand : IRequest<Unit>
+public class CreateProductCommand : IRequest<ProductAck>
 {
     public required int Price { get; set; }
     public required string Title { get; set; }
@@ -10,7 +11,7 @@ public class CreateProductCommand : IRequest<Unit>
     public required int Status { get; set; }
 }
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, Unit>
+public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductAck>
 {
     private readonly IProductService productService;
 
@@ -19,15 +20,15 @@ public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand,
         this.productService = productService;
     }
 
-    public async Task<Unit> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<ProductAck> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        await productService.AddNewProduct(
+        var createdProductId = await productService.AddNewProduct(
             request.Title,
             request.Description,
             request.Status,
             request.Price,
             cancellationToken);
 
-        return Unit.Value;
+        return new ProductAck { Id = createdProductId };
     }
 }
