@@ -1,22 +1,27 @@
+using Common;
 using Ecommerce.Store;
-using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddApplicationInsightsTelemetry();
-builder.Services.AddControllers();
+
+builder.Services
+    .AddControllers()
+    .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.AllowTrailingCommas = true;
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
-builder.Services.Configure<JsonOptions>(options =>
-{
-    options.SerializerOptions.AllowTrailingCommas = true;
-    options.SerializerOptions.PropertyNamingPolicy = null;
-});
 
-builder.Services.AddEcommerceStoreContext();
+builder.Services.AddCommonModule();
+builder.Services.AddEcommerceStoreModule();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -24,7 +29,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.MapControllers();
+
 app.MapHealthChecks("/Healthz");
+
 app.UseCors();
+
 app.Run();
