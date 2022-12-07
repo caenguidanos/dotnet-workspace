@@ -24,20 +24,24 @@ public class ProductRepository : IProductRepository
 
         var command = new CommandDefinition("SELECT * FROM product", cancellationToken: cancellationToken);
 
-        var result = await conn.QueryAsync<ProductAsPrimitives>(command).ConfigureAwait(false);
+        var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
         if (result is null)
         {
             return Enumerable.Empty<Product>();
         }
 
-        Func<ProductAsPrimitives, Product> productsSelector = product =>
+        Func<ProductPrimitives, Product> productsSelector = p =>
         {
-            return new Product(
-                new ProductId(product.Id),
-                new ProductTitle(product.Title),
-                new ProductDescription(product.Description),
-                new ProductStatus((ProductStatusValue)product.Status),
-                new ProductPrice(product.Price));
+            var product = new Product(
+                new ProductId(p.Id),
+                new ProductTitle(p.Title),
+                new ProductDescription(p.Description),
+                new ProductStatus((ProductStatusValue)p.Status),
+                new ProductPrice(p.Price));
+
+            product.WithTimeStamp(p.updated_at, p.created_at);
+
+            return product;
         };
 
         return result.Select(productsSelector);
@@ -55,18 +59,22 @@ public class ProductRepository : IProductRepository
 
         var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-        var result = await conn.QueryFirstOrDefaultAsync<ProductAsPrimitives>(command).ConfigureAwait(false);
+        var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command).ConfigureAwait(false);
         if (result is null)
         {
             throw new ProductNotFoundException();
         }
 
-        return new Product(
+        var product = new Product(
             new ProductId(result.Id),
             new ProductTitle(result.Title),
             new ProductDescription(result.Description),
             new ProductStatus((ProductStatusValue)result.Status),
             new ProductPrice(result.Price));
+
+        product.WithTimeStamp(result.updated_at, result.created_at);
+
+        return product;
     }
 
     public async Task Save(Product product, CancellationToken cancellationToken)

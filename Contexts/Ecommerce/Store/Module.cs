@@ -10,6 +10,8 @@ public static class EcommerceStoreModule
 {
     public static IServiceCollection AddEcommerceStoreContext(this IServiceCollection services)
     {
+        DefaultTypeMap.MatchNamesWithUnderscores = true;
+
         services.AddMediatR(typeof(EcommerceStoreModule).Assembly);
 
         services.AddSingleton<ConfigurationSettings>();

@@ -1,4 +1,5 @@
 using Ecommerce.Store;
+using Microsoft.AspNetCore.Http.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.SerializerOptions.AllowTrailingCommas = true;
+    options.SerializerOptions.PropertyNamingPolicy = null;
+});
 
 builder.Services.AddEcommerceStoreContext();
 

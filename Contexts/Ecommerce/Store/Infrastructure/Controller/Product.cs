@@ -133,6 +133,7 @@ public class ProductController : ControllerBase
                 Price = partialProduct.Price,
                 Status = partialProduct.Status
             };
+
             await _sender.Send(command, cancellationToken);
 
             return Accepted();
@@ -152,6 +153,8 @@ public class ProductController : ControllerBase
             {
                 return BadRequest();
             }
+
+
 
             return StatusCode(StatusCodes.Status501NotImplemented);
         }

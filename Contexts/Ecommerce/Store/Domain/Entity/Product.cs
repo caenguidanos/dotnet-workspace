@@ -1,30 +1,31 @@
 namespace Ecommerce.Store.Domain.Entity;
 
+using Common.Domain.Entity;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.ValueObject;
 
-public class Product
+public class Product : TimeStamp
 {
-    private readonly ProductId id;
-    private readonly ProductTitle title;
-    private readonly ProductDescription description;
-    private readonly ProductStatus status;
-    private readonly ProductPrice price;
+    private readonly ProductId _id;
+    private readonly ProductTitle _title;
+    private readonly ProductDescription _description;
+    private readonly ProductStatus _status;
+    private readonly ProductPrice _price;
 
     public Product(ProductId id, ProductTitle title, ProductDescription description, ProductStatus status, ProductPrice price)
     {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.status = status;
-        this.price = price;
+        _id = id;
+        _title = title;
+        _description = description;
+        _status = status;
+        _price = price;
     }
 
     public Guid Id
     {
         get
         {
-            return id.GetValue();
+            return _id.GetValue();
         }
     }
 
@@ -32,7 +33,7 @@ public class Product
     {
         get
         {
-            return price.GetValue();
+            return _price.GetValue();
         }
     }
 
@@ -40,7 +41,7 @@ public class Product
     {
         get
         {
-            return title.GetValue();
+            return _title.GetValue();
         }
     }
 
@@ -48,7 +49,7 @@ public class Product
     {
         get
         {
-            return description.GetValue();
+            return _description.GetValue();
         }
     }
 
@@ -56,7 +57,7 @@ public class Product
     {
         get
         {
-            return status.GetValue();
+            return _status.GetValue();
         }
     }
 
