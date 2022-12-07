@@ -4,7 +4,7 @@ using Common.Domain.Entity;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.ValueObject;
 
-public class Product : Schema
+public class Product : Entity
 {
     private readonly ProductId _id;
     private readonly ProductTitle _title;
@@ -58,6 +58,44 @@ public class Product : Schema
         get
         {
             return _status.GetValue();
+        }
+    }
+}
+
+public class ProductEvent : Entity
+{
+    private readonly ProductEventId _id;
+    private readonly ProductId _product;
+    private readonly ProductEventName _name;
+
+    public ProductEvent(ProductEventId id, ProductId product, ProductEventName name)
+    {
+        _id = id;
+        _product = product;
+        _name = name;
+    }
+
+    public Guid Id
+    {
+        get
+        {
+            return _id.GetValue();
+        }
+    }
+
+    public Guid Product
+    {
+        get
+        {
+            return _product.GetValue();
+        }
+    }
+
+    public string Name
+    {
+        get
+        {
+            return _name.GetValue();
         }
     }
 }

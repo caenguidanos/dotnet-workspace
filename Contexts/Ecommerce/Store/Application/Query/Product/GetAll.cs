@@ -7,11 +7,11 @@ public class GetProductsQuery : IRequest<IEnumerable<Product>>
 {
 }
 
-public class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, IEnumerable<Product>>
+public class GetProductsHandler : IRequestHandler<GetProductsQuery, IEnumerable<Product>>
 {
     private readonly IProductRepository productRepository;
 
-    public GetProductsQueryHandler(IProductRepository productRepository)
+    public GetProductsHandler(IProductRepository productRepository)
     {
         this.productRepository = productRepository;
     }

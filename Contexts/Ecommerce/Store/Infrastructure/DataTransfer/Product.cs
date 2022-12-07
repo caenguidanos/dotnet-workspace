@@ -7,7 +7,7 @@ public class ProductAck
     public required Guid Id { get; set; }
 }
 
-public class ProductPrimitives : SchemaPrimitives
+public class ProductPrimitives : EntityPrimitives
 {
     public required Guid Id { get; set; }
     public required string Title { get; set; }
@@ -16,6 +16,12 @@ public class ProductPrimitives : SchemaPrimitives
     public required int Status { get; set; }
 }
 
+public class ProductEventPrimitives : EntityPrimitives
+{
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
+    public required Guid Owner { get; set; }
+}
 
 public class ProductPrimitivesForCreateOperation
 {

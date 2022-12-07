@@ -11,11 +11,11 @@ public class CreateProductCommand : IRequest<ProductAck>
     public required int Status { get; set; }
 }
 
-public class CreateProductCommandHandler : IRequestHandler<CreateProductCommand, ProductAck>
+public class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductAck>
 {
     private readonly IProductService productService;
 
-    public CreateProductCommandHandler(IProductService productService)
+    public CreateProductHandler(IProductService productService)
     {
         this.productService = productService;
     }

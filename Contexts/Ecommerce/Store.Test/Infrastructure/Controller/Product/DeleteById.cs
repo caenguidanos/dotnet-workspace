@@ -17,7 +17,7 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenReturnsNothingFromSender_ThenReplyWithAccepted()
     {
-        var id = Common.Domain.Entity.Schema.NewID();
+        var id = Common.Domain.Entity.Entity.NewID();
 
         Mock
             .Get(_sender)
@@ -35,7 +35,7 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductNotFoundExceptionFromSender_ThenReplyWithNotFound()
     {
-        var id = Common.Domain.Entity.Schema.NewID();
+        var id = Common.Domain.Entity.Entity.NewID();
 
         Mock
             .Get(_sender)
@@ -53,7 +53,7 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
-        var id = Common.Domain.Entity.Schema.NewID();
+        var id = Common.Domain.Entity.Entity.NewID();
 
         Mock
             .Get(_sender)

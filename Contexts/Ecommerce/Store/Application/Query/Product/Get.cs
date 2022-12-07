@@ -8,11 +8,11 @@ public class GetProductQuery : IRequest<Product>
     public required Guid Id { get; set; }
 }
 
-public class GetProductQueryHandler : IRequestHandler<GetProductQuery, Product>
+public class GetProductHandler : IRequestHandler<GetProductQuery, Product>
 {
     private readonly IProductRepository productRepository;
 
-    public GetProductQueryHandler(IProductRepository productRepository)
+    public GetProductHandler(IProductRepository productRepository)
     {
         this.productRepository = productRepository;
     }

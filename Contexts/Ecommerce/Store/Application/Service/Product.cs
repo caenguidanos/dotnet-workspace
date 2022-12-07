@@ -1,7 +1,7 @@
 namespace Ecommerce.Store.Application.Service;
 
+using Ecommerce.Store.Application.Event;
 using Ecommerce.Store.Domain.Entity;
-using Ecommerce.Store.Domain.Notification;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.Repository;
 using Ecommerce.Store.Domain.Service;
@@ -21,7 +21,7 @@ public class ProductService : IProductService
 
     public async Task<Guid> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
-        var newId = Common.Domain.Entity.Schema.NewID();
+        var newId = Common.Domain.Entity.Entity.NewID();
 
         var newProduct = new Product(
             new ProductId(newId),
@@ -32,7 +32,7 @@ public class ProductService : IProductService
 
         await _productRepository.Save(newProduct, cancellationToken);
 
-        await _publisher.Publish(new ProductCreatedNotification { Id = newId }, cancellationToken);
+        await _publisher.Publish(new ProductCreatedEvent { Product = newId }, cancellationToken);
 
         return newProduct.Id;
     }
@@ -41,7 +41,7 @@ public class ProductService : IProductService
     {
         await _productRepository.DeleteById(id, cancellationToken);
 
-        await _publisher.Publish(new ProductRemovedNotification { Id = id }, cancellationToken);
+        await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
     }
 
     public async Task UpdateProductById(Guid id, ProductPrimitivesForUpdateOperation product, CancellationToken cancellationToken)
@@ -62,6 +62,6 @@ public class ProductService : IProductService
 
         await _productRepository.Update(existingProductWithUpdates, cancellationToken);
 
-        await _publisher.Publish(new ProductUpdatedNotification { Id = id }, cancellationToken);
+        await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
     }
 }

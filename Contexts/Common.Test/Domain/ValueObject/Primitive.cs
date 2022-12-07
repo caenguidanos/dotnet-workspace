@@ -33,7 +33,7 @@ public class Primitive
         {
         }
 
-        public override string Validate(string value)
+        protected override string Validate(string value)
         {
             int maxLength = 10;
             int minLength = 5;

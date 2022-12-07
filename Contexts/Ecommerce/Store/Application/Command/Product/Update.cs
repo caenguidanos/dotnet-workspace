@@ -12,27 +12,26 @@ public class UpdateProductCommand : IRequest<Unit>
     public int? Status { get; set; }
 }
 
-public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, Unit>
+public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Unit>
 {
     private readonly IProductService productService;
 
-    public UpdateProductCommandHandler(IProductService productService)
+    public UpdateProductHandler(IProductService productService)
     {
         this.productService = productService;
     }
 
     public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        await productService.UpdateProductById(
-            request.Id,
-            new ProductPrimitivesForUpdateOperation
-            {
-                Title = request.Title,
-                Description = request.Description,
-                Status = request.Status,
-                Price = request.Price,
-            },
-            cancellationToken);
+        var product = new ProductPrimitivesForUpdateOperation
+        {
+            Title = request.Title,
+            Description = request.Description,
+            Status = request.Status,
+            Price = request.Price,
+        };
+
+        await productService.UpdateProductById(request.Id, product, cancellationToken);
 
         return Unit.Value;
     }

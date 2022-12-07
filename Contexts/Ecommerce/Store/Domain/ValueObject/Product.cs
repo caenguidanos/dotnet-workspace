@@ -12,7 +12,7 @@ public class ProductId : ValueObject<Guid>
     {
     }
 
-    public override Guid Validate(Guid value)
+    protected override Guid Validate(Guid value)
     {
         return value;
     }
@@ -25,7 +25,7 @@ public class ProductPrice : ValueObject<int>
     {
     }
 
-    public override int Validate(int value)
+    protected override int Validate(int value)
     {
         int min = 100;
         int max = 100_000;
@@ -48,7 +48,7 @@ public class ProductDescription : ValueObject<string>
     {
     }
 
-    public override string Validate(string value)
+    protected override string Validate(string value)
     {
         int minLength = 5;
         int maxLength = 600;
@@ -69,7 +69,7 @@ public class ProductStatus : ValueObject<ProductStatusValue>
     {
     }
 
-    public override ProductStatusValue Validate(ProductStatusValue value)
+    protected override ProductStatusValue Validate(ProductStatusValue value)
     {
         if (!Enum.IsDefined(value))
         {
@@ -87,7 +87,7 @@ public class ProductTitle : ValueObject<string>
     {
     }
 
-    public override string Validate(string value)
+    protected override string Validate(string value)
     {
         int minLength = 5;
         int maxLength = 256;
@@ -95,6 +95,41 @@ public class ProductTitle : ValueObject<string>
         if (value.Length < minLength || value.Length > maxLength)
         {
             throw new ProductTitleInvalidException(value);
+        }
+
+        return value;
+    }
+}
+
+public class ProductEventId : ValueObject<Guid>
+{
+    public ProductEventId(Guid value)
+        : base(value)
+    {
+    }
+
+    protected override Guid Validate(Guid value)
+    {
+        return value;
+    }
+}
+
+public class ProductEventName : ValueObject<string>
+{
+    public ProductEventName(string value)
+        : base(value)
+    {
+    }
+
+    protected override string Validate(string value)
+    {
+        string preffix = "ecommerce_store_product";
+
+        var locale = new CultureInfo("en-US");
+
+        if (!value.StartsWith(preffix, false, locale))
+        {
+            throw new ProductEventNameInvalidException(value);
         }
 
         return value;

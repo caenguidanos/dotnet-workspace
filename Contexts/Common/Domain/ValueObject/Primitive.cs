@@ -9,7 +9,7 @@ public abstract class ValueObject<TPrimitive>
         this.value = Validate(value);
     }
 
-    public abstract TPrimitive Validate(TPrimitive value);
+    protected abstract TPrimitive Validate(TPrimitive value);
 
     public TPrimitive GetValue()
     {

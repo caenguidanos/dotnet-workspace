@@ -34,6 +34,24 @@ public class ProductController : ControllerBase
         }
     }
 
+    [HttpGet("Event")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    public async Task<IActionResult> GetAllProductEvents(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var query = new GetProductsEventsQuery();
+            var result = await _sender.Send(query, cancellationToken);
+
+            return Ok(result);
+        }
+        catch (Exception)
+        {
+            return StatusCode(StatusCodes.Status501NotImplemented);
+        }
+    }
+
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -84,3 +84,20 @@ public class ProductStatusInvalidException : Exception
     {
     }
 }
+
+public class ProductEventNameInvalidException : Exception
+{
+    public ProductEventNameInvalidException()
+    {
+    }
+
+    public ProductEventNameInvalidException(string paramName)
+        : base(paramName)
+    {
+    }
+
+    public ProductEventNameInvalidException(string paramName, Exception inner)
+        : base(paramName, inner)
+    {
+    }
+}
