@@ -17,7 +17,7 @@ public class ProductPrimitives : SchemaPrimitives
 }
 
 
-public class ProductPartialPrimitivesWithoutSchema
+public class ProductPrimitivesForCreateOperation
 {
     public required string Title { get; set; }
     public required string Description { get; set; }
@@ -25,7 +25,7 @@ public class ProductPartialPrimitivesWithoutSchema
     public required int Status { get; set; }
 }
 
-public class ProductPartialOptionalPrimitivesWithoutSchema
+public class ProductPrimitivesForUpdateOperation
 {
     public string? Title { get; set; }
     public string? Description { get; set; }

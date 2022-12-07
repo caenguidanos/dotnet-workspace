@@ -27,7 +27,7 @@ public class UpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPartialOptionalPrimitivesWithoutSchema>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
@@ -43,7 +43,7 @@ public class UpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPartialOptionalPrimitivesWithoutSchema>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 
@@ -59,7 +59,7 @@ public class UpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPartialOptionalPrimitivesWithoutSchema>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -75,7 +75,7 @@ public class UpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPartialOptionalPrimitivesWithoutSchema>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -91,7 +91,7 @@ public class UpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPartialOptionalPrimitivesWithoutSchema>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -107,7 +107,7 @@ public class UpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPartialOptionalPrimitivesWithoutSchema>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -123,7 +123,7 @@ public class UpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPartialOptionalPrimitivesWithoutSchema>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

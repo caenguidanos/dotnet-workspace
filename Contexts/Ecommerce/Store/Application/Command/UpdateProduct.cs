@@ -25,7 +25,7 @@ public class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand,
     {
         await productService.UpdateProductById(
             request.Id,
-            new ProductPartialOptionalPrimitivesWithoutSchema
+            new ProductPrimitivesForUpdateOperation
             {
                 Title = request.Title,
                 Description = request.Description,

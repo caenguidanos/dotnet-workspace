@@ -44,7 +44,7 @@ public class ProductService : IProductService
         await _publisher.Publish(new ProductRemovedNotification { Id = id }, cancellationToken);
     }
 
-    public async Task UpdateProductById(Guid id, ProductPartialOptionalPrimitivesWithoutSchema product, CancellationToken cancellationToken)
+    public async Task UpdateProductById(Guid id, ProductPrimitivesForUpdateOperation product, CancellationToken cancellationToken)
     {
         var existingProduct = await _productRepository.GetById(id, cancellationToken);
 
