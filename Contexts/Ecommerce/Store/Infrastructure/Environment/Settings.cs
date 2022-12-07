@@ -1,12 +1,12 @@
 namespace Ecommerce.Store.Infrastructure.Environment;
 
-public class ConfigurationSettings
+public class EnvironmentSettings
 {
-    public ConfigurationSettings(IConfiguration configuration)
+    public EnvironmentSettings(IConfiguration configuration)
     {
         PostgresConnection = configuration["Databases:Postgres:ConnectionString:Ecommerce:Store"]
             ?? throw new InvalidDataException("Trying to get [Databases:Postgres:ConnectionString:Ecommerce:Store]");
     }
 
-    public required string PostgresConnection { get; set; }
+    public string PostgresConnection { get; private set; }
 }

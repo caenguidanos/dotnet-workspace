@@ -2,15 +2,15 @@ namespace Common.Domain.Entity;
 
 public class Schema
 {
-    public DateTime created_at { get; private set; }
-    public DateTime updated_at { get; private set; }
+    public DateTime? created_at { get; set; }
+    public DateTime? updated_at { get; set; }
 
     public static Guid NewID()
     {
         return Guid.NewGuid();
     }
 
-    public void WithTimeStamp(DateTime updatedAt, DateTime createdAt)
+    public void AddTimeStamp(DateTime updatedAt, DateTime createdAt)
     {
         updated_at = updatedAt;
         created_at = createdAt;

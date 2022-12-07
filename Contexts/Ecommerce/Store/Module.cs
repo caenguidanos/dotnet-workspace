@@ -8,13 +8,13 @@ using Ecommerce.Store.Infrastructure.Repository;
 
 public static class EcommerceStoreModule
 {
-    public static IServiceCollection AddEcommerceStoreContext(this IServiceCollection services)
+    public static IServiceCollection AddEcommerceStoreModule(this IServiceCollection services)
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         services.AddMediatR(typeof(EcommerceStoreModule).Assembly);
 
-        services.AddSingleton<ConfigurationSettings>();
+        services.AddSingleton<EnvironmentSettings>();
         services.AddSingleton<IProductService, ProductService>();
         services.AddSingleton<IProductRepository, ProductRepository>();
 

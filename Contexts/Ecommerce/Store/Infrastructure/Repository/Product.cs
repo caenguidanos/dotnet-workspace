@@ -12,9 +12,9 @@ public class ProductRepository : IProductRepository
 {
     private readonly string _connectionString;
 
-    public ProductRepository(ConfigurationSettings configuration)
+    public ProductRepository(EnvironmentSettings environment)
     {
-        _connectionString = configuration.PostgresConnection;
+        _connectionString = environment.PostgresConnection;
     }
 
     public async Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ public class ProductRepository : IProductRepository
                 new ProductStatus((ProductStatusValue)p.Status),
                 new ProductPrice(p.Price));
 
-            product.WithTimeStamp(p.updated_at, p.created_at);
+            product.AddTimeStamp(p.updated_at, p.created_at);
 
             return product;
         };
@@ -72,7 +72,7 @@ public class ProductRepository : IProductRepository
             new ProductStatus((ProductStatusValue)result.Status),
             new ProductPrice(result.Price));
 
-        product.WithTimeStamp(result.updated_at, result.created_at);
+        product.AddTimeStamp(result.updated_at, result.created_at);
 
         return product;
     }
