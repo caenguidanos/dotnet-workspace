@@ -1,7 +1,6 @@
 namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 
 using Ecommerce.Store.Application.Command;
-using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Infrastructure.Controller;
 
@@ -18,7 +17,7 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenReturnsNothingFromSender_ThenReplyWithAccepted()
     {
-        var id = Product.NewID();
+        var id = Common.Domain.Entity.Schema.NewID();
 
         Mock
             .Get(_sender)
@@ -36,7 +35,7 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductNotFoundExceptionFromSender_ThenReplyWithNotFound()
     {
-        var id = Product.NewID();
+        var id = Common.Domain.Entity.Schema.NewID();
 
         Mock
             .Get(_sender)
@@ -54,7 +53,7 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
-        var id = Product.NewID();
+        var id = Common.Domain.Entity.Schema.NewID();
 
         Mock
             .Get(_sender)

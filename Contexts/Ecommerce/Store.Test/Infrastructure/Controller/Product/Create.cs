@@ -18,7 +18,7 @@ public class Create
     [Test]
     public async Task GivenRequestCommand_WhenReturnsProductAckFromSender_ThenReplyAccepted()
     {
-        var newProduct = Mock.Of<NewProduct>();
+        var newProduct = Mock.Of<ProductPartialPrimitivesWithoutSchema>();
 
         Mock
             .Get(_sender)
@@ -39,7 +39,7 @@ public class Create
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductTitleInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<NewProduct>();
+        var newProduct = Mock.Of<ProductPartialPrimitivesWithoutSchema>();
 
         Mock
             .Get(_sender)
@@ -57,7 +57,7 @@ public class Create
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductDescriptionInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<NewProduct>();
+        var newProduct = Mock.Of<ProductPartialPrimitivesWithoutSchema>();
 
         Mock
             .Get(_sender)
@@ -75,7 +75,7 @@ public class Create
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductPriceInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<NewProduct>();
+        var newProduct = Mock.Of<ProductPartialPrimitivesWithoutSchema>();
 
         Mock
             .Get(_sender)
@@ -93,7 +93,7 @@ public class Create
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductStatusInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<NewProduct>();
+        var newProduct = Mock.Of<ProductPartialPrimitivesWithoutSchema>();
 
         Mock
             .Get(_sender)
@@ -111,7 +111,7 @@ public class Create
     [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyNotImplemented()
     {
-        var newProduct = Mock.Of<NewProduct>();
+        var newProduct = Mock.Of<ProductPartialPrimitivesWithoutSchema>();
 
         Mock
             .Get(_sender)

@@ -4,7 +4,7 @@ using Common.Domain.Entity;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.ValueObject;
 
-public class Product : TimeStamp
+public class Product : Schema
 {
     private readonly ProductId _id;
     private readonly ProductTitle _title;
@@ -59,10 +59,5 @@ public class Product : TimeStamp
         {
             return _status.GetValue();
         }
-    }
-
-    public static Guid NewID()
-    {
-        return Guid.NewGuid();
     }
 }

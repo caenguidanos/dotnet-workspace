@@ -21,7 +21,7 @@ public class ProductService : IProductService
 
     public async Task<Guid> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
-        var newId = Product.NewID();
+        var newId = Common.Domain.Entity.Schema.NewID();
 
         var newProduct = new Product(
             new ProductId(newId),
@@ -44,14 +44,14 @@ public class ProductService : IProductService
         await _publisher.Publish(new ProductRemovedNotification { Id = id }, cancellationToken);
     }
 
-    public async Task UpdateProductById(Guid id, PartialProduct partialProduct, CancellationToken cancellationToken)
+    public async Task UpdateProductById(Guid id, ProductPartialOptionalPrimitivesWithoutSchema product, CancellationToken cancellationToken)
     {
         var existingProduct = await _productRepository.GetById(id, cancellationToken);
 
-        string newProductTitle = partialProduct.Title ?? existingProduct.Title;
-        string newProductDescription = partialProduct.Description ?? existingProduct.Description;
-        int newProductStatus = partialProduct.Status ?? (int)existingProduct.Status;
-        int newProductPrice = partialProduct.Price ?? existingProduct.Price;
+        string newProductTitle = product.Title ?? existingProduct.Title;
+        string newProductDescription = product.Description ?? existingProduct.Description;
+        int newProductStatus = product.Status ?? (int)existingProduct.Status;
+        int newProductPrice = product.Price ?? existingProduct.Price;
 
         var existingProductWithUpdates = new Product(
             new ProductId(id),
