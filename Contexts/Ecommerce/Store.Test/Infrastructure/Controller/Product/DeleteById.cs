@@ -17,8 +17,6 @@ public class DeleteById
     [Test]
     public async Task GivenRequestCommand_WhenReturnsNothingFromSender_ThenReplyWithAccepted()
     {
-        var id = Common.Domain.Entity.Entity.NewID();
-
         Mock
             .Get(_sender)
             .Setup(sender => sender
@@ -28,15 +26,13 @@ public class DeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(id, CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Entity.Entity.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductNotFoundExceptionFromSender_ThenReplyWithNotFound()
     {
-        var id = Common.Domain.Entity.Entity.NewID();
-
         Mock
             .Get(_sender)
             .Setup(sender => sender
@@ -46,15 +42,13 @@ public class DeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(id, CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Entity.Entity.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 
     [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
-        var id = Common.Domain.Entity.Entity.NewID();
-
         Mock
             .Get(_sender)
             .Setup(sender => sender
@@ -64,7 +58,7 @@ public class DeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(id, CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Entity.Entity.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

@@ -25,7 +25,7 @@ public class Create
             .Setup(sender => sender
                 .Send(
                     It.IsAny<CreateProductCommand>(),
-                    It.IsAny<CancellationToken>())).ReturnsAsync(new ProductAck { Id = Guid.NewGuid() });
+                    It.IsAny<CancellationToken>())).ReturnsAsync(new ProductAck { Id = Common.Domain.Entity.Entity.NewID() });
 
         var controller = new ProductController(_sender);
 
