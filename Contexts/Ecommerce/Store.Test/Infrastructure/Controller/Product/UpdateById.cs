@@ -1,7 +1,6 @@
 namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
 
 using Ecommerce.Store.Application.Command;
-using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Infrastructure.Controller;
 using Ecommerce.Store.Infrastructure.DataTransfer;
@@ -35,8 +34,6 @@ public class UpdateById
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductNotFoundExceptionFromSender_ThenReplyWithNotFound()
     {
-        var id = Product.NewID();
-
         Mock
             .Get(_sender)
             .Setup(sender => sender
@@ -51,10 +48,72 @@ public class UpdateById
     }
 
     [Test]
+    public async Task GivenRequestCommand_WhenThrowsProductTitleInvalidExceptionFromSender_ThenReplyWithBadRequest()
+    {
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<UpdateProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductTitleInvalidException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<PartialProduct>(), CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+    }
+
+    [Test]
+    public async Task GivenRequestCommand_WhenThrowsProductDescriptionInvalidExceptionFromSender_ThenReplyWithBadRequest()
+    {
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<UpdateProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductDescriptionInvalidException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<PartialProduct>(), CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+    }
+
+    [Test]
+    public async Task GivenRequestCommand_WhenThrowsProductPriceInvalidExceptionFromSender_ThenReplyWithBadRequest()
+    {
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<UpdateProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductPriceInvalidException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<PartialProduct>(), CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+    }
+
+    [Test]
+    public async Task GivenRequestCommand_WhenThrowsProductStatusInvalidExceptionFromSender_ThenReplyWithBadRequest()
+    {
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<UpdateProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductStatusInvalidException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.UpdateById(Guid.NewGuid(), Mock.Of<PartialProduct>(), CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
+    }
+
+    [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
-        var id = Product.NewID();
-
         Mock
             .Get(_sender)
             .Setup(sender => sender
