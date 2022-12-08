@@ -1,13 +1,13 @@
 namespace Ecommerce.Store.Infrastructure.DataTransfer;
 
-using Common.Domain.Entity;
+using Common.Domain;
 
 public class ProductAck
 {
     public required Guid Id { get; set; }
 }
 
-public class ProductPrimitives : EntityPrimitives
+public class ProductPrimitives : SchemaPrimitives
 {
     public required Guid Id { get; set; }
     public required string Title { get; set; }
@@ -16,7 +16,7 @@ public class ProductPrimitives : EntityPrimitives
     public required int Status { get; set; }
 }
 
-public class ProductEventPrimitives : EntityPrimitives
+public class ProductEventPrimitives : SchemaPrimitives
 {
     public required Guid Id { get; set; }
     public required string Name { get; set; }

@@ -1,6 +1,6 @@
-namespace Common.Domain.Entity;
+namespace Common.Domain;
 
-public class Entity
+public class Schema
 {
     public DateTime? created_at { get; set; }
     public DateTime? updated_at { get; set; }
@@ -17,7 +17,7 @@ public class Entity
     }
 }
 
-public class EntityPrimitives
+public class SchemaPrimitives
 {
     public DateTime created_at { get; set; }
     public DateTime updated_at { get; set; }

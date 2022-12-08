@@ -17,7 +17,7 @@ public class ProductRepository : IProductRepository
         _db = dbContext;
     }
 
-    public async Task<IEnumerable<Product>> GetAll(CancellationToken cancellationToken)
+    public async Task<IEnumerable<Product>> Get(CancellationToken cancellationToken)
     {
         await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
@@ -47,7 +47,7 @@ public class ProductRepository : IProductRepository
         return result.Select(productsSelector);
     }
 
-    public async Task<IEnumerable<ProductEvent>> GetAllEvents(CancellationToken cancellationToken)
+    public async Task<IEnumerable<ProductEvent>> GetEvents(CancellationToken cancellationToken)
     {
         await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
@@ -153,7 +153,7 @@ public class ProductRepository : IProductRepository
         await conn.ExecuteAsync(command).ConfigureAwait(false);
     }
 
-    public async Task DeleteById(Guid id, CancellationToken cancellationToken)
+    public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
         await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);

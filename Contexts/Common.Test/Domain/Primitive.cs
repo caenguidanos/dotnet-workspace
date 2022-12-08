@@ -1,6 +1,6 @@
-namespace Common.Test.Domain.ValueObject;
+namespace Common.Test.Domain;
 
-using Common.Domain.ValueObject;
+using Common.Domain;
 
 public class Primitive
 {
@@ -26,7 +26,7 @@ public class Primitive
         Assert.That(primitive.GetValue(), Is.EqualTo("123499"));
     }
 
-    private sealed class StringPrimitiveWithValidation : ValueObject<string>
+    private sealed class StringPrimitiveWithValidation : Primitive<string>
     {
         public StringPrimitiveWithValidation(string value)
             : base(value)

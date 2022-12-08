@@ -39,14 +39,14 @@ public class DbSeed
         var products = new List<Product>
         {
             new Product(
-                new ProductId(Common.Domain.Entity.Entity.NewID()),
+                new ProductId(Product.NewID()),
                 new ProductTitle("Title 1"),
                 new ProductDescription("Description 1"),
                 new ProductStatus(ProductStatusValue.Draft),
                 new ProductPrice(200)
             ),
             new Product(
-                new ProductId(Common.Domain.Entity.Entity.NewID()),
+                new ProductId(Product.NewID()),
                 new ProductTitle("Title 2"),
                 new ProductDescription("Description 2"),
                 new ProductStatus(ProductStatusValue.Draft),
@@ -71,7 +71,7 @@ public class DbSeed
             {
                 string sql = "INSERT INTO ecommerce_store.event (id, name, owner) VALUES (@Id, @Name, @Owner)";
                 var parameters = new DynamicParameters();
-                parameters.Add("Id", Common.Domain.Entity.Entity.NewID());
+                parameters.Add("Id", Product.NewID());
                 parameters.Add("Name", "ecommerce_store_product_created");
                 parameters.Add("Owner", product.Id);
                 var command = new CommandDefinition(sql, parameters);

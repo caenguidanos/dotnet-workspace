@@ -1,4 +1,4 @@
-namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
+namespace Ecommerce.Store.Test.Infrastructure.Controller;
 
 using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Entity;
@@ -7,7 +7,7 @@ using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.ValueObject;
 using Ecommerce.Store.Infrastructure.Controller;
 
-public class GetById
+public class ProductGetById
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 
@@ -21,7 +21,7 @@ public class GetById
     public async Task GivenRequestQuery_WhenReturnsProductFromSender_ThenReplyWithProduct()
     {
         var product = new Product(
-            new ProductId(Common.Domain.Entity.Entity.NewID()),
+            new ProductId(Product.NewID()),
             new ProductTitle("Title 1"),
             new ProductDescription("Description 1"),
             new ProductStatus(ProductStatusValue.Draft),
@@ -55,7 +55,7 @@ public class GetById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetById(Common.Domain.Entity.Entity.NewID(), CancellationToken.None);
+        var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;
@@ -74,7 +74,7 @@ public class GetById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetById(Common.Domain.Entity.Entity.NewID(), CancellationToken.None);
+        var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 }

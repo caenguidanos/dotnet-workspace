@@ -1,11 +1,11 @@
 namespace Ecommerce.Store.Domain.ValueObject;
 
-using Common.Domain.ValueObject;
+using Common.Domain;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Domain.Model;
 using System.Globalization;
 
-public class ProductId : ValueObject<Guid>
+public class ProductId : Primitive<Guid>
 {
     public ProductId(Guid value)
         : base(value)
@@ -18,7 +18,7 @@ public class ProductId : ValueObject<Guid>
     }
 }
 
-public class ProductPrice : ValueObject<int>
+public class ProductPrice : Primitive<int>
 {
     public ProductPrice(int value)
         : base(value)
@@ -41,7 +41,7 @@ public class ProductPrice : ValueObject<int>
     }
 }
 
-public class ProductDescription : ValueObject<string>
+public class ProductDescription : Primitive<string>
 {
     public ProductDescription(string value)
         : base(value)
@@ -62,7 +62,7 @@ public class ProductDescription : ValueObject<string>
     }
 }
 
-public class ProductStatus : ValueObject<ProductStatusValue>
+public class ProductStatus : Primitive<ProductStatusValue>
 {
     public ProductStatus(ProductStatusValue value)
         : base(value)
@@ -80,7 +80,7 @@ public class ProductStatus : ValueObject<ProductStatusValue>
     }
 }
 
-public class ProductTitle : ValueObject<string>
+public class ProductTitle : Primitive<string>
 {
     public ProductTitle(string value)
         : base(value)
@@ -101,7 +101,7 @@ public class ProductTitle : ValueObject<string>
     }
 }
 
-public class ProductEventId : ValueObject<Guid>
+public class ProductEventId : Primitive<Guid>
 {
     public ProductEventId(Guid value)
         : base(value)
@@ -114,7 +114,7 @@ public class ProductEventId : ValueObject<Guid>
     }
 }
 
-public class ProductEventName : ValueObject<string>
+public class ProductEventName : Primitive<string>
 {
     public ProductEventName(string value)
         : base(value)

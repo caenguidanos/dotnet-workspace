@@ -18,7 +18,7 @@ public class GetProductsEventsHandler : IRequestHandler<GetProductsEventsQuery, 
 
     public async Task<IEnumerable<ProductEvent>> Handle(GetProductsEventsQuery request, CancellationToken cancellationToken)
     {
-        var productsEvents = await productRepository.GetAllEvents(cancellationToken);
+        var productsEvents = await productRepository.GetEvents(cancellationToken);
 
         return productsEvents;
     }

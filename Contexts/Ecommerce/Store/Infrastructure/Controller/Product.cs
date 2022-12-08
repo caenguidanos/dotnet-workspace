@@ -19,7 +19,7 @@ public class ProductController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(CancellationToken cancellationToken)
     {
         try
         {
@@ -37,7 +37,7 @@ public class ProductController : ControllerBase
     [HttpGet("Event")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> GetAllProductEvents(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetEvents(CancellationToken cancellationToken)
     {
         try
         {

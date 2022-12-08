@@ -1,10 +1,10 @@
 namespace Ecommerce.Store.Domain.Entity;
 
-using Common.Domain.Entity;
+using Common.Domain;
 using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.ValueObject;
 
-public class Product : Entity
+public class Product : Schema
 {
     private readonly ProductId _id;
     private readonly ProductTitle _title;
@@ -62,7 +62,7 @@ public class Product : Entity
     }
 }
 
-public class ProductEvent : Entity
+public class ProductEvent : Schema
 {
     private readonly ProductEventId _id;
     private readonly ProductId _product;

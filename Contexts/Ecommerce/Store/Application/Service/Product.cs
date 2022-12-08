@@ -21,7 +21,7 @@ public class ProductService : IProductService
 
     public async Task<Guid> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
-        var newId = Common.Domain.Entity.Entity.NewID();
+        var newId = Product.NewID();
 
         var newProduct = new Product(
             new ProductId(newId),
@@ -39,7 +39,7 @@ public class ProductService : IProductService
 
     public async Task DeleteProductById(Guid id, CancellationToken cancellationToken)
     {
-        await _productRepository.DeleteById(id, cancellationToken);
+        await _productRepository.Delete(id, cancellationToken);
 
         await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
     }

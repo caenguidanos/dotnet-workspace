@@ -1,4 +1,4 @@
-namespace Ecommerce.Store.Test.Infrastructure.Controller.Product;
+namespace Ecommerce.Store.Test.Infrastructure.Controller;
 
 using Ecommerce.Store.Application.Query;
 using Ecommerce.Store.Domain.Entity;
@@ -6,7 +6,7 @@ using Ecommerce.Store.Domain.Model;
 using Ecommerce.Store.Domain.ValueObject;
 using Ecommerce.Store.Infrastructure.Controller;
 
-public class GetAll
+public class ProductGetAll
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 
@@ -22,14 +22,14 @@ public class GetAll
         var products = new List<Product>
         {
             new Product(
-                    new ProductId(Common.Domain.Entity.Entity.NewID()),
+                    new ProductId(Product.NewID()),
                     new ProductTitle("Title 1"),
                     new ProductDescription("Description 1"),
                     new ProductStatus(ProductStatusValue.Draft),
                     new ProductPrice(100)),
 
             new Product(
-                    new ProductId(Common.Domain.Entity.Entity.NewID()),
+                    new ProductId(Product.NewID()),
                     new ProductTitle("Title 2"),
                     new ProductDescription("Description 2"),
                     new ProductStatus(ProductStatusValue.Published),
@@ -45,7 +45,7 @@ public class GetAll
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetAll(CancellationToken.None);
+        var actionResult = await controller.Get(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
 
         var actionResultObject = (OkObjectResult)actionResult;
@@ -69,7 +69,7 @@ public class GetAll
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetAll(CancellationToken.None);
+        var actionResult = await controller.Get(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
 
         var actionResultObject = (OkObjectResult)actionResult;
@@ -93,7 +93,7 @@ public class GetAll
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetAll(CancellationToken.None);
+        var actionResult = await controller.Get(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;
