@@ -10,3 +10,6 @@ infra-dev:
 
 webapi-dev:
 	dotnet watch --project ./Apps/MySaaS/Backend/Api/Api.csproj
+
+test:
+	dotnet test
