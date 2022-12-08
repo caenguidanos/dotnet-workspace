@@ -19,28 +19,22 @@ public class DbSeed
 
         conn.Open();
 
-        EmptyProductTable(conn);
-        EmptyEventTable(conn);
-        InsertProductTable(conn);
+        TruncateTable(conn, "product");
+        TruncateTable(conn, "event");
+
+        InsertProducts(conn);
 
         conn.Close();
     }
 
-    private static void EmptyProductTable(NpgsqlConnection conn)
+    private static void TruncateTable(NpgsqlConnection conn, string name)
     {
-        string sql = "TRUNCATE ecommerce_store.product";
+        string sql = $"TRUNCATE ecommerce_store.{name}";
         var command = new CommandDefinition(sql);
         conn.Execute(command);
     }
 
-    private static void EmptyEventTable(NpgsqlConnection conn)
-    {
-        string sql = "TRUNCATE ecommerce_store.event";
-        var command = new CommandDefinition(sql);
-        conn.Execute(command);
-    }
-
-    private static void InsertProductTable(NpgsqlConnection conn)
+    private static void InsertProducts(NpgsqlConnection conn)
     {
         var products = new List<Product>
         {
