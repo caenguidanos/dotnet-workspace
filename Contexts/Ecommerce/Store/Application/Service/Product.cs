@@ -37,14 +37,14 @@ public class ProductService : IProductService
         return newProduct.Id;
     }
 
-    public async Task DeleteProductById(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteProduct(Guid id, CancellationToken cancellationToken)
     {
         await _productRepository.Delete(id, cancellationToken);
 
         await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
     }
 
-    public async Task UpdateProductById(Guid id, ProductPrimitivesForUpdateOperation product, CancellationToken cancellationToken)
+    public async Task UpdateProduct(Guid id, ProductPrimitivesForUpdateOperation product, CancellationToken cancellationToken)
     {
         var existingProduct = await _productRepository.GetById(id, cancellationToken);
 

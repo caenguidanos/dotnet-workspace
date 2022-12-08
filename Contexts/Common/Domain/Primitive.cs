@@ -1,17 +1,17 @@
 namespace Common.Domain;
 
-public abstract class Primitive<K>
+public abstract class Primitive<TValue>
 {
-    private readonly K value;
+    private readonly TValue value;
 
-    public Primitive(K value)
+    public Primitive(TValue value)
     {
         this.value = Validate(value);
     }
 
-    protected abstract K Validate(K value);
+    protected abstract TValue Validate(TValue value);
 
-    public K GetValue()
+    public TValue GetValue()
     {
         return value;
     }

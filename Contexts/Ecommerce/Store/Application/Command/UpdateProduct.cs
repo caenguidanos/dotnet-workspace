@@ -31,7 +31,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Unit>
             Price = request.Price,
         };
 
-        await productService.UpdateProductById(request.Id, product, cancellationToken);
+        await productService.UpdateProduct(request.Id, product, cancellationToken);
 
         return Unit.Value;
     }
