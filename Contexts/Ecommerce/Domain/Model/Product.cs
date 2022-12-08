@@ -2,6 +2,6 @@ namespace Ecommerce.Domain.Model;
 
 public enum ProductStatusValue
 {
-    Draft,
+    Closed,
     Published,
 }

@@ -29,7 +29,7 @@ public class ProductGetById
             new ProductId(Common.Domain.Schema.NewID()),
             new ProductTitle("Title 1"),
             new ProductDescription("Description 1"),
-            new ProductStatus(ProductStatusValue.Draft),
+            new ProductStatus(ProductStatusValue.Closed),
             new ProductPrice(100));
 
         Mock

@@ -18,12 +18,9 @@ public class DbSeed
         using var conn = _dbContext.CreateConnection();
 
         conn.Open();
-
         TruncateTable(conn, "product");
         TruncateTable(conn, "event");
-
         InsertProducts(conn);
-
         conn.Close();
     }
 
@@ -40,17 +37,24 @@ public class DbSeed
         {
             new Product(
                 new ProductId(Common.Domain.Schema.NewID()),
-                new ProductTitle("Title 1"),
-                new ProductDescription("Description 1"),
-                new ProductStatus(ProductStatusValue.Draft),
-                new ProductPrice(200)
+                new ProductTitle("American Professional II Stratocaster"),
+                new ProductDescription("Great guitar"),
+                new ProductStatus(ProductStatusValue.Published),
+                new ProductPrice(2_199 * 100)
             ),
             new Product(
                 new ProductId(Common.Domain.Schema.NewID()),
-                new ProductTitle("Title 2"),
-                new ProductDescription("Description 2"),
-                new ProductStatus(ProductStatusValue.Draft),
-                new ProductPrice(700)
+                new ProductTitle("Mustang Shelby GT500"),
+                new ProductDescription("Great car"),
+                new ProductStatus(ProductStatusValue.Published),
+                new ProductPrice(79_000 * 100)
+            ),
+            new Product(
+                new ProductId(Common.Domain.Schema.NewID()),
+                new ProductTitle("Antelope Orion +32"),
+                new ProductDescription("Great audio interface"),
+                new ProductStatus(ProductStatusValue.Published),
+                new ProductPrice(3_000 * 100)
             ),
         };
 

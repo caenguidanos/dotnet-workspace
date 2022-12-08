@@ -28,7 +28,7 @@ public class ProductPrice : Primitive<int>
     protected override int Validate(int value)
     {
         int min = 100;
-        int max = 100_000;
+        int max = 1_000_000 * 100;
 
         if (value < min || value > max)
         {
