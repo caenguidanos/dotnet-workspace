@@ -5,10 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-using global::Ecommerce.Application.Command;
-using global::Ecommerce.Domain.Entity;
-using global::Ecommerce.Domain.Exceptions;
-using global::Ecommerce.Infrastructure.Controller;
+using Ecommerce.Application.Command;
+using Ecommerce.Domain.Exceptions;
+using Ecommerce.Infrastructure.Controller;
 
 public class ProductDeleteById
 {
@@ -32,7 +31,7 @@ public class ProductDeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
@@ -48,7 +47,7 @@ public class ProductDeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 
@@ -64,7 +63,7 @@ public class ProductDeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

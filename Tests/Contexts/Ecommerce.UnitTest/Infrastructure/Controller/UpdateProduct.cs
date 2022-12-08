@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-using global::Ecommerce.Application.Command;
-using global::Ecommerce.Domain.Exceptions;
-using global::Ecommerce.Infrastructure.Controller;
-using global::Ecommerce.Infrastructure.DataTransfer;
-using global::Ecommerce.Domain.Entity;
+using Ecommerce.Application.Command;
+using Ecommerce.Domain.Exceptions;
+using Ecommerce.Infrastructure.Controller;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public class ProductUpdateById
 {
@@ -33,7 +32,7 @@ public class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Product.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Common.Domain.Schema.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
@@ -49,7 +48,7 @@ public class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Product.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Common.Domain.Schema.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 
@@ -65,7 +64,7 @@ public class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Product.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Common.Domain.Schema.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -81,7 +80,7 @@ public class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Product.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Common.Domain.Schema.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -97,7 +96,7 @@ public class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Product.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Common.Domain.Schema.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -113,7 +112,7 @@ public class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Product.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Common.Domain.Schema.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -129,7 +128,7 @@ public class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateById(Product.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
+        var actionResult = await controller.UpdateById(Common.Domain.Schema.NewID(), Mock.Of<ProductPrimitivesForUpdateOperation>(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

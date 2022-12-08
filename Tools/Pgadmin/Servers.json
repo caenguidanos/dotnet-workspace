@@ -2,8 +2,8 @@
   "Servers": {
     "1": {
       "Group": "Servers",
-      "Name": "Local DB",
-      "Host": "postgres",
+      "Name": "Ecommerce",
+      "Host": "postgres-ecommerce",
       "Port": 5432,
       "Username": "root",
       "SSLMode": "prefer",

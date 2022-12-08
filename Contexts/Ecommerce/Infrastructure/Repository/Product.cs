@@ -22,7 +22,7 @@ public class ProductRepository : IProductRepository
         await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
-        var command = new CommandDefinition("SELECT * FROM ecommerce.product", cancellationToken: cancellationToken);
+        var command = new CommandDefinition("SELECT * FROM public.product", cancellationToken: cancellationToken);
 
         var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
         if (result is null)
@@ -54,8 +54,8 @@ public class ProductRepository : IProductRepository
 
         string sql = @"
                 SELECT *
-                FROM ecommerce.event
-                WHERE to_tsvector(name) @@ to_tsquery('ecommerce_store_product')
+                FROM public.event
+                WHERE to_tsvector(name) @@ to_tsquery('ecommerce_product')
             ";
 
         var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
@@ -86,7 +86,7 @@ public class ProductRepository : IProductRepository
         await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
-        string sql = @"SELECT * FROM ecommerce.product WHERE id = @Id";
+        string sql = @"SELECT * FROM public.product WHERE id = @Id";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);
@@ -117,7 +117,7 @@ public class ProductRepository : IProductRepository
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
-                INSERT INTO ecommerce.product (id, title, description, price, status)
+                INSERT INTO public.product (id, title, description, price, status)
                 VALUES (@Id, @Title, @Description, @Price, @Status)
             ";
 
@@ -139,7 +139,7 @@ public class ProductRepository : IProductRepository
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
-                INSERT INTO ecommerce.event (id, name, owner)
+                INSERT INTO public.event (id, name, owner)
                 VALUES (@Id, @Name, @Owner)
             ";
 
@@ -158,7 +158,7 @@ public class ProductRepository : IProductRepository
         await using var conn = _db.CreateConnection();
         await conn.OpenAsync(cancellationToken);
 
-        string sql = @"DELETE FROM ecommerce.product WHERE id = @Id";
+        string sql = @"DELETE FROM public.product WHERE id = @Id";
 
         var parameters = new DynamicParameters();
         parameters.Add("Id", id);
@@ -178,7 +178,7 @@ public class ProductRepository : IProductRepository
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
-            UPDATE ecommerce.product
+            UPDATE public.product
             SET title = @Title, description = @Description, price = @Price, status = @Status
             WHERE id = @Id";
 

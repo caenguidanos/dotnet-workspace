@@ -29,7 +29,7 @@ public class DbSeed
 
     private static void TruncateTable(NpgsqlConnection conn, string name)
     {
-        string sql = $"TRUNCATE ecommerce.{name}";
+        string sql = $"TRUNCATE public.{name}";
         var command = new CommandDefinition(sql);
         conn.Execute(command);
     }
@@ -39,14 +39,14 @@ public class DbSeed
         var products = new List<Product>
         {
             new Product(
-                new ProductId(Product.NewID()),
+                new ProductId(Common.Domain.Schema.NewID()),
                 new ProductTitle("Title 1"),
                 new ProductDescription("Description 1"),
                 new ProductStatus(ProductStatusValue.Draft),
                 new ProductPrice(200)
             ),
             new Product(
-                new ProductId(Product.NewID()),
+                new ProductId(Common.Domain.Schema.NewID()),
                 new ProductTitle("Title 2"),
                 new ProductDescription("Description 2"),
                 new ProductStatus(ProductStatusValue.Draft),
@@ -57,7 +57,7 @@ public class DbSeed
         products.ForEach(product =>
         {
             {
-                string sql = "INSERT INTO ecommerce.product (id, title, description, price, status) VALUES (@Id, @Title, @Description, @Price, @Status)";
+                string sql = "INSERT INTO public.product (id, title, description, price, status) VALUES (@Id, @Title, @Description, @Price, @Status)";
                 var parameters = new DynamicParameters();
                 parameters.Add("Id", product.Id);
                 parameters.Add("Title", product.Title);
@@ -69,10 +69,10 @@ public class DbSeed
             }
 
             {
-                string sql = "INSERT INTO ecommerce.event (id, name, owner) VALUES (@Id, @Name, @Owner)";
+                string sql = "INSERT INTO public.event (id, name, owner) VALUES (@Id, @Name, @Owner)";
                 var parameters = new DynamicParameters();
-                parameters.Add("Id", Product.NewID());
-                parameters.Add("Name", "ecommerce_store_product_created");
+                parameters.Add("Id", Common.Domain.Schema.NewID());
+                parameters.Add("Name", "ecommerce_product_created");
                 parameters.Add("Owner", product.Id);
                 var command = new CommandDefinition(sql, parameters);
                 conn.Execute(command);

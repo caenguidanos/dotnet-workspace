@@ -123,7 +123,7 @@ public class ProductEventName : Primitive<string>
 
     protected override string Validate(string value)
     {
-        string preffix = "ecommerce_store_product";
+        string preffix = "ecommerce_product";
 
         var locale = new CultureInfo("en-US");
 

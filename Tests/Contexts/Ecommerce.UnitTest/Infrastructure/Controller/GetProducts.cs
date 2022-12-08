@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-using global::Ecommerce.Application.Query;
-using global::Ecommerce.Domain.Entity;
-using global::Ecommerce.Domain.Model;
-using global::Ecommerce.Domain.ValueObject;
-using global::Ecommerce.Infrastructure.Controller;
+using Ecommerce.Application.Query;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Model;
+using Ecommerce.Domain.ValueObject;
+using Ecommerce.Infrastructure.Controller;
 
 public class ProductGetAll
 {
@@ -27,14 +27,14 @@ public class ProductGetAll
         var products = new List<Product>
         {
             new Product(
-                    new ProductId(Product.NewID()),
+                    new ProductId(Common.Domain.Schema.NewID()),
                     new ProductTitle("Title 1"),
                     new ProductDescription("Description 1"),
                     new ProductStatus(ProductStatusValue.Draft),
                     new ProductPrice(100)),
 
             new Product(
-                    new ProductId(Product.NewID()),
+                    new ProductId(Common.Domain.Schema.NewID()),
                     new ProductTitle("Title 2"),
                     new ProductDescription("Description 2"),
                     new ProductStatus(ProductStatusValue.Published),

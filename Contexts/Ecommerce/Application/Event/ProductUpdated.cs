@@ -20,12 +20,12 @@ public class ProductUpdatedHandler : INotificationHandler<ProductUpdatedEvent>
 
     public async Task Handle(ProductUpdatedEvent notification, CancellationToken cancellationToken)
     {
-        var newProductEventId = Product.NewID();
+        var newProductEventId = Common.Domain.Schema.NewID();
 
         var newProductEvent = new ProductEvent(
             new ProductEventId(newProductEventId),
             new ProductId(notification.Product),
-            new ProductEventName("ecommerce_store_product_updated"));
+            new ProductEventName("ecommerce_product_updated"));
 
         await _productRepository.SaveEvent(newProductEvent, cancellationToken);
     }

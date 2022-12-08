@@ -5,11 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-using global::Ecommerce.Application.Command;
-using global::Ecommerce.Domain.Entity;
-using global::Ecommerce.Domain.Exceptions;
-using global::Ecommerce.Infrastructure.Controller;
-using global::Ecommerce.Infrastructure.DataTransfer;
+using Ecommerce.Application.Command;
+using Ecommerce.Domain.Exceptions;
+using Ecommerce.Infrastructure.Controller;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public class Create
 {
@@ -31,7 +30,7 @@ public class Create
             .Setup(sender => sender
                 .Send(
                     It.IsAny<CreateProductCommand>(),
-                    It.IsAny<CancellationToken>())).ReturnsAsync(new ProductAck { Id = Product.NewID() });
+                    It.IsAny<CancellationToken>())).ReturnsAsync(new ProductAck { Id = Common.Domain.Schema.NewID() });
 
         var controller = new ProductController(_sender);
 

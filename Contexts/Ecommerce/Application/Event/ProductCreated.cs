@@ -20,12 +20,12 @@ public class ProductCreatedHandler : INotificationHandler<ProductCreatedEvent>
 
     public async Task Handle(ProductCreatedEvent notification, CancellationToken cancellationToken)
     {
-        var newProductEventId = Product.NewID();
+        var newProductEventId = Common.Domain.Schema.NewID();
 
         var newProductEvent = new ProductEvent(
             new ProductEventId(newProductEventId),
             new ProductId(notification.Product),
-            new ProductEventName("ecommerce_store_product_created"));
+            new ProductEventName("ecommerce_product_created"));
 
         await _productRepository.SaveEvent(newProductEvent, cancellationToken);
     }

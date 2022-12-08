@@ -7,21 +7,11 @@
 ## Start infra
 
 ```bash
-make infra
-```
-
-## Start api
-
-```bash
-cd Apps/MySaaS/Backend/Api
-
-make start
+make infra-dev
 ```
 
 ## Watch api
 
 ```bash
-cd Apps/MySaaS/Backend/Api
-
-make watch
+make webapi-dev
 ```

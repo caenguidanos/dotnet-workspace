@@ -5,5 +5,8 @@ check:
 	dotnet build
 	dotnet test
 
-infra:
+infra-dev:
 	docker-compose up
+
+webapi-dev:
+	dotnet watch --project ./Apps/MySaaS/Backend/Api/Api.csproj
