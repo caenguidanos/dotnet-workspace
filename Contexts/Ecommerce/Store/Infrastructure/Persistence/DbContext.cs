@@ -9,6 +9,11 @@ public class DbContext
         _connectionString = configuration.GetConnectionString("Ecommerce.Store") ?? throw new InvalidDataException("Trying to get [ConnectionStrings]");
     }
 
+    public string GetConnectionString()
+    {
+        return _connectionString;
+    }
+
     public NpgsqlConnection CreateConnection()
     {
         return new NpgsqlConnection(_connectionString);
