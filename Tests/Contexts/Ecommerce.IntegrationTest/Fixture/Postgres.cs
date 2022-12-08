@@ -1,10 +1,11 @@
 namespace Ecommerce.IntegrationTest.Fixture;
 
+using Docker.DotNet;
+using Docker.DotNet.Models;
+using Npgsql;
 using System.Data.Common;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using Docker.DotNet;
-using Docker.DotNet.Models;
 
 public class PostgresFixture
 {
@@ -59,6 +60,12 @@ public class PostgresFixture
 
         var hostConfig = new HostConfig
         {
+
+            Binds = new List<string>
+            {
+                $"{Environment.CurrentDirectory}/SQL/Definitions:/var/lib/sql/denifitions",
+                $"{Environment.CurrentDirectory}/SQL/Init.sh:/docker-entrypoint-initdb.d/init.sh"
+            },
             PortBindings = new Dictionary<string, IList<PortBinding>>
                     {
                         {
@@ -85,6 +92,20 @@ public class PostgresFixture
 
         await _docker.Containers.StartContainerAsync(
             _postgresContainerName, new ContainerStartParameters());
+
+        // wait for healthy container
+        while (true)
+        {
+            try
+            {
+                await using var conn = new NpgsqlConnection(connectionString.ToString());
+                await conn.OpenAsync();
+                break;
+            }
+            catch (Exception)
+            {
+            }
+        }
 
         return connectionString.ToString();
     }

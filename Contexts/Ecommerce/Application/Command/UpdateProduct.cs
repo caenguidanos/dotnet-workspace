@@ -1,7 +1,6 @@
 namespace Ecommerce.Application.Command;
 
 using Ecommerce.Domain.Service;
-using Ecommerce.Infrastructure.DataTransfer;
 
 public class UpdateProductCommand : IRequest<Unit>
 {
@@ -23,15 +22,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Unit>
 
     public async Task<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = new ProductPrimitivesForUpdateOperation
-        {
-            Title = request.Title,
-            Description = request.Description,
-            Status = request.Status,
-            Price = request.Price,
-        };
-
-        await productService.UpdateProduct(request.Id, product, cancellationToken);
+        await productService.UpdateProduct(request.Id, request, cancellationToken);
 
         return Unit.Value;
     }

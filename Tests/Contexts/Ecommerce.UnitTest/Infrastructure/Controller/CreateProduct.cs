@@ -23,7 +23,7 @@ public class CreateProduct
     [Test]
     public async Task GivenRequestCommand_WhenReturnsProductAckFromSender_ThenReplyAccepted()
     {
-        var newProduct = Mock.Of<ProductPrimitivesForCreateOperation>();
+        var newProduct = Mock.Of<CreateProductHttpRequestBody>();
 
         Mock
             .Get(_sender)
@@ -44,7 +44,7 @@ public class CreateProduct
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductTitleInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<ProductPrimitivesForCreateOperation>();
+        var newProduct = Mock.Of<CreateProductHttpRequestBody>();
 
         Mock
             .Get(_sender)
@@ -62,7 +62,7 @@ public class CreateProduct
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductDescriptionInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<ProductPrimitivesForCreateOperation>();
+        var newProduct = Mock.Of<CreateProductHttpRequestBody>();
 
         Mock
             .Get(_sender)
@@ -80,7 +80,7 @@ public class CreateProduct
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductPriceInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<ProductPrimitivesForCreateOperation>();
+        var newProduct = Mock.Of<CreateProductHttpRequestBody>();
 
         Mock
             .Get(_sender)
@@ -98,7 +98,7 @@ public class CreateProduct
     [Test]
     public async Task GivenRequestCommand_WhenThrowsProductStatusInvalidExceptionFromSender_ThenReplyBadRequest()
     {
-        var newProduct = Mock.Of<ProductPrimitivesForCreateOperation>();
+        var newProduct = Mock.Of<CreateProductHttpRequestBody>();
 
         Mock
             .Get(_sender)
@@ -116,7 +116,7 @@ public class CreateProduct
     [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyNotImplemented()
     {
-        var newProduct = Mock.Of<ProductPrimitivesForCreateOperation>();
+        var newProduct = Mock.Of<CreateProductHttpRequestBody>();
 
         Mock
             .Get(_sender)

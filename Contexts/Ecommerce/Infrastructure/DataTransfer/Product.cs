@@ -16,7 +16,7 @@ public class ProductPrimitives : SchemaPrimitives
     public required int Status { get; set; }
 }
 
-public class ProductPrimitivesForCreateOperation
+public class CreateProductHttpRequestBody
 {
     public required string Title { get; set; }
     public required string Description { get; set; }
@@ -24,7 +24,7 @@ public class ProductPrimitivesForCreateOperation
     public required int Status { get; set; }
 }
 
-public class ProductPrimitivesForUpdateOperation
+public class UpdateProductHttpRequestBody
 {
     public string? Title { get; set; }
     public string? Description { get; set; }

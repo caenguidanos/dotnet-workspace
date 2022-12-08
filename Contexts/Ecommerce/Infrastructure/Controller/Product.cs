@@ -62,7 +62,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> CreateProduct([FromBody] ProductPrimitivesForCreateOperation body, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         try
         {
@@ -121,7 +121,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid Id, [FromBody] ProductPrimitivesForUpdateOperation body, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid Id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         try
         {

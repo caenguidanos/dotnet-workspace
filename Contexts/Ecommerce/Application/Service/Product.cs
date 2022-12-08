@@ -1,12 +1,12 @@
 namespace Ecommerce.Application.Service;
 
+using Ecommerce.Application.Command;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
 using Ecommerce.Domain.ValueObject;
-using Ecommerce.Infrastructure.DataTransfer;
 
 public class ProductService : IProductService
 {
@@ -44,14 +44,14 @@ public class ProductService : IProductService
         await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
     }
 
-    public async Task UpdateProduct(Guid id, ProductPrimitivesForUpdateOperation product, CancellationToken cancellationToken)
+    public async Task UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
     {
         var existingProduct = await _productRepository.GetById(id, cancellationToken);
 
-        string newProductTitle = product.Title ?? existingProduct.Title;
-        string newProductDescription = product.Description ?? existingProduct.Description;
-        int newProductStatus = product.Status ?? (int)existingProduct.Status;
-        int newProductPrice = product.Price ?? existingProduct.Price;
+        string newProductTitle = command.Title ?? existingProduct.Title;
+        string newProductDescription = command.Description ?? existingProduct.Description;
+        int newProductStatus = command.Status ?? (int)existingProduct.Status;
+        int newProductPrice = command.Price ?? existingProduct.Price;
 
         var existingProductWithUpdates = new Product(
             new ProductId(id),

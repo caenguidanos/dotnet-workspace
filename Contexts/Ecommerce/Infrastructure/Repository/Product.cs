@@ -10,9 +10,9 @@ using Ecommerce.Infrastructure.Persistence;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly DbContext _dbContext;
+    private readonly IDbContext _dbContext;
 
-    public ProductRepository(DbContext dbContext)
+    public ProductRepository(IDbContext dbContext)
     {
         _dbContext = dbContext;
     }
