@@ -1,10 +1,10 @@
-namespace Contexts.Ecommerce;
+namespace Ecommerce;
 
-using Contexts.Ecommerce.Application.Service;
-using Contexts.Ecommerce.Domain.Repository;
-using Contexts.Ecommerce.Domain.Service;
-using Contexts.Ecommerce.Infrastructure.Persistence;
-using Contexts.Ecommerce.Infrastructure.Repository;
+using Ecommerce.Application.Service;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.Service;
+using Ecommerce.Infrastructure.Persistence;
+using Ecommerce.Infrastructure.Repository;
 
 public static class Module
 {

@@ -1,9 +1,9 @@
-namespace Contexts.Ecommerce.Infrastructure.Controller;
+namespace Ecommerce.Infrastructure.Controller;
 
-using Contexts.Ecommerce.Application.Command;
-using Contexts.Ecommerce.Application.Query;
-using Contexts.Ecommerce.Domain.Exceptions;
-using Contexts.Ecommerce.Infrastructure.DataTransfer;
+using Ecommerce.Application.Command;
+using Ecommerce.Application.Query;
+using Ecommerce.Domain.Exceptions;
+using Ecommerce.Infrastructure.DataTransfer;
 
 [ApiController]
 [Route("[controller]")]

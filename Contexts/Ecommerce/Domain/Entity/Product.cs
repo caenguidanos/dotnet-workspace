@@ -1,8 +1,8 @@
-namespace Contexts.Ecommerce.Domain.Entity;
+namespace Ecommerce.Domain.Entity;
 
-using Contexts.Common.Domain;
-using Contexts.Ecommerce.Domain.Model;
-using Contexts.Ecommerce.Domain.ValueObject;
+using Common.Domain;
+using Ecommerce.Domain.Model;
+using Ecommerce.Domain.ValueObject;
 
 public class Product : Schema
 {

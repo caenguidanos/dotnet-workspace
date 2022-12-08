@@ -1,6 +1,6 @@
-namespace Contexts.Ecommerce.Infrastructure.DataTransfer;
+namespace Ecommerce.Infrastructure.DataTransfer;
 
-using Contexts.Common.Domain;
+using Common.Domain;
 
 public class ProductAck
 {

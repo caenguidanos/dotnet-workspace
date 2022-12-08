@@ -1,16 +1,16 @@
-namespace Tests.Contexts.Ecommerce.Unit.Infrastructure.Controller;
+namespace Ecommerce.UnitTest.Infrastructure.Controller;
 
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-using global::Contexts.Ecommerce.Application.Query;
-using global::Contexts.Ecommerce.Domain.Entity;
-using global::Contexts.Ecommerce.Domain.Exceptions;
-using global::Contexts.Ecommerce.Domain.Model;
-using global::Contexts.Ecommerce.Domain.ValueObject;
-using global::Contexts.Ecommerce.Infrastructure.Controller;
+using global::Ecommerce.Application.Query;
+using global::Ecommerce.Domain.Entity;
+using global::Ecommerce.Domain.Exceptions;
+using global::Ecommerce.Domain.Model;
+using global::Ecommerce.Domain.ValueObject;
+using global::Ecommerce.Infrastructure.Controller;
 
 public class ProductGetById
 {

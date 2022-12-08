@@ -21,9 +21,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F0C55F01
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contexts", "Contexts", "{95E2E109-D167-4B18-AC80-1C26195E99AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.Unit", "Tests\Contexts\Ecommerce.Unit\Ecommerce.Unit.csproj", "{BC0A851E-C217-43CB-9021-95DA580553FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.UnitTest", "Tests\Contexts\Ecommerce.UnitTest\Ecommerce.UnitTest.csproj", "{BC0A851E-C217-43CB-9021-95DA580553FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Unit", "Tests\Contexts\Common.Unit\Common.Unit.csproj", "{887CF512-C232-4B04-8B23-3BA8D56F3D55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UnitTest", "Tests\Contexts\Common.UnitTest\Common.UnitTest.csproj", "{887CF512-C232-4B04-8B23-3BA8D56F3D55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,6 +1,6 @@
-namespace Contexts.Ecommerce.Application.Command;
+namespace Ecommerce.Application.Command;
 
-using Contexts.Ecommerce.Domain.Service;
+using Ecommerce.Domain.Service;
 
 public class DeleteProductCommand : IRequest<Unit>
 {

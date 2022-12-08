@@ -1,8 +1,8 @@
-namespace Contexts.Ecommerce.Application.Event;
+namespace Ecommerce.Application.Event;
 
-using Contexts.Ecommerce.Domain.Entity;
-using Contexts.Ecommerce.Domain.Repository;
-using Contexts.Ecommerce.Domain.ValueObject;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.ValueObject;
 
 public class ProductUpdatedEvent : INotification
 {

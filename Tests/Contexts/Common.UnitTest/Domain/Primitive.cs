@@ -1,6 +1,6 @@
-namespace Tests.Contexts.Common.Unit.Domain;
+namespace Common.UnitTest.Domain;
 
-using global::Contexts.Common.Domain;
+using global::Common.Domain;
 
 public class Primitive
 {

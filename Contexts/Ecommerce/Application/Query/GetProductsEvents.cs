@@ -1,7 +1,7 @@
-namespace Contexts.Ecommerce.Application.Query;
+namespace Ecommerce.Application.Query;
 
-using Contexts.Ecommerce.Domain.Entity;
-using Contexts.Ecommerce.Domain.Repository;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Repository;
 
 public class GetProductsEventsQuery : IRequest<IEnumerable<ProductEvent>>
 {

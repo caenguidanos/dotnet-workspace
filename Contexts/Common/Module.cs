@@ -1,4 +1,4 @@
-namespace Contexts.Common;
+namespace Common;
 
 public static class Module
 {

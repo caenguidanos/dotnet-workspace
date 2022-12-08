@@ -1,12 +1,12 @@
-namespace Contexts.Ecommerce.Application.Service;
+namespace Ecommerce.Application.Service;
 
-using Contexts.Ecommerce.Application.Event;
-using Contexts.Ecommerce.Domain.Entity;
-using Contexts.Ecommerce.Domain.Model;
-using Contexts.Ecommerce.Domain.Repository;
-using Contexts.Ecommerce.Domain.Service;
-using Contexts.Ecommerce.Domain.ValueObject;
-using Contexts.Ecommerce.Infrastructure.DataTransfer;
+using Ecommerce.Application.Event;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Model;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.Service;
+using Ecommerce.Domain.ValueObject;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public class ProductService : IProductService
 {

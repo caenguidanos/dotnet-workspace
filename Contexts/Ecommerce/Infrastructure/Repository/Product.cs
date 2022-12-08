@@ -1,12 +1,12 @@
-namespace Contexts.Ecommerce.Infrastructure.Repository;
+namespace Ecommerce.Infrastructure.Repository;
 
-using Contexts.Ecommerce.Domain.Entity;
-using Contexts.Ecommerce.Domain.Exceptions;
-using Contexts.Ecommerce.Domain.Model;
-using Contexts.Ecommerce.Domain.Repository;
-using Contexts.Ecommerce.Domain.ValueObject;
-using Contexts.Ecommerce.Infrastructure.DataTransfer;
-using Contexts.Ecommerce.Infrastructure.Persistence;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Exceptions;
+using Ecommerce.Domain.Model;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.ValueObject;
+using Ecommerce.Infrastructure.DataTransfer;
+using Ecommerce.Infrastructure.Persistence;
 
 public class ProductRepository : IProductRepository
 {

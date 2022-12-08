@@ -1,5 +1,5 @@
-namespace Contexts.Ecommerce.Domain.Aggregate;
+namespace Ecommerce.Domain.Aggregate;
 
-using Contexts.Common.Domain;
+using Common.Domain;
 
 public class ProductCart : AggregateRoot { }

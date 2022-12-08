@@ -1,4 +1,4 @@
-namespace Contexts.Common.Domain;
+namespace Common.Domain;
 
 public abstract class Primitive<TValue>
 {

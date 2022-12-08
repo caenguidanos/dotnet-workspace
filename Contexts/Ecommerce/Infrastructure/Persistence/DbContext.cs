@@ -1,4 +1,4 @@
-namespace Contexts.Ecommerce.Infrastructure.Persistence;
+namespace Ecommerce.Infrastructure.Persistence;
 
 public class DbContext
 {
@@ -6,7 +6,7 @@ public class DbContext
 
     public DbContext(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("Contexts.Ecommerce") ?? throw new InvalidDataException("Trying to get [ConnectionStrings]");
+        _connectionString = configuration.GetConnectionString("Ecommerce") ?? throw new InvalidDataException("Trying to get [ConnectionStrings]");
     }
 
     public string GetConnectionString()

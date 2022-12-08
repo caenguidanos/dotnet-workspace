@@ -1,8 +1,8 @@
-namespace Contexts.Ecommerce.Infrastructure.Persistence;
+namespace Ecommerce.Infrastructure.Persistence;
 
-using Contexts.Ecommerce.Domain.Entity;
-using Contexts.Ecommerce.Domain.Model;
-using Contexts.Ecommerce.Domain.ValueObject;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Model;
+using Ecommerce.Domain.ValueObject;
 
 public class DbSeed
 {

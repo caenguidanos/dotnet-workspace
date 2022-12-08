@@ -1,6 +1,6 @@
-namespace Contexts.Ecommerce.Domain.Repository;
+namespace Ecommerce.Domain.Repository;
 
-using Contexts.Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Entity;
 
 public interface IProductRepository
 {

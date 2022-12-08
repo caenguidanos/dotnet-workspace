@@ -1,6 +1,6 @@
-namespace Contexts.Ecommerce.Domain.Service;
+namespace Ecommerce.Domain.Service;
 
-using Contexts.Ecommerce.Infrastructure.DataTransfer;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public interface IProductService
 {

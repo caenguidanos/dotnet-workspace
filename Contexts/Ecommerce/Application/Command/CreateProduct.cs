@@ -1,7 +1,7 @@
-namespace Contexts.Ecommerce.Application.Command;
+namespace Ecommerce.Application.Command;
 
-using Contexts.Ecommerce.Domain.Service;
-using Contexts.Ecommerce.Infrastructure.DataTransfer;
+using Ecommerce.Domain.Service;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public class CreateProductCommand : IRequest<ProductAck>
 {
