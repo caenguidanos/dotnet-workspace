@@ -1,40 +1,28 @@
 namespace Ecommerce.IntegrationTest.Fixture;
 
 using System.Data.Common;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 
 public class PostgresFixture
 {
-    private DockerClient _docker;
+    private readonly DockerClient _docker;
 
-    public string PostgresImageName { get; } = "postgres:15-alpine";
-    public string PostgresContainerName { get; } = $"postgres-{Guid.NewGuid()}";
+    private readonly string _postgresImageName = "postgres:15-alpine";
+    private readonly string _postgresContainerName = $"postgres-{Guid.NewGuid()}";
 
     public PostgresFixture()
     {
-        Uri dockerDaemonUri;
+        var dockerDaemonUri = new Uri("npipe://./pipe/docker_engine");
 
-        var isPlatformOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        var isPlatformLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-        var isPlatformWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        bool isPlatformOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        bool isPlatformLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
-        if (isPlatformWindows)
-        {
-            dockerDaemonUri = new Uri("npipe://./pipe/docker_engine");
-        }
-        else if (isPlatformLinux)
+        if (isPlatformLinux || isPlatformOSX)
         {
             dockerDaemonUri = new Uri("unix:///var/run/docker.sock");
-        }
-        else if (isPlatformOSX)
-        {
-            dockerDaemonUri = new Uri("unix:///var/run/docker.sock");
-        }
-        else
-        {
-            throw new NotSupportedException($"Unsupported OS [{RuntimeInformation.OSDescription}]");
         }
 
         _docker = new DockerClientConfiguration(dockerDaemonUri).CreateClient();
@@ -49,19 +37,25 @@ public class PostgresFixture
 
     public async Task<string> StartServerAsync(int port, string database)
     {
-        var environment = new List<string>();
-        environment.Add("POSTGRES_USER=root");
-        environment.Add("POSTGRES_PASSWORD=root");
-        environment.Add($"POSTGRES_DB={database}");
+        var environment = new List<string>
+        {
+            "POSTGRES_USER=root",
+            "POSTGRES_PASSWORD=root",
+            $"POSTGRES_DB={database}"
+        };
 
-        var connectionString = new DbConnectionStringBuilder();
-        connectionString.Add("User ID", "root");
-        connectionString.Add("Password", "root");
-        connectionString.Add("Server", "localhost");
-        connectionString.Add("Port", port);
-        connectionString.Add("Database", database);
-        connectionString.Add("Integrated Security", true);
-        connectionString.Add("Pooling", true);
+        var connectionString = new DbConnectionStringBuilder()
+        {
+            { "User ID", "root" },
+            { "Password", "root" },
+            { "Server", "localhost" },
+            { "Port", port },
+            { "Database", database },
+            { "Integrated Security", true },
+            { "Pooling", true }
+        };
+
+        var locale = new CultureInfo("en-US");
 
         var hostConfig = new HostConfig
         {
@@ -72,25 +66,25 @@ public class PostgresFixture
                             new List<PortBinding>
                             {
                                 new PortBinding{
-                                    HostPort = port.ToString()
+                                    HostPort = port.ToString(locale)
                                 }
                             }
                         }
                     }
         };
 
-        var container = await _docker.Containers.CreateContainerAsync(
+        await _docker.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
-                Image = PostgresImageName,
-                Name = PostgresContainerName,
+                Image = _postgresImageName,
+                Name = _postgresContainerName,
                 HostConfig = hostConfig,
                 Env = environment
             }
         );
 
         await _docker.Containers.StartContainerAsync(
-            PostgresContainerName, new ContainerStartParameters());
+            _postgresContainerName, new ContainerStartParameters());
 
         return connectionString.ToString();
     }
@@ -104,7 +98,7 @@ public class PostgresFixture
     public async Task DisposeServerAsync()
     {
         await _docker.Containers.RemoveContainerAsync(
-            PostgresContainerName, new ContainerRemoveParameters { Force = true });
+            _postgresContainerName, new ContainerRemoveParameters { Force = true });
 
         _docker.Dispose();
     }

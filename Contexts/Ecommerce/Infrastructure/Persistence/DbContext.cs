@@ -1,6 +1,11 @@
 namespace Ecommerce.Infrastructure.Persistence;
 
-public class DbContext
+public interface IDbContext
+{
+    string GetConnectionString();
+}
+
+public class DbContext : IDbContext
 {
     private readonly string _connectionString;
 
@@ -12,10 +17,5 @@ public class DbContext
     public string GetConnectionString()
     {
         return _connectionString;
-    }
-
-    public NpgsqlConnection CreateConnection()
-    {
-        return new NpgsqlConnection(_connectionString);
     }
 }

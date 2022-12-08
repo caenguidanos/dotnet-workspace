@@ -10,16 +10,16 @@ using Ecommerce.Infrastructure.Persistence;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly DbContext _db;
+    private readonly DbContext _dbContext;
 
     public ProductRepository(DbContext dbContext)
     {
-        _db = dbContext;
+        _dbContext = dbContext;
     }
 
     public async Task<IEnumerable<Product>> Get(CancellationToken cancellationToken)
     {
-        await using var conn = _db.CreateConnection();
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
         await conn.OpenAsync(cancellationToken);
 
         var command = new CommandDefinition("SELECT * FROM public.product", cancellationToken: cancellationToken);
@@ -49,7 +49,7 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = _db.CreateConnection();
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"SELECT * FROM public.product WHERE id = @Id";
@@ -79,7 +79,7 @@ public class ProductRepository : IProductRepository
 
     public async Task Save(Product product, CancellationToken cancellationToken)
     {
-        await using var conn = _db.CreateConnection();
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"
@@ -101,7 +101,7 @@ public class ProductRepository : IProductRepository
 
     public async Task Delete(Guid id, CancellationToken cancellationToken)
     {
-        await using var conn = _db.CreateConnection();
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"DELETE FROM public.product WHERE id = @Id";
@@ -120,7 +120,7 @@ public class ProductRepository : IProductRepository
 
     public async Task Update(Product product, CancellationToken cancellationToken)
     {
-        await using var conn = _db.CreateConnection();
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
         await conn.OpenAsync(cancellationToken);
 
         string sql = @"

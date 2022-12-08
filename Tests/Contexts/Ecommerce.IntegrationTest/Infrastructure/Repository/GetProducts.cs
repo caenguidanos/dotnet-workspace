@@ -1,21 +1,27 @@
-namespace Ecommerce.IntegrationTest.Repository;
+namespace Ecommerce.IntegrationTest.Infrastructure.Repository;
 
 using Ecommerce.IntegrationTest.Fixture;
 
 public class GetProducts
 {
-    private string connectionString = string.Empty;
+    private string _connectionString = string.Empty;
+    private readonly PostgresFixture _postgresFixture;
 
-    private readonly PostgresFixture _postgresFixture = new PostgresFixture();
+    public GetProducts()
+    {
+        _postgresFixture = new PostgresFixture();
+    }
 
     [OneTimeSetUp]
-    public void Setup()
+    public void OneTimeSetUp()
     {
-        connectionString = _postgresFixture.StartServer(port: 9200, database: "ecommerce");
+        _connectionString = _postgresFixture.StartServer(
+            port: 9200,
+            database: "ecommerce");
     }
 
     [OneTimeTearDown]
-    public void Teardown()
+    public void OneTimeTearDown()
     {
         _postgresFixture.DisposeServer();
     }

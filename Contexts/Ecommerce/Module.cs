@@ -14,7 +14,7 @@ public static class Module
 
         services.AddMediatR(typeof(Module).Assembly);
 
-        services.AddSingleton<DbContext>();
+        services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IProductService, ProductService>();
         services.AddSingleton<IProductRepository, ProductRepository>();
 

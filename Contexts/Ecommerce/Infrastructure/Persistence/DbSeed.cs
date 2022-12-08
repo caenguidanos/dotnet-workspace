@@ -15,7 +15,7 @@ public class DbSeed
 
     public void Run()
     {
-        using var conn = _dbContext.CreateConnection();
+        using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
 
         conn.Open();
         TruncateTable(conn, "product");
