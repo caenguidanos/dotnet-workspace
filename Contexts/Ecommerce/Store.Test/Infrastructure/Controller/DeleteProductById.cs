@@ -1,7 +1,6 @@
 namespace Ecommerce.Store.Test.Infrastructure.Controller;
 
 using Ecommerce.Store.Application.Command;
-using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Domain.Exceptions;
 using Ecommerce.Store.Infrastructure.Controller;
 
@@ -27,7 +26,7 @@ public class ProductDeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
     }
 
@@ -43,7 +42,7 @@ public class ProductDeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 
@@ -59,7 +58,7 @@ public class ProductDeleteById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.DeleteById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

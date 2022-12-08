@@ -21,7 +21,7 @@ public class ProductService : IProductService
 
     public async Task<Guid> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
-        var newId = Product.NewID();
+        var newId = Common.Domain.Schema.NewID();
 
         var newProduct = new Product(
             new ProductId(newId),

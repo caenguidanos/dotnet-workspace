@@ -21,7 +21,7 @@ public class ProductGetById
     public async Task GivenRequestQuery_WhenReturnsProductFromSender_ThenReplyWithProduct()
     {
         var product = new Product(
-            new ProductId(Product.NewID()),
+            new ProductId(Common.Domain.Schema.NewID()),
             new ProductTitle("Title 1"),
             new ProductDescription("Description 1"),
             new ProductStatus(ProductStatusValue.Draft),
@@ -55,7 +55,7 @@ public class ProductGetById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.GetById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;
@@ -74,7 +74,7 @@ public class ProductGetById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetById(Product.NewID(), CancellationToken.None);
+        var actionResult = await controller.GetById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 }

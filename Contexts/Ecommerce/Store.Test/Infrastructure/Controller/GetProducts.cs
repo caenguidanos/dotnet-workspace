@@ -22,14 +22,14 @@ public class ProductGetAll
         var products = new List<Product>
         {
             new Product(
-                    new ProductId(Product.NewID()),
+                    new ProductId(Common.Domain.Schema.NewID()),
                     new ProductTitle("Title 1"),
                     new ProductDescription("Description 1"),
                     new ProductStatus(ProductStatusValue.Draft),
                     new ProductPrice(100)),
 
             new Product(
-                    new ProductId(Product.NewID()),
+                    new ProductId(Common.Domain.Schema.NewID()),
                     new ProductTitle("Title 2"),
                     new ProductDescription("Description 2"),
                     new ProductStatus(ProductStatusValue.Published),

@@ -2,7 +2,6 @@ namespace Ecommerce.Store.Test.Infrastructure.Controller;
 
 using Ecommerce.Store.Application.Command;
 using Ecommerce.Store.Domain.Exceptions;
-using Ecommerce.Store.Domain.Entity;
 using Ecommerce.Store.Infrastructure.Controller;
 using Ecommerce.Store.Infrastructure.DataTransfer;
 
@@ -26,7 +25,7 @@ public class Create
             .Setup(sender => sender
                 .Send(
                     It.IsAny<CreateProductCommand>(),
-                    It.IsAny<CancellationToken>())).ReturnsAsync(new ProductAck { Id = Product.NewID() });
+                    It.IsAny<CancellationToken>())).ReturnsAsync(new ProductAck { Id = Common.Domain.Schema.NewID() });
 
         var controller = new ProductController(_sender);
 

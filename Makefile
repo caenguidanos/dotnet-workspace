@@ -1,7 +1,7 @@
 check:
 	dotnet clean
 	dotnet restore
-	dotnet format analyzers
+	dotnet format
 	dotnet build
 	dotnet test
 
