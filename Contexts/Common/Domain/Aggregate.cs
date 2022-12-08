@@ -1,4 +1,4 @@
-namespace Common.Domain;
+namespace Contexts.Common.Domain;
 
 public class AggregateRoot
 {

@@ -1,6 +1,6 @@
-namespace Common;
+namespace Contexts.Common;
 
-public static class CommonModule
+public static class Module
 {
     public static IServiceCollection AddCommonModule(this IServiceCollection services)
     {

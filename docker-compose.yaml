@@ -10,7 +10,8 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./Contexts/Ecommerce/Store/Infrastructure/Persistence/DbSchema.sql:/docker-entrypoint-initdb.d/ecommerce_store.sql
+      - ./Contexts/Ecommerce/Common/Infrastructure/Persistence/DbSchema.sql:/docker-entrypoint-initdb.d/0000.sql
+      - ./Contexts/Ecommerce/Store/Infrastructure/Persistence/DbSchema.sql:/docker-entrypoint-initdb.d/0001.sql
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4:latest
