@@ -80,16 +80,16 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> Create([FromBody] ProductPrimitivesForCreateOperation request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Create([FromBody] ProductPrimitivesForCreateOperation body, CancellationToken cancellationToken)
     {
         try
         {
             var command = new CreateProductCommand
             {
-                Title = request.Title,
-                Description = request.Description,
-                Price = request.Price,
-                Status = request.Status,
+                Title = body.Title,
+                Description = body.Description,
+                Price = body.Price,
+                Status = body.Status,
             };
 
             var ack = await _sender.Send(command, cancellationToken);
@@ -139,17 +139,17 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> UpdateById([FromRoute(Name = "id")] Guid Id, [FromBody] ProductPrimitivesForUpdateOperation partialProduct, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateById([FromRoute(Name = "id")] Guid Id, [FromBody] ProductPrimitivesForUpdateOperation body, CancellationToken cancellationToken)
     {
         try
         {
             var command = new UpdateProductCommand
             {
                 Id = Id,
-                Title = partialProduct.Title,
-                Description = partialProduct.Description,
-                Price = partialProduct.Price,
-                Status = partialProduct.Status
+                Title = body.Title,
+                Description = body.Description,
+                Price = body.Price,
+                Status = body.Status
             };
 
             await _sender.Send(command, cancellationToken);
