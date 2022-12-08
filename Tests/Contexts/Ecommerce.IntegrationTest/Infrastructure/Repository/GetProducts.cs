@@ -11,13 +11,13 @@ public class GetProducts
     [OneTimeSetUp]
     public void Setup()
     {
-        connectionString = _postgresFixture.Start(port: 9200, database: "ecommerce");
+        connectionString = _postgresFixture.StartServer(port: 9200, database: "ecommerce");
     }
 
     [OneTimeTearDown]
     public void Teardown()
     {
-        _postgresFixture.Dispose();
+        _postgresFixture.DisposeServer();
     }
 
     [Test]

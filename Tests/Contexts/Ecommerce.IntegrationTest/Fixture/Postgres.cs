@@ -40,14 +40,14 @@ public class PostgresFixture
         _docker = new DockerClientConfiguration(dockerDaemonUri).CreateClient();
     }
 
-    public string Start(int port, string database)
+    public string StartServer(int port, string database)
     {
-        var task = StartAsync(port, database);
+        var task = StartServerAsync(port, database);
         task.Wait();
         return task.Result;
     }
 
-    public async Task<string> StartAsync(int port, string database)
+    public async Task<string> StartServerAsync(int port, string database)
     {
         var environment = new List<string>();
         environment.Add("POSTGRES_USER=root");
@@ -95,13 +95,13 @@ public class PostgresFixture
         return connectionString.ToString();
     }
 
-    public void Dispose()
+    public void DisposeServer()
     {
-        var task = DisposeAsync();
+        var task = DisposeServerAsync();
         task.Wait();
     }
 
-    public async Task DisposeAsync()
+    public async Task DisposeServerAsync()
     {
         await _docker.Containers.RemoveContainerAsync(
             PostgresContainerName, new ContainerRemoveParameters { Force = true });
