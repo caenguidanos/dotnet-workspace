@@ -71,16 +71,6 @@ public class DbSeed
                 var command = new CommandDefinition(sql, parameters);
                 conn.Execute(command);
             }
-
-            {
-                string sql = "INSERT INTO public.event (id, name, owner) VALUES (@Id, @Name, @Owner)";
-                var parameters = new DynamicParameters();
-                parameters.Add("Id", Common.Domain.Schema.NewID());
-                parameters.Add("Name", "ecommerce_product_created");
-                parameters.Add("Owner", product.Id);
-                var command = new CommandDefinition(sql, parameters);
-                conn.Execute(command);
-            }
         });
     }
 }

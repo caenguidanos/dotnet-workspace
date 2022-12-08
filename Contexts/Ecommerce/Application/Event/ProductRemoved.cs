@@ -1,9 +1,5 @@
 namespace Ecommerce.Application.Event;
 
-using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Repository;
-using Ecommerce.Domain.ValueObject;
-
 public class ProductRemovedEvent : INotification
 {
     public Guid Product { get; set; }
@@ -11,22 +7,11 @@ public class ProductRemovedEvent : INotification
 
 public class ProductRemovedHandler : INotificationHandler<ProductRemovedEvent>
 {
-    private readonly IProductRepository _productRepository;
-
-    public ProductRemovedHandler(IProductRepository productRepository)
+    public Task Handle(ProductRemovedEvent notification, CancellationToken cancellationToken)
     {
-        _productRepository = productRepository;
-    }
+        // do stuff...
+        Console.WriteLine("ecommerce_product_removed");
 
-    public async Task Handle(ProductRemovedEvent notification, CancellationToken cancellationToken)
-    {
-        var newProductEventId = Common.Domain.Schema.NewID();
-
-        var newProductEvent = new ProductEvent(
-            new ProductEventId(newProductEventId),
-            new ProductId(notification.Product),
-            new ProductEventName("ecommerce_product_removed"));
-
-        await _productRepository.SaveEvent(newProductEvent, cancellationToken);
+        return Task.CompletedTask;
     }
 }

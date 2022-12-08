@@ -16,13 +16,6 @@ public class ProductPrimitives : SchemaPrimitives
     public required int Status { get; set; }
 }
 
-public class ProductEventPrimitives : SchemaPrimitives
-{
-    public required Guid Id { get; set; }
-    public required string Name { get; set; }
-    public required Guid Owner { get; set; }
-}
-
 public class ProductPrimitivesForCreateOperation
 {
     public required string Title { get; set; }

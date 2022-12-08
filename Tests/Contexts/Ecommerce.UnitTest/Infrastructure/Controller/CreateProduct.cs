@@ -10,7 +10,7 @@ using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Controller;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public class Create
+public class CreateProduct
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 
@@ -34,7 +34,7 @@ public class Create
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Create(newProduct, CancellationToken.None);
+        var actionResult = await controller.CreateProduct(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
 
         var actionResultObject = (AcceptedResult)actionResult;
@@ -55,7 +55,7 @@ public class Create
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Create(newProduct, CancellationToken.None);
+        var actionResult = await controller.CreateProduct(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -73,7 +73,7 @@ public class Create
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Create(newProduct, CancellationToken.None);
+        var actionResult = await controller.CreateProduct(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -91,7 +91,7 @@ public class Create
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Create(newProduct, CancellationToken.None);
+        var actionResult = await controller.CreateProduct(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -109,7 +109,7 @@ public class Create
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Create(newProduct, CancellationToken.None);
+        var actionResult = await controller.CreateProduct(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<BadRequestResult>());
     }
 
@@ -127,7 +127,7 @@ public class Create
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Create(newProduct, CancellationToken.None);
+        var actionResult = await controller.CreateProduct(newProduct, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

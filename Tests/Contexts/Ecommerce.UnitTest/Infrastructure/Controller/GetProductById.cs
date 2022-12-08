@@ -41,7 +41,7 @@ public class ProductGetById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetById(product.Id, CancellationToken.None);
+        var actionResult = await controller.GetProductById(product.Id, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
 
         var actionResultObject = (OkObjectResult)actionResult;
@@ -60,7 +60,7 @@ public class ProductGetById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetById(Common.Domain.Schema.NewID(), CancellationToken.None);
+        var actionResult = await controller.GetProductById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;
@@ -79,7 +79,7 @@ public class ProductGetById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.GetById(Common.Domain.Schema.NewID(), CancellationToken.None);
+        var actionResult = await controller.GetProductById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
 }

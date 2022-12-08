@@ -19,7 +19,7 @@ public class ProductController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> Get(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
     {
         try
         {
@@ -34,29 +34,11 @@ public class ProductController : ControllerBase
         }
     }
 
-    [HttpGet("Event")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> GetEvents(CancellationToken cancellationToken)
-    {
-        try
-        {
-            var query = new GetProductsEventsQuery();
-            var result = await _sender.Send(query, cancellationToken);
-
-            return Ok(result);
-        }
-        catch (Exception)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented);
-        }
-    }
-
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> GetById([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProductById([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
     {
         try
         {
@@ -80,7 +62,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> Create([FromBody] ProductPrimitivesForCreateOperation body, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProduct([FromBody] ProductPrimitivesForCreateOperation body, CancellationToken cancellationToken)
     {
         try
         {
@@ -115,7 +97,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> DeleteById([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteProduct([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
     {
         try
         {
@@ -139,7 +121,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<IActionResult> UpdateById([FromRoute(Name = "id")] Guid Id, [FromBody] ProductPrimitivesForUpdateOperation body, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid Id, [FromBody] ProductPrimitivesForUpdateOperation body, CancellationToken cancellationToken)
     {
         try
         {

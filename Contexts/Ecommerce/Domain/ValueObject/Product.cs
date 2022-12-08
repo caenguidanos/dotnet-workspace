@@ -100,38 +100,3 @@ public class ProductTitle : Primitive<string>
         return value;
     }
 }
-
-public class ProductEventId : Primitive<Guid>
-{
-    public ProductEventId(Guid value)
-        : base(value)
-    {
-    }
-
-    protected override Guid Validate(Guid value)
-    {
-        return value;
-    }
-}
-
-public class ProductEventName : Primitive<string>
-{
-    public ProductEventName(string value)
-        : base(value)
-    {
-    }
-
-    protected override string Validate(string value)
-    {
-        string preffix = "ecommerce_product";
-
-        var locale = new CultureInfo("en-US");
-
-        if (!value.StartsWith(preffix, false, locale))
-        {
-            throw new ProductEventNameInvalidException(value);
-        }
-
-        return value;
-    }
-}

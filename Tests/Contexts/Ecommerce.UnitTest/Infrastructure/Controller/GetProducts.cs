@@ -50,7 +50,7 @@ public class ProductGetAll
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Get(CancellationToken.None);
+        var actionResult = await controller.GetProducts(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
 
         var actionResultObject = (OkObjectResult)actionResult;
@@ -74,7 +74,7 @@ public class ProductGetAll
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Get(CancellationToken.None);
+        var actionResult = await controller.GetProducts(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<OkObjectResult>());
 
         var actionResultObject = (OkObjectResult)actionResult;
@@ -98,7 +98,7 @@ public class ProductGetAll
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.Get(CancellationToken.None);
+        var actionResult = await controller.GetProducts(CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
 
         var actionResultObject = (StatusCodeResult)actionResult;

@@ -47,40 +47,6 @@ public class ProductRepository : IProductRepository
         return result.Select(productsSelector);
     }
 
-    public async Task<IEnumerable<ProductEvent>> GetEvents(CancellationToken cancellationToken)
-    {
-        await using var conn = _db.CreateConnection();
-        await conn.OpenAsync(cancellationToken);
-
-        string sql = @"
-                SELECT *
-                FROM public.event
-                WHERE to_tsvector(name) @@ to_tsquery('ecommerce_product')
-            ";
-
-        var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
-
-        var result = await conn.QueryAsync<ProductEventPrimitives>(command).ConfigureAwait(false);
-        if (result is null)
-        {
-            return Enumerable.Empty<ProductEvent>();
-        }
-
-        Func<ProductEventPrimitives, ProductEvent> selector = ev =>
-        {
-            var productNotification = new ProductEvent(
-                new ProductEventId(ev.Id),
-                new ProductId(ev.Owner),
-                new ProductEventName(ev.Name));
-
-            productNotification.AddTimeStamp(ev.updated_at, ev.created_at);
-
-            return productNotification;
-        };
-
-        return result.Select(selector);
-    }
-
     public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
     {
         await using var conn = _db.CreateConnection();
@@ -127,26 +93,6 @@ public class ProductRepository : IProductRepository
         parameters.Add("Description", product.Description);
         parameters.Add("Price", product.Price);
         parameters.Add("Status", product.Status);
-
-        var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
-
-        await conn.ExecuteAsync(command).ConfigureAwait(false);
-    }
-
-    public async Task SaveEvent(ProductEvent ev, CancellationToken cancellationToken)
-    {
-        await using var conn = _db.CreateConnection();
-        await conn.OpenAsync(cancellationToken);
-
-        string sql = @"
-                INSERT INTO public.event (id, name, owner)
-                VALUES (@Id, @Name, @Owner)
-            ";
-
-        var parameters = new DynamicParameters();
-        parameters.Add("Id", ev.Id);
-        parameters.Add("Name", ev.Name);
-        parameters.Add("Owner", ev.Product);
 
         var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
