@@ -1,6 +1,7 @@
 namespace Ecommerce.IntegrationTest.Infrastructure.Repository;
 
 using Dapper;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 using Moq;
@@ -53,6 +54,86 @@ public class GetProducts
         var productRepository = new ProductRepository(_dbContext);
 
         var products = await productRepository.Get(CancellationToken.None);
-        Assert.That(products.Count(), Is.EqualTo(3));
+        Assert.That(products.Count, Is.EqualTo(3));
+    }
+
+    [Test]
+    public async Task GivenCorruptedProductsOnTitleInDatabase_WhenGet_ThenThrowsException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+
+            INSERT INTO public.product (id, title, description, price, status) -- title corrupted
+            VALUES ('8ba4e56f-6b2b-49d1-9aeb-16a3a8740511', '', 'Great guitar', 219900, 1);
+        ";
+
+        await conn.ExecuteAsync(sql);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        Assert.ThrowsAsync<ProductTitleInvalidException>(async () => await productRepository.Get(CancellationToken.None));
+    }
+
+    [Test]
+    public async Task GivenCorruptedProductsOnDescriptionInDatabase_WhenGet_ThenThrowsException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+
+            INSERT INTO public.product (id, title, description, price, status) -- description corrupted
+            VALUES ('954d73fc-30d8-4aa7-bab6-2f5c090fd2dc', 'American Professional II Stratocaster', '', 219900, 1);
+        ";
+
+        await conn.ExecuteAsync(sql);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        Assert.ThrowsAsync<ProductDescriptionInvalidException>(async () => await productRepository.Get(CancellationToken.None));
+    }
+
+    [Test]
+    public async Task GivenCorruptedProductsOnPriceInDatabase_WhenGet_ThenThrowsException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+
+            INSERT INTO public.product (id, title, description, price, status) -- price corrupted
+            VALUES ('ac381bcb-1b14-497d-86e8-b64c8b6e9d01', 'American Professional II Stratocaster', 'Great guitar', 0, 1);
+        ";
+
+        await conn.ExecuteAsync(sql);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        Assert.ThrowsAsync<ProductPriceInvalidException>(async () => await productRepository.Get(CancellationToken.None));
+    }
+
+    [Test]
+    public async Task GivenCorruptedProductsOnStatusInDatabase_WhenGet_ThenThrowsException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+
+            INSERT INTO public.product (id, title, description, price, status) -- status corrupted
+            VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 3);
+        ";
+
+        await conn.ExecuteAsync(sql);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        Assert.ThrowsAsync<ProductStatusInvalidException>(async () => await productRepository.Get(CancellationToken.None));
     }
 }
