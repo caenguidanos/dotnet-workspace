@@ -5,6 +5,8 @@ using Docker.DotNet.Models;
 using Npgsql;
 using System.Data.Common;
 using System.Globalization;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
 public class PostgresFixture
@@ -36,15 +38,17 @@ public class PostgresFixture
         _docker = new DockerClientConfiguration(dockerDaemonUri).CreateClient();
     }
 
-    public string StartServer(int port)
+    public string StartServer()
     {
-        var task = StartServerAsync(port);
+        var task = StartServerAsync();
         task.Wait();
         return task.Result;
     }
 
-    public async Task<string> StartServerAsync(int port)
+    public async Task<string> StartServerAsync()
     {
+        int port = GetRandomUnusedPort();
+
         var environment = new List<string>
         {
             "POSTGRES_USER=root",
@@ -123,5 +127,16 @@ public class PostgresFixture
         await _docker.Containers.RemoveContainerAsync(_postgresContainerName, new ContainerRemoveParameters { Force = true });
 
         _docker.Dispose();
+    }
+
+    private static int GetRandomUnusedPort()
+    {
+        var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+
+        int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        listener.Stop();
+
+        return port;
     }
 }

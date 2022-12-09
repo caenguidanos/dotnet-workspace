@@ -14,7 +14,6 @@ public class DbSeed
         using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
 
         string sql = @"
-            TRUNCATE public.event;
             TRUNCATE public.product;
 
             INSERT INTO public.product (id, title, description, price, status)

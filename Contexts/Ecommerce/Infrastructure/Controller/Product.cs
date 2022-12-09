@@ -19,6 +19,7 @@ public class ProductController : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
     {
         try
@@ -28,8 +29,13 @@ public class ProductController : ControllerBase
 
             return Ok(result);
         }
-        catch (Exception)
+        catch (Exception exception)
         {
+            if (exception is ProductRepositoryPersistenceException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
@@ -38,6 +44,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> GetProductById([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
     {
         try
@@ -54,6 +61,11 @@ public class ProductController : ControllerBase
                 return NotFound();
             }
 
+            if (exception is ProductRepositoryPersistenceException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
@@ -62,6 +74,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         try
@@ -89,6 +102,11 @@ public class ProductController : ControllerBase
                 return BadRequest();
             }
 
+            if (exception is ProductRepositoryPersistenceException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
@@ -97,6 +115,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> DeleteProduct([FromRoute(Name = "id")] Guid Id, CancellationToken cancellationToken)
     {
         try
@@ -113,6 +132,11 @@ public class ProductController : ControllerBase
                 return NotFound();
             }
 
+            if (exception is ProductRepositoryPersistenceException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
+            }
+
             return StatusCode(StatusCodes.Status501NotImplemented);
         }
     }
@@ -121,6 +145,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid Id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         try
@@ -152,6 +177,11 @@ public class ProductController : ControllerBase
                 or ProductStatusInvalidException)
             {
                 return BadRequest();
+            }
+
+            if (exception is ProductRepositoryPersistenceException)
+            {
+                return StatusCode(StatusCodes.Status503ServiceUnavailable);
             }
 
             return StatusCode(StatusCodes.Status501NotImplemented);

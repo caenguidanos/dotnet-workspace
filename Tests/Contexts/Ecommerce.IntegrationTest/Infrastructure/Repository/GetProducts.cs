@@ -16,7 +16,7 @@ public class GetProducts
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        string connectionString = _postgres.StartServer(port: 9200);
+        string connectionString = _postgres.StartServer();
 
         Mock
             .Get(_dbContext)
@@ -30,7 +30,7 @@ public class GetProducts
         _postgres.DisposeServer();
     }
 
-    [Test]
+    [Test, Order(1)]
     public async Task GivenProductsInDatabase_WhenGet_ThenReturnsAll()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
@@ -57,7 +57,25 @@ public class GetProducts
         Assert.That(products.Count, Is.EqualTo(3));
     }
 
-    [Test]
+    [Test, Order(2)]
+    public async Task GivenNoProductsInDatabase_WhenGet_ThenReturnsEmptyList()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+        ";
+
+        await conn.ExecuteAsync(sql);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        var products = await productRepository.Get(CancellationToken.None);
+        Assert.IsEmpty(products);
+    }
+
+    [Test, Order(3)]
     public async Task GivenCorruptedProductsOnTitleInDatabase_WhenGet_ThenThrowsException()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
@@ -74,10 +92,11 @@ public class GetProducts
 
         var productRepository = new ProductRepository(_dbContext);
 
-        Assert.ThrowsAsync<ProductTitleInvalidException>(async () => await productRepository.Get(CancellationToken.None));
+        Assert.ThrowsAsync<ProductTitleInvalidException>(
+            async () => await productRepository.Get(CancellationToken.None));
     }
 
-    [Test]
+    [Test, Order(4)]
     public async Task GivenCorruptedProductsOnDescriptionInDatabase_WhenGet_ThenThrowsException()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
@@ -94,10 +113,11 @@ public class GetProducts
 
         var productRepository = new ProductRepository(_dbContext);
 
-        Assert.ThrowsAsync<ProductDescriptionInvalidException>(async () => await productRepository.Get(CancellationToken.None));
+        Assert.ThrowsAsync<ProductDescriptionInvalidException>(
+            async () => await productRepository.Get(CancellationToken.None));
     }
 
-    [Test]
+    [Test, Order(5)]
     public async Task GivenCorruptedProductsOnPriceInDatabase_WhenGet_ThenThrowsException()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
@@ -114,10 +134,11 @@ public class GetProducts
 
         var productRepository = new ProductRepository(_dbContext);
 
-        Assert.ThrowsAsync<ProductPriceInvalidException>(async () => await productRepository.Get(CancellationToken.None));
+        Assert.ThrowsAsync<ProductPriceInvalidException>(
+            async () => await productRepository.Get(CancellationToken.None));
     }
 
-    [Test]
+    [Test, Order(6)]
     public async Task GivenCorruptedProductsOnStatusInDatabase_WhenGet_ThenThrowsException()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
@@ -134,6 +155,25 @@ public class GetProducts
 
         var productRepository = new ProductRepository(_dbContext);
 
-        Assert.ThrowsAsync<ProductStatusInvalidException>(async () => await productRepository.Get(CancellationToken.None));
+        Assert.ThrowsAsync<ProductStatusInvalidException>(
+            async () => await productRepository.Get(CancellationToken.None));
+    }
+
+    [Test]
+    public async Task GivenNoTableInDatabase_WhenGet_ThenThrowsException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            DROP TABLE public.product;
+        ";
+
+        conn.Execute(sql);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        Assert.ThrowsAsync<ProductRepositoryPersistenceException>(
+            async () => await productRepository.Get(CancellationToken.None));
     }
 }
