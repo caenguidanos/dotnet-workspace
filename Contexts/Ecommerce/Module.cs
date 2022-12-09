@@ -31,9 +31,8 @@ public static class EcommerceModule
     {
         using var scope = host.Services.CreateScope();
 
-        var dbSeed = scope.ServiceProvider.GetRequiredService<IDbSeed>();
-
-        dbSeed.RunAsync().Wait();
+        scope.ServiceProvider
+            .GetRequiredService<IDbSeed>().RunAsync().Wait();
 
         return host;
     }
