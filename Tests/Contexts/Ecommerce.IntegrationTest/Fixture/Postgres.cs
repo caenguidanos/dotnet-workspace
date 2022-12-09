@@ -93,14 +93,14 @@ public class PostgresFixture
             }
         );
 
-        await _docker.Containers.StartContainerAsync(
-            _postgresContainerName, new ContainerStartParameters());
+        await _docker.Containers.StartContainerAsync(_postgresContainerName, new ContainerStartParameters());
+
+        await using var conn = new NpgsqlConnection(connectionString.ToString());
 
         while (true)
         {
             try
             {
-                await using var conn = new NpgsqlConnection(connectionString.ToString());
                 await conn.OpenAsync();
                 break;
             }
@@ -120,8 +120,7 @@ public class PostgresFixture
 
     public async Task DisposeServerAsync()
     {
-        await _docker.Containers.RemoveContainerAsync(
-            _postgresContainerName, new ContainerRemoveParameters { Force = true });
+        await _docker.Containers.RemoveContainerAsync(_postgresContainerName, new ContainerRemoveParameters { Force = true });
 
         _docker.Dispose();
     }
