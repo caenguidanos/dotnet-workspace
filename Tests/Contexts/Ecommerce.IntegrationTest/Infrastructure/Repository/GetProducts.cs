@@ -15,7 +15,7 @@ public class GetProducts
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        string connectionString = _postgres.StartServer(port: 9200, database: "ecommerce");
+        string connectionString = _postgres.StartServer(port: 9200);
 
         Mock
             .Get(_dbContext)

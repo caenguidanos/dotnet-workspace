@@ -11,8 +11,15 @@ public class PostgresFixture
 {
     private readonly DockerClient _docker;
 
+    private readonly string _postgresDatabase = "ecommerce";
     private readonly string _postgresImageName = "postgres:15-alpine";
     private readonly string _postgresContainerName = $"postgres-{Guid.NewGuid()}";
+
+    private readonly List<string> _dockerContainerVolumes = new()
+    {
+        $"{Environment.CurrentDirectory}/SQL/Definitions:/var/lib/sql/denifitions",
+        $"{Environment.CurrentDirectory}/SQL/Init.sh:/docker-entrypoint-initdb.d/init.sh"
+    };
 
     public PostgresFixture()
     {
@@ -29,20 +36,20 @@ public class PostgresFixture
         _docker = new DockerClientConfiguration(dockerDaemonUri).CreateClient();
     }
 
-    public string StartServer(int port, string database)
+    public string StartServer(int port)
     {
-        var task = StartServerAsync(port, database);
+        var task = StartServerAsync(port);
         task.Wait();
         return task.Result;
     }
 
-    public async Task<string> StartServerAsync(int port, string database)
+    public async Task<string> StartServerAsync(int port)
     {
         var environment = new List<string>
         {
             "POSTGRES_USER=root",
             "POSTGRES_PASSWORD=root",
-            $"POSTGRES_DB={database}"
+            $"POSTGRES_DB={_postgresDatabase}"
         };
 
         var connectionString = new DbConnectionStringBuilder()
@@ -51,7 +58,7 @@ public class PostgresFixture
             { "Password", "root" },
             { "Server", "localhost" },
             { "Port", port },
-            { "Database", database },
+            { "Database", _postgresDatabase },
             { "Integrated Security", true },
             { "Pooling", true }
         };
@@ -61,23 +68,19 @@ public class PostgresFixture
         var hostConfig = new HostConfig
         {
 
-            Binds = new List<string>
-            {
-                $"{Environment.CurrentDirectory}/SQL/Definitions:/var/lib/sql/denifitions",
-                $"{Environment.CurrentDirectory}/SQL/Init.sh:/docker-entrypoint-initdb.d/init.sh"
-            },
+            Binds = _dockerContainerVolumes,
             PortBindings = new Dictionary<string, IList<PortBinding>>
+            {
+                {
+                    "5432/tcp",
+                    new List<PortBinding>
                     {
-                        {
-                            "5432/tcp",
-                            new List<PortBinding>
-                            {
-                                new PortBinding{
-                                    HostPort = port.ToString(locale)
-                                }
-                            }
+                        new PortBinding{
+                            HostPort = port.ToString(locale)
                         }
                     }
+                }
+            }
         };
 
         await _docker.Containers.CreateContainerAsync(
@@ -93,7 +96,6 @@ public class PostgresFixture
         await _docker.Containers.StartContainerAsync(
             _postgresContainerName, new ContainerStartParameters());
 
-        // wait for healthy container
         while (true)
         {
             try
