@@ -103,7 +103,7 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                return BadRequest(exception.ToString());
+                return BadRequest();
             }
 
             if (exception is ProductRepositoryPersistenceException)
