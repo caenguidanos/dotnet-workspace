@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 
 using Common;
 using Ecommerce;
+using Ecommerce.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -11,15 +11,16 @@ using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
-public static class Module
+public static class EcommerceModule
 {
     public static IServiceCollection AddEcommerceModule(this IServiceCollection services)
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-        services.AddMediatR(typeof(Module).Assembly);
+        services.AddMediatR(typeof(EcommerceModule).Assembly);
 
         services.AddSingleton<IDbContext, DbContext>();
+        services.AddSingleton<IDbSeed, DbSeed>();
         services.AddSingleton<IProductService, ProductService>();
         services.AddSingleton<IProductRepository, ProductRepository>();
 
@@ -30,9 +31,9 @@ public static class Module
     {
         using var scope = host.Services.CreateScope();
 
-        new DbSeed(scope.ServiceProvider.GetRequiredService<DbContext>())
-            .RunAsync()
-            .Wait();
+        var dbSeed = scope.ServiceProvider.GetRequiredService<IDbSeed>();
+
+        dbSeed.RunAsync().Wait();
 
         return host;
     }

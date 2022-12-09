@@ -3,11 +3,16 @@ namespace Ecommerce.Infrastructure.Persistence;
 using Dapper;
 using Npgsql;
 
-public class DbSeed
+public interface IDbSeed
 {
-    private readonly DbContext _dbContext;
+    Task RunAsync();
+}
 
-    public DbSeed(DbContext dbContext)
+public class DbSeed : IDbSeed
+{
+    private readonly IDbContext _dbContext;
+
+    public DbSeed(IDbContext dbContext)
     {
         _dbContext = dbContext;
     }

@@ -29,7 +29,11 @@ public class ProductRepository : IProductRepository
             await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
             await conn.OpenAsync(cancellationToken);
 
-            var command = new CommandDefinition("SELECT * FROM public.product", cancellationToken: cancellationToken);
+            string sql = @"
+                SELECT * FROM public.product
+            ";
+
+            var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
 
             var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
             if (result is null)
@@ -71,7 +75,9 @@ public class ProductRepository : IProductRepository
             await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
             await conn.OpenAsync(cancellationToken);
 
-            string sql = @"SELECT * FROM public.product WHERE id = @Id";
+            string sql = @"
+                SELECT * FROM public.product WHERE id = @Id
+            ";
 
             var parameters = new DynamicParameters();
             parameters.Add("Id", id);
@@ -147,7 +153,9 @@ public class ProductRepository : IProductRepository
             await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
             await conn.OpenAsync(cancellationToken);
 
-            string sql = @"DELETE FROM public.product WHERE id = @Id";
+            string sql = @"
+                DELETE FROM public.product WHERE id = @Id
+            ";
 
             var parameters = new DynamicParameters();
             parameters.Add("Id", id);
@@ -179,9 +187,10 @@ public class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             string sql = @"
-            UPDATE public.product
-            SET title = @Title, description = @Description, price = @Price, status = @Status
-            WHERE id = @Id";
+                UPDATE public.product
+                SET title = @Title, description = @Description, price = @Price, status = @Status
+                WHERE id = @Id
+            ";
 
             var parameters = new DynamicParameters();
             parameters.Add("Id", product.Id);
