@@ -21,7 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 
 builder.Services.AddCommonModule();
-builder.Services.AddEcommerceStoreModule();
+builder.Services.AddEcommerceModule();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.UseEcommerceStoreSeed();
+    app.UseEcommerceDataSeed();
 }
 
 app.MapControllers();

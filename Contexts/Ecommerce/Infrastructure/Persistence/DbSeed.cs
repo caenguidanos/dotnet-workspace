@@ -9,9 +9,9 @@ public class DbSeed
         _dbContext = dbContext;
     }
 
-    public void Run()
+    public async Task RunAsync()
     {
-        using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
 
         string sql = @"
             TRUNCATE public.product;
@@ -26,6 +26,6 @@ public class DbSeed
             VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'Antelope Orion +32', 'Great audio interface', 300000, 1);
         ";
 
-        conn.Execute(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
     }
 }

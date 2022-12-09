@@ -8,7 +8,7 @@ using Ecommerce.Infrastructure.Repository;
 
 public static class Module
 {
-    public static IServiceCollection AddEcommerceStoreModule(this IServiceCollection services)
+    public static IServiceCollection AddEcommerceModule(this IServiceCollection services)
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
@@ -21,12 +21,13 @@ public static class Module
         return services;
     }
 
-    public static IHost UseEcommerceStoreSeed(this IHost host)
+    public static IHost UseEcommerceDataSeed(this IHost host)
     {
         using var scope = host.Services.CreateScope();
 
-        new DbSeed(
-            scope.ServiceProvider.GetRequiredService<DbContext>()).Run();
+        new DbSeed(scope.ServiceProvider.GetRequiredService<DbContext>())
+            .RunAsync()
+            .Wait();
 
         return host;
     }

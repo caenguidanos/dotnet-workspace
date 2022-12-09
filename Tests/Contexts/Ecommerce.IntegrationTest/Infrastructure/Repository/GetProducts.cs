@@ -110,7 +110,7 @@ public class GetProducts
             VALUES ('954d73fc-30d8-4aa7-bab6-2f5c090fd2dc', 'American Professional II Stratocaster', '', 219900, 1);
         ";
 
-        await conn.ExecuteAsync(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
         var productRepository = new ProductRepository(_dbContext);
 
@@ -131,7 +131,7 @@ public class GetProducts
             VALUES ('ac381bcb-1b14-497d-86e8-b64c8b6e9d01', 'American Professional II Stratocaster', 'Great guitar', 0, 1);
         ";
 
-        await conn.ExecuteAsync(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
         var productRepository = new ProductRepository(_dbContext);
 
@@ -152,7 +152,7 @@ public class GetProducts
             VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 3);
         ";
 
-        await conn.ExecuteAsync(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
         var productRepository = new ProductRepository(_dbContext);
 
@@ -169,7 +169,7 @@ public class GetProducts
             DROP TABLE public.product;
         ";
 
-        await conn.ExecuteAsync(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
         var productRepository = new ProductRepository(_dbContext);
 
