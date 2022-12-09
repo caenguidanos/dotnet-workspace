@@ -38,13 +38,6 @@ public class PostgresFixture
         _docker = new DockerClientConfiguration(dockerDaemonUri).CreateClient();
     }
 
-    public string StartServer()
-    {
-        var task = StartServerAsync();
-        task.Wait();
-        return task.Result;
-    }
-
     public async Task<string> StartServerAsync()
     {
         int port = GetRandomUnusedPort();
@@ -114,12 +107,6 @@ public class PostgresFixture
         }
 
         return connectionString.ToString();
-    }
-
-    public void DisposeServer()
-    {
-        var task = DisposeServerAsync();
-        task.Wait();
     }
 
     public async Task DisposeServerAsync()

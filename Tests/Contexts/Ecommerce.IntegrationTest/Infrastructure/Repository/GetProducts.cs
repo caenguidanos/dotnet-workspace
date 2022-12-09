@@ -15,9 +15,9 @@ public class GetProducts
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
 
     [OneTimeSetUp]
-    public void OneTimeSetUp()
+    public async Task OneTimeSetUp()
     {
-        string connectionString = _postgres.StartServer();
+        string connectionString = await _postgres.StartServerAsync();
 
         Mock
             .Get(_dbContext)
@@ -26,9 +26,9 @@ public class GetProducts
     }
 
     [OneTimeTearDown]
-    public void OneTimeTearDown()
+    public async Task OneTimeTearDown()
     {
-        _postgres.DisposeServer();
+        await _postgres.DisposeServerAsync();
     }
 
     [Test, Order(1)]
@@ -156,8 +156,7 @@ public class GetProducts
 
         var productRepository = new ProductRepository(_dbContext);
 
-        Assert.ThrowsAsync<ProductStatusInvalidException>(
-            async () => await productRepository.Get(CancellationToken.None));
+        Assert.ThrowsAsync<ProductStatusInvalidException>(async () => await productRepository.Get(CancellationToken.None));
     }
 
     [Test]
@@ -170,11 +169,10 @@ public class GetProducts
             DROP TABLE public.product;
         ";
 
-        conn.Execute(sql);
+        await conn.ExecuteAsync(sql);
 
         var productRepository = new ProductRepository(_dbContext);
 
-        Assert.ThrowsAsync<ProductRepositoryPersistenceException>(
-            async () => await productRepository.Get(CancellationToken.None));
+        Assert.ThrowsAsync<ProductRepositoryPersistenceException>(async () => await productRepository.Get(CancellationToken.None));
     }
 }
