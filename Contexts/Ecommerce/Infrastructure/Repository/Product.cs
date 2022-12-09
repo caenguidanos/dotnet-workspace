@@ -44,7 +44,7 @@ public class ProductRepository : IProductRepository
             return product;
         };
 
-        return result.Select(productsSelector);
+        return result.Select(productsSelector).AsList();
     }
 
     public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
