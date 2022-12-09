@@ -10,6 +10,7 @@ using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.Controller;
+using Ecommerce.Domain.Exceptions;
 
 public class ProductGetAll
 {
@@ -82,6 +83,27 @@ public class ProductGetAll
 
         var actionResultObjectPayload = (List<Product>)actionResultObject.Value;
         Assert.That(actionResultObjectPayload, Is.Empty);
+    }
+
+    [Test]
+    public async Task GivenRequestQuery_WhenThrowsPersistenceExceptionFromSender_ThenReplyWithServiceUnavailable()
+    {
+        var products = Mock.Of<List<Product>>();
+
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductsQuery>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductRepositoryPersistenceException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.GetProducts(CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
+
+        var actionResultObject = (StatusCodeResult)actionResult;
+        Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status503ServiceUnavailable));
     }
 
     [Test]

@@ -52,6 +52,25 @@ public class ProductDeleteById
     }
 
     [Test]
+    public async Task GivenRequestCommand_WhenThrowsPersistenceExceptionFromSender_ThenReplyWithServiceUnavailable()
+    {
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<DeleteProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductRepositoryPersistenceException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.DeleteProduct(Common.Domain.Schema.NewID(), CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
+
+        var actionResultObject = (StatusCodeResult)actionResult;
+        Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status503ServiceUnavailable));
+    }
+
+    [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
         Mock

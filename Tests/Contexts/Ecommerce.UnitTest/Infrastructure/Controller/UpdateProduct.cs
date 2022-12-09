@@ -117,6 +117,25 @@ public class ProductUpdateById
     }
 
     [Test]
+    public async Task GivenRequestCommand_WhenThrowsPersistenceExceptionFromSender_ThenReplyWithServiceUnavailable()
+    {
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<UpdateProductCommand>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductRepositoryPersistenceException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.UpdateProduct(Common.Domain.Schema.NewID(), Mock.Of<UpdateProductHttpRequestBody>(), CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
+
+        var actionResultObject = (StatusCodeResult)actionResult;
+        Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status503ServiceUnavailable));
+    }
+
+    [Test]
     public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
     {
         Mock

@@ -82,4 +82,23 @@ public class ProductGetById
         var actionResult = await controller.GetProductById(Common.Domain.Schema.NewID(), CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
     }
+
+    [Test]
+    public async Task GivenRequestQuery_WhenThrowsPersistenceException_ThenReplyServiceUnavailable()
+    {
+        Mock
+            .Get(_sender)
+            .Setup(sender => sender
+                .Send(
+                    It.IsAny<GetProductQuery>(),
+                    It.IsAny<CancellationToken>())).Throws<ProductRepositoryPersistenceException>();
+
+        var controller = new ProductController(_sender);
+
+        var actionResult = await controller.GetProductById(Common.Domain.Schema.NewID(), CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
+
+        var actionResultObject = (StatusCodeResult)actionResult;
+        Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status503ServiceUnavailable));
+    }
 }

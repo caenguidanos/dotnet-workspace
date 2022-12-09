@@ -48,9 +48,9 @@ public class ProductRepository : IProductRepository
 
             return result.Select(productsSelector).AsList();
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
-            if (exception is Npgsql.PostgresException)
+            if (exception is PostgresException)
             {
                 throw new ProductRepositoryPersistenceException(exception.Message);
             }
@@ -90,9 +90,9 @@ public class ProductRepository : IProductRepository
 
             return product;
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
-            if (exception is Npgsql.PostgresException)
+            if (exception is PostgresException)
             {
                 throw new ProductRepositoryPersistenceException(exception.Message);
             }
@@ -124,9 +124,9 @@ public class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
-            if (exception is Npgsql.PostgresException)
+            if (exception is PostgresException)
             {
                 throw new ProductRepositoryPersistenceException(exception.Message);
             }
@@ -155,9 +155,9 @@ public class ProductRepository : IProductRepository
                 throw new ProductNotFoundException();
             }
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
-            if (exception is Npgsql.PostgresException)
+            if (exception is PostgresException)
             {
                 throw new ProductRepositoryPersistenceException(exception.Message);
             }
@@ -189,9 +189,9 @@ public class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
         }
-        catch (System.Exception exception)
+        catch (Exception exception)
         {
-            if (exception is Npgsql.PostgresException)
+            if (exception is PostgresException)
             {
                 throw new ProductRepositoryPersistenceException(exception.Message);
             }

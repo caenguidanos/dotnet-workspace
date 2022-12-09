@@ -1,11 +1,12 @@
 namespace Ecommerce.IntegrationTest.Infrastructure.Repository;
 
 using Dapper;
+using Moq;
+using Npgsql;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
-using Moq;
-using Npgsql;
 
 public class GetProducts
 {
