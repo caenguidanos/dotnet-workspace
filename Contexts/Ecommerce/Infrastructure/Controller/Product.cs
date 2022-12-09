@@ -8,7 +8,6 @@ using Ecommerce.Application.Command;
 using Ecommerce.Application.Query;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.DataTransfer;
-using Ecommerce.Domain.Entity;
 
 [ApiController]
 [Route("[controller]")]
@@ -22,7 +21,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Product>))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
@@ -104,7 +103,7 @@ public class ProductController : ControllerBase
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)
             {
-                return BadRequest();
+                return BadRequest(exception.ToString());
             }
 
             if (exception is ProductRepositoryPersistenceException)
