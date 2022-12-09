@@ -1,5 +1,7 @@
 namespace Ecommerce.Application.Service;
 
+using MediatR;
+
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;

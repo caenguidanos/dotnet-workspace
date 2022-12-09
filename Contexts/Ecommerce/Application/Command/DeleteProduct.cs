@@ -1,5 +1,7 @@
 namespace Ecommerce.Application.Command;
 
+using MediatR;
+
 using Ecommerce.Domain.Service;
 
 public class DeleteProductCommand : IRequest<Unit>

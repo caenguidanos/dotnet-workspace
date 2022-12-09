@@ -1,5 +1,7 @@
 namespace Ecommerce.Application.Event;
 
+using MediatR;
+
 public class ProductRemovedEvent : INotification
 {
     public Guid Product { get; set; }

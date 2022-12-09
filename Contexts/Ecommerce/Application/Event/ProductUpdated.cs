@@ -1,5 +1,7 @@
 namespace Ecommerce.Application.Event;
 
+using MediatR;
+
 public class ProductUpdatedEvent : INotification
 {
     public Guid Product { get; set; }

@@ -1,5 +1,7 @@
 namespace Ecommerce.Application.Query;
 
+using MediatR;
+
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Repository;
 

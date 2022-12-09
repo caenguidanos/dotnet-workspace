@@ -1,6 +1,7 @@
 namespace Ecommerce.Domain.Entity;
 
 using Common.Domain;
+
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.ValueObject;
 

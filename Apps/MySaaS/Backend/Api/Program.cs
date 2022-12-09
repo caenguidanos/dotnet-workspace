@@ -1,6 +1,7 @@
+using System.Text.Json.Serialization;
+
 using Common;
 using Ecommerce;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 

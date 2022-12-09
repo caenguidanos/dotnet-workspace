@@ -1,5 +1,9 @@
 namespace Ecommerce.Infrastructure.Controller;
 
+using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Query;
 using Ecommerce.Domain.Exceptions;

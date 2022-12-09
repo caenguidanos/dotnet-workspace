@@ -1,9 +1,11 @@
 namespace Ecommerce.Domain.ValueObject;
 
+using System.Globalization;
+
 using Common.Domain;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Model;
-using System.Globalization;
 
 public class ProductId : Primitive<Guid>
 {

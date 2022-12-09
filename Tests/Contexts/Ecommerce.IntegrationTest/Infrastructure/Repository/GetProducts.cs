@@ -4,20 +4,29 @@ using Dapper;
 using Moq;
 using Npgsql;
 
+using Common.Fixture.Infrastructure.Database;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
-public class GetProducts
+public class GetProductsIntegrationTest
 {
-    private readonly PostgresFixture _postgres = new();
+    private readonly PostgresDatabase _postgresDatabase;
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
+
+    public GetProductsIntegrationTest()
+    {
+        _postgresDatabase = new PostgresDatabase(
+            name: "ecommerce",
+            volumes: Config.postgresDatabaseVolumes);
+    }
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
-        string connectionString = await _postgres.StartServerAsync();
+        string connectionString = await _postgresDatabase.StartAsync();
 
         Mock
             .Get(_dbContext)
@@ -28,7 +37,7 @@ public class GetProducts
     [OneTimeTearDown]
     public async Task OneTimeTearDown()
     {
-        await _postgres.DisposeServerAsync();
+        await _postgresDatabase.DisposeAsync();
     }
 
     [Test, Order(1)]

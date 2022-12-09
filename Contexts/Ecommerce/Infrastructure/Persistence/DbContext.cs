@@ -1,5 +1,7 @@
 namespace Ecommerce.Infrastructure.Persistence;
 
+using Microsoft.Extensions.Configuration;
+
 public interface IDbContext
 {
     string GetConnectionString();

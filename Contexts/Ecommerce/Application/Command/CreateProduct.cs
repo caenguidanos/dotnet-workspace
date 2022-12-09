@@ -1,5 +1,7 @@
 namespace Ecommerce.Application.Command;
 
+using MediatR;
+
 using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.DataTransfer;
 

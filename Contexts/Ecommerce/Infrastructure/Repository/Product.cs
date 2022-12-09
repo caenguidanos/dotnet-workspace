@@ -1,5 +1,10 @@
 namespace Ecommerce.Infrastructure.Repository;
 
+using Dapper;
+using Npgsql;
+
+using System.Data;
+
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Model;

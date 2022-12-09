@@ -1,5 +1,8 @@
 namespace Ecommerce.Infrastructure.Persistence;
 
+using Dapper;
+using Npgsql;
+
 public class DbSeed
 {
     private readonly DbContext _dbContext;

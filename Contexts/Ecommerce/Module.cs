@@ -1,5 +1,10 @@
 namespace Ecommerce;
 
+using Dapper;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 using Ecommerce.Application.Service;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
