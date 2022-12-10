@@ -2,11 +2,10 @@ namespace Ecommerce.UnitTest.Infrastructure.Controller;
 
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
 
+using Common.Application.HttpUtil;
 using Ecommerce.Application.Command;
-using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Controller;
 
 public class ProductDeleteById
@@ -20,73 +19,25 @@ public class ProductDeleteById
     }
 
     [Test]
-    public async Task GivenRequestCommand_WhenReturnsNothingFromSender_ThenReplyWithAccepted()
+    public async Task GivenProductId_WhenRequestSender_ThenPass()
     {
+        var productId = Common.Domain.Schema.NewID();
+
         Mock
             .Get(_sender)
             .Setup(sender => sender
-                .Send(
-                    It.IsAny<DeleteProductCommand>(),
-                    It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
+                .Send(It.IsAny<DeleteProductCommand>(), It.IsAny<CancellationToken>()))
+                    .ReturnsAsync(
+                        new HttpResultResponse(CancellationToken.None)
+                        {
+                            StatusCode = StatusCodes.Status202Accepted
+                        }
+                    );
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteProduct(Common.Domain.Schema.NewID(), CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<AcceptedResult>());
-    }
-
-    [Test]
-    public async Task GivenRequestCommand_WhenThrowsProductNotFoundExceptionFromSender_ThenReplyWithNotFound()
-    {
-        Mock
-            .Get(_sender)
-            .Setup(sender => sender
-                .Send(
-                    It.IsAny<DeleteProductCommand>(),
-                    It.IsAny<CancellationToken>())).Throws<ProductNotFoundException>();
-
-        var controller = new ProductController(_sender);
-
-        var actionResult = await controller.DeleteProduct(Common.Domain.Schema.NewID(), CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<NotFoundResult>());
-    }
-
-    [Test]
-    public async Task GivenRequestCommand_WhenThrowsPersistenceExceptionFromSender_ThenReplyWithServiceUnavailable()
-    {
-        Mock
-            .Get(_sender)
-            .Setup(sender => sender
-                .Send(
-                    It.IsAny<DeleteProductCommand>(),
-                    It.IsAny<CancellationToken>())).Throws<ProductRepositoryPersistenceException>();
-
-        var controller = new ProductController(_sender);
-
-        var actionResult = await controller.DeleteProduct(Common.Domain.Schema.NewID(), CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
-
-        var actionResultObject = (StatusCodeResult)actionResult;
-        Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status503ServiceUnavailable));
-    }
-
-    [Test]
-    public async Task GivenRequestCommand_WhenThrowsAnyExceptionFromSender_ThenReplyWithNotImplemented()
-    {
-        Mock
-            .Get(_sender)
-            .Setup(sender => sender
-                .Send(
-                    It.IsAny<DeleteProductCommand>(),
-                    It.IsAny<CancellationToken>())).Throws<Exception>();
-
-        var controller = new ProductController(_sender);
-
-        var actionResult = await controller.DeleteProduct(Common.Domain.Schema.NewID(), CancellationToken.None);
-        Assert.That(actionResult, Is.TypeOf<StatusCodeResult>());
-
-        var actionResultObject = (StatusCodeResult)actionResult;
-        Assert.That(actionResultObject.StatusCode, Is.EqualTo(StatusCodes.Status501NotImplemented));
+        var actionResult = await controller.DeleteProduct(productId, CancellationToken.None);
+        Assert.That(actionResult, Is.TypeOf<HttpResultResponse>());
     }
 }
 

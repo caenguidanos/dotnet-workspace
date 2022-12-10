@@ -1,5 +1,3 @@
-using System.Text.Json.Serialization;
-
 using Common;
 using Ecommerce;
 
@@ -9,14 +7,7 @@ builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddApplicationInsightsTelemetry();
 
-builder.Services
-    .AddControllers()
-    .AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.AllowTrailingCommas = true;
-            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        });
-
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();

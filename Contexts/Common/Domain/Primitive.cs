@@ -2,7 +2,7 @@ namespace Common.Domain;
 
 public abstract class Primitive<TValue>
 {
-    private readonly TValue value;
+    private TValue value { get; init; }
 
     public Primitive(TValue value)
     {

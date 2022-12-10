@@ -1,15 +1,18 @@
 namespace Ecommerce.Application.Query;
 
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using System.Net.Mime;
 
-using Ecommerce.Domain.Entity;
+using Common.Application.HttpUtil;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
 
-public class GetProductsQuery : IRequest<IEnumerable<Product>>
+public class GetProductsQuery : IRequest<HttpResultResponse>
 {
 }
 
-public class GetProductsHandler : IRequestHandler<GetProductsQuery, IEnumerable<Product>>
+public class GetProductsHandler : IRequestHandler<GetProductsQuery, HttpResultResponse>
 {
     private readonly IProductRepository productRepository;
 
@@ -18,10 +21,33 @@ public class GetProductsHandler : IRequestHandler<GetProductsQuery, IEnumerable<
         this.productRepository = productRepository;
     }
 
-    public async Task<IEnumerable<Product>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async Task<HttpResultResponse> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
-        var products = await productRepository.Get(cancellationToken);
+        try
+        {
+            var products = await productRepository.Get(cancellationToken);
 
-        return products;
+            return new HttpResultResponse(cancellationToken)
+            {
+                Body = products,
+                StatusCode = StatusCodes.Status200OK,
+                ContentType = MediaTypeNames.Application.Json,
+            };
+        }
+        catch (Exception ex)
+        {
+            if (ex is ProductPersistenceException)
+            {
+                return new HttpResultResponse(cancellationToken)
+                {
+                    StatusCode = StatusCodes.Status503ServiceUnavailable,
+                };
+            }
+
+            return new HttpResultResponse(cancellationToken)
+            {
+                StatusCode = StatusCodes.Status501NotImplemented,
+            };
+        }
     }
 }

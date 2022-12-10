@@ -1,16 +1,19 @@
 namespace Ecommerce.Application.Query;
 
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using System.Net.Mime;
 
-using Ecommerce.Domain.Entity;
+using Common.Application.HttpUtil;
+using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
 
-public class GetProductQuery : IRequest<Product>
+public class GetProductQuery : IRequest<HttpResultResponse>
 {
-    public required Guid Id { get; set; }
+    public required Guid Id { get; init; }
 }
 
-public class GetProductHandler : IRequestHandler<GetProductQuery, Product>
+public class GetProductHandler : IRequestHandler<GetProductQuery, HttpResultResponse>
 {
     private readonly IProductRepository productRepository;
 
@@ -19,10 +22,41 @@ public class GetProductHandler : IRequestHandler<GetProductQuery, Product>
         this.productRepository = productRepository;
     }
 
-    public async Task<Product> Handle(GetProductQuery request, CancellationToken cancellationToken)
+    public async Task<HttpResultResponse> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetById(request.Id, cancellationToken);
+        try
+        {
+            var product = await productRepository.GetById(request.Id, cancellationToken);
 
-        return product;
+            return new HttpResultResponse(cancellationToken)
+            {
+                Body = product,
+                StatusCode = StatusCodes.Status200OK,
+                ContentType = MediaTypeNames.Application.Json,
+            };
+        }
+        catch (Exception ex)
+        {
+            if (ex is ProductNotFoundException)
+            {
+                return new HttpResultResponse(cancellationToken)
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                };
+            }
+
+            if (ex is ProductPersistenceException)
+            {
+                return new HttpResultResponse(cancellationToken)
+                {
+                    StatusCode = StatusCodes.Status503ServiceUnavailable,
+                };
+            }
+
+            return new HttpResultResponse(cancellationToken)
+            {
+                StatusCode = StatusCodes.Status501NotImplemented,
+            };
+        }
     }
 }

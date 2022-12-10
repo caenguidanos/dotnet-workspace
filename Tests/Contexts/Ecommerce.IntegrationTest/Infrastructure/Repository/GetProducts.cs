@@ -12,7 +12,7 @@ using Ecommerce.Infrastructure.Repository;
 
 public class GetProductsIntegrationTest
 {
-    private readonly PostgresDatabase _postgresDatabase;
+    private PostgresDatabase _postgresDatabase { get; init; }
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
 
@@ -182,6 +182,6 @@ public class GetProductsIntegrationTest
 
         var productRepository = new ProductRepository(_dbContext);
 
-        Assert.ThrowsAsync<ProductRepositoryPersistenceException>(async () => await productRepository.Get(CancellationToken.None));
+        Assert.ThrowsAsync<ProductPersistenceException>(async () => await productRepository.Get(CancellationToken.None));
     }
 }

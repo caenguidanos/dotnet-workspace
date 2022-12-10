@@ -15,7 +15,7 @@ using Ecommerce.Infrastructure.Persistence;
 
 public class ProductRepository : IProductRepository
 {
-    private readonly IDbContext _dbContext;
+    private IDbContext _dbContext { get; init; }
 
     public ProductRepository(IDbContext dbContext)
     {
@@ -61,7 +61,7 @@ public class ProductRepository : IProductRepository
         {
             if (exception is PostgresException)
             {
-                throw new ProductRepositoryPersistenceException(exception.Message);
+                throw new ProductPersistenceException(exception.Message);
             }
 
             throw;
@@ -105,7 +105,7 @@ public class ProductRepository : IProductRepository
         {
             if (exception is PostgresException)
             {
-                throw new ProductRepositoryPersistenceException(exception.Message);
+                throw new ProductPersistenceException(exception.Message);
             }
 
             throw;
@@ -139,7 +139,7 @@ public class ProductRepository : IProductRepository
         {
             if (exception is PostgresException)
             {
-                throw new ProductRepositoryPersistenceException(exception.Message);
+                throw new ProductPersistenceException(exception.Message);
             }
 
             throw;
@@ -172,7 +172,7 @@ public class ProductRepository : IProductRepository
         {
             if (exception is PostgresException)
             {
-                throw new ProductRepositoryPersistenceException(exception.Message);
+                throw new ProductPersistenceException(exception.Message);
             }
 
             throw;
@@ -207,7 +207,7 @@ public class ProductRepository : IProductRepository
         {
             if (exception is PostgresException)
             {
-                throw new ProductRepositoryPersistenceException(exception.Message);
+                throw new ProductPersistenceException(exception.Message);
             }
 
             throw;

@@ -9,7 +9,7 @@ public interface IDbContext
 
 public class DbContext : IDbContext
 {
-    private readonly string _connectionString;
+    private string _connectionString { get; init; }
 
     public DbContext(IConfiguration configuration)
     {

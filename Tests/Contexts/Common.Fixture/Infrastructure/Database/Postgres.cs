@@ -12,13 +12,11 @@ using System.Runtime.InteropServices;
 
 public class PostgresDatabase
 {
-    private readonly DockerClient _docker;
-
-    private readonly string _postgresDatabase;
+    private DockerClient _docker { get; init; }
+    private string _postgresDatabase { get; init; }
+    private List<string> _dockerContainerVolumes { get; init; }
     private readonly string _postgresImageName = "postgres:15-alpine";
     private readonly string _postgresContainerName = $"postgres-{Guid.NewGuid()}";
-
-    private readonly List<string> _dockerContainerVolumes;
 
     public PostgresDatabase(string name, List<string> volumes)
     {

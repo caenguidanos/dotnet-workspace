@@ -12,8 +12,8 @@ using Ecommerce.Domain.ValueObject;
 
 public class ProductService : IProductService
 {
-    private readonly IPublisher _publisher;
-    private readonly IProductRepository _productRepository;
+    private IPublisher _publisher { get; init; }
+    private IProductRepository _productRepository { get; init; }
 
     public ProductService(IPublisher publisher, IProductRepository productRepository)
     {

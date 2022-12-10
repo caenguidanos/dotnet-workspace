@@ -85,18 +85,18 @@ public class ProductStatusInvalidException : Exception
     }
 }
 
-public class ProductRepositoryPersistenceException : Exception
+public class ProductPersistenceException : Exception
 {
-    public ProductRepositoryPersistenceException()
+    public ProductPersistenceException()
     {
     }
 
-    public ProductRepositoryPersistenceException(string paramName)
+    public ProductPersistenceException(string paramName)
         : base(paramName)
     {
     }
 
-    public ProductRepositoryPersistenceException(string paramName, Exception inner)
+    public ProductPersistenceException(string paramName, Exception inner)
         : base(paramName, inner)
     {
     }

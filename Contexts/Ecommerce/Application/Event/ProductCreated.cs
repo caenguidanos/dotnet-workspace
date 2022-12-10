@@ -4,7 +4,7 @@ using MediatR;
 
 public class ProductCreatedEvent : INotification
 {
-    public Guid Product { get; set; }
+    public required Guid Product { get; init; }
 }
 
 public class ProductCreatedHandler : INotificationHandler<ProductCreatedEvent>
