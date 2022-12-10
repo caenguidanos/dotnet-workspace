@@ -1,0 +1,112 @@
+namespace Ecommerce.IntegrationTest.Infrastructure.Repository;
+
+using Dapper;
+using Moq;
+using Npgsql;
+
+using Common.Fixture.Infrastructure.Database;
+using Common.Fixture.Application.Tests;
+
+using Ecommerce.Domain.Exceptions;
+using Ecommerce.Domain.Model;
+using Ecommerce.Infrastructure.Persistence;
+using Ecommerce.Infrastructure.Repository;
+
+[Category(TestCategory.Integration)]
+public class GetProductByIdTest
+{
+    private PostgresDatabase _postgresDatabase { get; init; }
+
+    private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
+
+    public GetProductByIdTest()
+    {
+        _postgresDatabase = new PostgresDatabase(
+            name: "ecommerce",
+            volumes: Config.postgresDatabaseVolumes);
+    }
+
+    [OneTimeSetUp]
+    public async Task OneTimeSetUp()
+    {
+        string connectionString = await _postgresDatabase.StartAsync();
+
+        Mock
+            .Get(_dbContext)
+            .Setup(dbContext => dbContext
+                .GetConnectionString()).Returns(connectionString);
+    }
+
+    [OneTimeTearDown]
+    public async Task OneTimeTearDown()
+    {
+        await _postgresDatabase.DisposeAsync();
+    }
+
+    [Test, Order(1)]
+    public async Task GivenProductsInDatabase_WhenGetById_ThenReturnCoincidence()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+
+            INSERT INTO public.product (id, title, description, price, status)
+            VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
+        ";
+
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        var productId = Guid.Parse("092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        var product = await productRepository.GetById(productId, CancellationToken.None);
+
+        Assert.That(product, Is.Not.Null);
+        Assert.That(product.Id, Is.EqualTo(productId));
+        Assert.That(product.Title, Is.EqualTo("American Professional II Stratocaster"));
+        Assert.That(product.Description, Is.EqualTo("Great guitar"));
+        Assert.That(product.Price, Is.EqualTo(219900));
+        Assert.That(product.Status, Is.EqualTo(ProductStatusValue.Published));
+    }
+
+    [Test, Order(2)]
+    public async Task GivenProductsInDatabase_WhenGetById_ThenThrowNotFoundException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+
+            INSERT INTO public.product (id, title, description, price, status)
+            VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
+        ";
+
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        var productId = Guid.Parse("092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+
+        Assert.ThrowsAsync<ProductNotFoundException>(async () => await productRepository.GetById(productId, CancellationToken.None));
+    }
+
+    [Test]
+    public async Task GivenNoTableInDatabase_WhenGetById_ThenThrowsException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            DROP TABLE public.product;
+        ";
+
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        Assert.ThrowsAsync<ProductPersistenceException>(async () => await productRepository.GetById(Guid.NewGuid(), CancellationToken.None));
+    }
+}

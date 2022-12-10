@@ -5,20 +5,20 @@ using Moq;
 using Npgsql;
 
 using Common.Fixture.Infrastructure.Database;
-
 using Common.Fixture.Application.Tests;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
 [Category(TestCategory.Integration)]
-public class GetProductsIntegrationTest
+public class GetProductsTest
 {
     private PostgresDatabase _postgresDatabase { get; init; }
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
 
-    public GetProductsIntegrationTest()
+    public GetProductsTest()
     {
         _postgresDatabase = new PostgresDatabase(
             name: "ecommerce",
@@ -61,7 +61,7 @@ public class GetProductsIntegrationTest
             VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'Antelope Orion +32', 'Great audio interface', 300000, 1);
         ";
 
-        await conn.ExecuteAsync(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
         var productRepository = new ProductRepository(_dbContext);
 
@@ -79,7 +79,7 @@ public class GetProductsIntegrationTest
             TRUNCATE public.product;
         ";
 
-        await conn.ExecuteAsync(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
         var productRepository = new ProductRepository(_dbContext);
 
@@ -100,7 +100,7 @@ public class GetProductsIntegrationTest
             VALUES ('8ba4e56f-6b2b-49d1-9aeb-16a3a8740511', '', 'Great guitar', 219900, 1);
         ";
 
-        await conn.ExecuteAsync(sql);
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
         var productRepository = new ProductRepository(_dbContext);
 
