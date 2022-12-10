@@ -9,9 +9,9 @@ using System.Text.Json.Serialization;
 
 public class HttpResultResponse : ActionResult
 {
+    public object? Body { get; set; }
     public required HttpStatusCode StatusCode { get; set; }
     public string ContentType { get; set; } = MediaTypeNames.Text.Plain;
-    public object? Body { get; set; }
 
     private CancellationToken _cancellationToken { get; init; }
 
