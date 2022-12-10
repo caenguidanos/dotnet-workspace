@@ -2,13 +2,14 @@ namespace Common.Application.HttpUtil;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
 public class HttpResultResponse : ActionResult
 {
-    public required int StatusCode { get; set; }
+    public required HttpStatusCode StatusCode { get; set; }
     public string ContentType { get; set; } = MediaTypeNames.Text.Plain;
     public object? Body { get; set; }
 
@@ -28,24 +29,25 @@ public class HttpResultResponse : ActionResult
 
     public override async Task ExecuteResultAsync(ActionContext context)
     {
-        string payload;
+        context.HttpContext.Response.StatusCode = (int)StatusCode;
 
         if (Body is null)
         {
-            payload = JsonSerializer.Serialize(
-                new { Message = HttpStatusText.From(StatusCode) }, options: _jsonSerializerOptions);
-
-            context.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
+            context.HttpContext.Response.ContentType = MediaTypeNames.Text.Plain;
+            await context.HttpContext.Response.WriteAsync(HttpStatusText.From(StatusCode), _cancellationToken);
+            return;
         }
-        else
+
+        if (Body is string or int or bool)
         {
-            payload = JsonSerializer.Serialize(Body, options: _jsonSerializerOptions);
-
             context.HttpContext.Response.ContentType = ContentType;
+            await context.HttpContext.Response.WriteAsync(Body.ToString(), _cancellationToken);
+            return;
         }
 
-        context.HttpContext.Response.StatusCode = StatusCode;
-
+        string payload = JsonSerializer.Serialize(Body, options: _jsonSerializerOptions);
+        context.HttpContext.Response.ContentType = ContentType;
         await context.HttpContext.Response.WriteAsync(payload, _cancellationToken);
+        return;
     }
 }

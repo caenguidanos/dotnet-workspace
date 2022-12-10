@@ -1,7 +1,7 @@
 namespace Ecommerce.Application.Command;
 
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using System.Net;
 using System.Net.Mime;
 
 using Common.Application.HttpUtil;
@@ -40,7 +40,7 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpRe
             return new HttpResultResponse(cancellationToken)
             {
                 Body = new ProductAck { Id = createdProductId },
-                StatusCode = StatusCodes.Status200OK,
+                StatusCode = HttpStatusCode.OK,
                 ContentType = MediaTypeNames.Application.Json,
             };
         }
@@ -54,7 +54,7 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpRe
             {
                 return new HttpResultResponse(cancellationToken)
                 {
-                    StatusCode = StatusCodes.Status400BadRequest,
+                    StatusCode = HttpStatusCode.BadRequest,
                 };
             }
 
@@ -62,13 +62,13 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpRe
             {
                 return new HttpResultResponse(cancellationToken)
                 {
-                    StatusCode = StatusCodes.Status503ServiceUnavailable,
+                    StatusCode = HttpStatusCode.ServiceUnavailable,
                 };
             }
 
             return new HttpResultResponse(cancellationToken)
             {
-                StatusCode = StatusCodes.Status501NotImplemented,
+                StatusCode = HttpStatusCode.NotImplemented,
             };
         }
     }

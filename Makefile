@@ -11,5 +11,8 @@ infra-dev:
 webapi-dev:
 	dotnet watch --project ./Apps/MySaaS/Backend/Api/Api.csproj
 
-test:
-	dotnet test
+test-unit:
+	dotnet test --filter Category=Unit
+
+test-integration:
+	dotnet test --filter Category=Integration

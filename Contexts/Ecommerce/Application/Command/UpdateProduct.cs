@@ -1,7 +1,7 @@
 namespace Ecommerce.Application.Command;
 
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using System.Net;
 
 using Common.Application.HttpUtil;
 using Ecommerce.Domain.Exceptions;
@@ -33,7 +33,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpRe
 
             return new HttpResultResponse(cancellationToken)
             {
-                StatusCode = StatusCodes.Status202Accepted,
+                StatusCode = HttpStatusCode.Accepted,
             };
         }
         catch (Exception ex)
@@ -42,7 +42,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpRe
             {
                 return new HttpResultResponse(cancellationToken)
                 {
-                    StatusCode = StatusCodes.Status404NotFound,
+                    StatusCode = HttpStatusCode.NotFound,
                 };
             }
 
@@ -54,7 +54,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpRe
             {
                 return new HttpResultResponse(cancellationToken)
                 {
-                    StatusCode = StatusCodes.Status400BadRequest,
+                    StatusCode = HttpStatusCode.BadRequest,
                 };
             }
 
@@ -62,13 +62,13 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpRe
             {
                 return new HttpResultResponse(cancellationToken)
                 {
-                    StatusCode = StatusCodes.Status503ServiceUnavailable,
+                    StatusCode = HttpStatusCode.ServiceUnavailable,
                 };
             }
 
             return new HttpResultResponse(cancellationToken)
             {
-                StatusCode = StatusCodes.Status501NotImplemented,
+                StatusCode = HttpStatusCode.NotImplemented,
             };
         }
     }

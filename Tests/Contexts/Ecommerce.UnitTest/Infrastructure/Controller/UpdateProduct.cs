@@ -1,14 +1,16 @@
 namespace Ecommerce.UnitTest.Infrastructure.Controller;
 
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Moq;
+using System.Net;
 
 using Common.Application.HttpUtil;
+using Common.Fixture.Application.Tests;
 using Ecommerce.Application.Command;
 using Ecommerce.Infrastructure.Controller;
 using Ecommerce.Infrastructure.DataTransfer;
 
+[Category(TestCategory.Unit)]
 public class ProductUpdateById
 {
     private readonly ISender _sender = Mock.Of<ISender>();
@@ -32,7 +34,7 @@ public class ProductUpdateById
                     .ReturnsAsync(
                         new HttpResultResponse(CancellationToken.None)
                         {
-                            StatusCode = StatusCodes.Status202Accepted
+                            StatusCode = HttpStatusCode.Accepted
                         }
                     );
 

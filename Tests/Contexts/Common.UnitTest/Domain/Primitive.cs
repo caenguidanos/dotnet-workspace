@@ -1,8 +1,10 @@
 namespace Common.UnitTest.Domain;
 
 using Common.Domain;
+using Common.Fixture.Application.Tests;
 
-public class Primitive
+[Category(TestCategory.Unit)]
+public class PrimitiveTest
 {
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowArgumentOutOfRangeException()

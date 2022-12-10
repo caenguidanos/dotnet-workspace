@@ -20,5 +20,6 @@ make webapi-dev
 
 ## Test
 ```bash
-make test
+make test-unit
+make test-integration
 ```

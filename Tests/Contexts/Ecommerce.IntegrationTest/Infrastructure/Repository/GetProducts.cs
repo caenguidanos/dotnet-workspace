@@ -6,10 +6,12 @@ using Npgsql;
 
 using Common.Fixture.Infrastructure.Database;
 
+using Common.Fixture.Application.Tests;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
+[Category(TestCategory.Integration)]
 public class GetProductsIntegrationTest
 {
     private PostgresDatabase _postgresDatabase { get; init; }

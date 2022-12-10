@@ -3,7 +3,9 @@ namespace Common.UnitTest.Application.HttpUtil;
 using System.Net;
 
 using Common.Application.HttpUtil;
+using Common.Fixture.Application.Tests;
 
+[Category(TestCategory.Unit)]
 public class HttpStatusTextTest
 {
     [Test]
