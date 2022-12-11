@@ -5,11 +5,12 @@ using System.Net;
 using System.Net.Mime;
 
 using Common.Application.HttpUtil;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public class CreateProductCommand : IRequest<HttpResultResponse>
+public sealed class CreateProductCommand : IRequest<HttpResultResponse>
 {
     public required int Price { get; init; }
     public required string Title { get; init; }
@@ -17,7 +18,7 @@ public class CreateProductCommand : IRequest<HttpResultResponse>
     public required int Status { get; init; }
 }
 
-public class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpResultResponse>
+public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpResultResponse>
 {
     private readonly IProductService productService;
 

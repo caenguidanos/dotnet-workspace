@@ -8,7 +8,7 @@ public interface IDbSeed
     Task RunAsync();
 }
 
-public class DbSeed : IDbSeed
+public sealed class DbSeed : IDbSeed
 {
     private IDbContext _dbContext { get; init; }
 

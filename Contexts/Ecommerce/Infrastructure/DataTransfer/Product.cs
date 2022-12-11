@@ -2,18 +2,20 @@ namespace Ecommerce.Infrastructure.DataTransfer;
 
 using Common.Domain;
 
-public class ProductAck
+using Ecommerce.Domain.Model;
+
+public sealed class ProductAck
 {
     public required Guid Id { get; set; }
 }
 
-public class ProductPrimitives : SchemaPrimitives
+public sealed class ProductPrimitives : SchemaPrimitives
 {
     public required Guid Id { get; set; }
     public required string Title { get; set; }
     public required string Description { get; set; }
     public required int Price { get; set; }
-    public required int Status { get; set; }
+    public required ProductStatusValue Status { get; set; }
 }
 
 public class CreateProductHttpRequestBody

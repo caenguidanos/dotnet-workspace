@@ -5,15 +5,16 @@ using System.Net;
 using System.Net.Mime;
 
 using Common.Application.HttpUtil;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
 
-public class GetProductQuery : IRequest<HttpResultResponse>
+public sealed class GetProductQuery : IRequest<HttpResultResponse>
 {
     public required Guid Id { get; init; }
 }
 
-public class GetProductHandler : IRequestHandler<GetProductQuery, HttpResultResponse>
+public sealed class GetProductHandler : IRequestHandler<GetProductQuery, HttpResultResponse>
 {
     private readonly IProductRepository productRepository;
 
@@ -30,7 +31,7 @@ public class GetProductHandler : IRequestHandler<GetProductQuery, HttpResultResp
 
             return new HttpResultResponse(cancellationToken)
             {
-                Body = product,
+                Body = product.ToPrimitives(),
                 StatusCode = HttpStatusCode.OK,
                 ContentType = MediaTypeNames.Application.Json,
             };

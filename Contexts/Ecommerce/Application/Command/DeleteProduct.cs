@@ -4,15 +4,16 @@ using MediatR;
 using System.Net;
 
 using Common.Application.HttpUtil;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 
-public class DeleteProductCommand : IRequest<HttpResultResponse>
+public sealed class DeleteProductCommand : IRequest<HttpResultResponse>
 {
     public required Guid Id { get; init; }
 }
 
-public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, HttpResultResponse>
+public sealed class DeleteProductHandler : IRequestHandler<DeleteProductCommand, HttpResultResponse>
 {
     private readonly IProductService productService;
 

@@ -14,7 +14,7 @@
 make infra-dev
 ```
 
-## Watch api
+## Start webapi
 
 ```bash
 make webapi-dev

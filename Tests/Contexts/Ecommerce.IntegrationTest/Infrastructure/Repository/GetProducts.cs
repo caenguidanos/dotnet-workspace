@@ -4,15 +4,15 @@ using Dapper;
 using Moq;
 using Npgsql;
 
-using Common.Fixture.Infrastructure.Database;
 using Common.Fixture.Application.Tests;
+using Common.Fixture.Infrastructure.Database;
 
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
 [Category(TestCategory.Integration)]
-public class GetProductsTest
+public sealed class GetProductsTest
 {
     private PostgresDatabase _postgresDatabase { get; init; }
 

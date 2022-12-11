@@ -15,7 +15,7 @@ using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
 [Category(TestCategory.Integration)]
-public class SaveProductTest
+public sealed class SaveProductTest
 {
     private PostgresDatabase _postgresDatabase { get; init; }
 
@@ -60,22 +60,20 @@ public class SaveProductTest
         var productRepository = new ProductRepository(_dbContext);
 
         var newProductId = Product.NewID();
-        var newProduct = new Product(
-            new ProductId(newProductId),
-            new ProductTitle("Super title 1"),
-            new ProductDescription("Super description 1"),
-            new ProductStatus(ProductStatusValue.Published),
-            new ProductPrice(200)
-        );
+        var newProduct = new Product
+        {
+            Id = new ProductId(newProductId),
+            Title = new ProductTitle("Super title 1"),
+            Description = new ProductDescription("Super description 1"),
+            Status = new ProductStatus(ProductStatusValue.Published),
+            Price = new ProductPrice(200)
+        };
 
         await productRepository.Save(newProduct, CancellationToken.None);
 
         var product = await productRepository.GetById(newProductId, CancellationToken.None);
-        Assert.That(product.Id, Is.EqualTo(newProductId));
-        Assert.That(product.Title, Is.EqualTo(newProduct.Title));
-        Assert.That(product.Description, Is.EqualTo(newProduct.Description));
-        Assert.That(product.Status, Is.EqualTo(newProduct.Status));
-        Assert.That(product.Price, Is.EqualTo(newProduct.Price));
+
+        Assert.That(newProduct.IsEqualTo(product), Is.True);
     }
 
     [Test, Order(2)]
@@ -95,14 +93,14 @@ public class SaveProductTest
 
         var productRepository = new ProductRepository(_dbContext);
 
-        var productId = Guid.Parse("71a4c1e7-625f-4576-b7a5-188537da5bfe");
-        var product = new Product(
-            new ProductId(productId),
-            new ProductTitle("Super title 1"),
-            new ProductDescription("Super description 1"),
-            new ProductStatus(ProductStatusValue.Published),
-            new ProductPrice(200)
-        );
+        var product = new Product
+        {
+            Id = new ProductId(Guid.Parse("71a4c1e7-625f-4576-b7a5-188537da5bfe")),
+            Title = new ProductTitle("Super title 1"),
+            Description = new ProductDescription("Super description 1"),
+            Status = new ProductStatus(ProductStatusValue.Published),
+            Price = new ProductPrice(200)
+        };
 
         Assert.ThrowsAsync<ProductPersistenceException>(async () => await productRepository.Save(product, CancellationToken.None));
     }
@@ -121,13 +119,14 @@ public class SaveProductTest
 
         var productRepository = new ProductRepository(_dbContext);
 
-        var product = new Product(
-            new ProductId(Product.NewID()),
-            new ProductTitle("Super title 1"),
-            new ProductDescription("Super description 1"),
-            new ProductStatus(ProductStatusValue.Published),
-            new ProductPrice(200)
-        );
+        var product = new Product
+        {
+            Id = new ProductId(Product.NewID()),
+            Title = new ProductTitle("Super title 1"),
+            Description = new ProductDescription("Super description 1"),
+            Status = new ProductStatus(ProductStatusValue.Published),
+            Price = new ProductPrice(200)
+        };
 
         Assert.ThrowsAsync<ProductPersistenceException>(async () => await productRepository.Save(product, CancellationToken.None));
     }

@@ -10,7 +10,7 @@ using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
 using Ecommerce.Domain.ValueObject;
 
-public class ProductService : IProductService
+public sealed class ProductService : IProductService
 {
     private IPublisher _publisher { get; init; }
     private IProductRepository _productRepository { get; init; }
@@ -25,18 +25,20 @@ public class ProductService : IProductService
     {
         var newId = Common.Domain.Schema.NewID();
 
-        var newProduct = new Product(
-            new ProductId(newId),
-            new ProductTitle(title),
-            new ProductDescription(description),
-            new ProductStatus((ProductStatusValue)status),
-            new ProductPrice(price));
+        var newProduct = new Product
+        {
+            Id = new ProductId(newId),
+            Title = new ProductTitle(title),
+            Description = new ProductDescription(description),
+            Status = new ProductStatus((ProductStatusValue)status),
+            Price = new ProductPrice(price)
+        };
 
         await _productRepository.Save(newProduct, cancellationToken);
 
         await _publisher.Publish(new ProductCreatedEvent { Product = newId }, cancellationToken);
 
-        return newProduct.Id;
+        return newProduct.Id.GetValue();
     }
 
     public async Task DeleteProduct(Guid id, CancellationToken cancellationToken)
@@ -50,17 +52,19 @@ public class ProductService : IProductService
     {
         var existingProduct = await _productRepository.GetById(id, cancellationToken);
 
-        string newProductTitle = command.Title ?? existingProduct.Title;
-        string newProductDescription = command.Description ?? existingProduct.Description;
-        int newProductStatus = command.Status ?? (int)existingProduct.Status;
-        int newProductPrice = command.Price ?? existingProduct.Price;
+        string productTitle = command.Title ?? existingProduct.Title.GetValue();
+        string productDescription = command.Description ?? existingProduct.Description.GetValue();
+        int productStatus = command.Status ?? (int)existingProduct.Status.GetValue();
+        int productPrice = command.Price ?? existingProduct.Price.GetValue();
 
-        var existingProductWithUpdates = new Product(
-            new ProductId(id),
-            new ProductTitle(newProductTitle),
-            new ProductDescription(newProductDescription),
-            new ProductStatus((ProductStatusValue)newProductStatus),
-            new ProductPrice(newProductPrice));
+        var existingProductWithUpdates = new Product
+        {
+            Id = new ProductId(id),
+            Title = new ProductTitle(productTitle),
+            Description = new ProductDescription(productDescription),
+            Status = new ProductStatus((ProductStatusValue)productStatus),
+            Price = new ProductPrice(productPrice)
+        };
 
         await _productRepository.Update(existingProductWithUpdates, cancellationToken);
 

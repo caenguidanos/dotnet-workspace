@@ -2,12 +2,12 @@ namespace Ecommerce.Application.Event;
 
 using MediatR;
 
-public class ProductCreatedEvent : INotification
+public sealed class ProductCreatedEvent : INotification
 {
     public required Guid Product { get; init; }
 }
 
-public class ProductCreatedHandler : INotificationHandler<ProductCreatedEvent>
+public sealed class ProductCreatedHandler : INotificationHandler<ProductCreatedEvent>
 {
     public Task Handle(ProductCreatedEvent notification, CancellationToken cancellationToken)
     {

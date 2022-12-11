@@ -6,11 +6,12 @@ using System.Net;
 
 using Common.Application.HttpUtil;
 using Common.Fixture.Application.Tests;
+
 using Ecommerce.Application.Command;
 using Ecommerce.Infrastructure.Controller;
 
 [Category(TestCategory.Unit)]
-public class ProductDeleteById
+public sealed class ProductDeleteById
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 

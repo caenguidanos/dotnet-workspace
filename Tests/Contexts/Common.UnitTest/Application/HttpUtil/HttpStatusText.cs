@@ -6,7 +6,7 @@ using Common.Application.HttpUtil;
 using Common.Fixture.Application.Tests;
 
 [Category(TestCategory.Unit)]
-public class HttpStatusTextTest
+public sealed class HttpStatusTextTest
 {
     [Test]
     public void GivenStatusTextGenerator_WhenPassDifferentValidStatusValues_ThenParseToString()

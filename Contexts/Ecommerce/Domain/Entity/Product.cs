@@ -2,63 +2,35 @@ namespace Ecommerce.Domain.Entity;
 
 using Common.Domain;
 
-using Ecommerce.Domain.Model;
 using Ecommerce.Domain.ValueObject;
+using Ecommerce.Infrastructure.DataTransfer;
 
-public class Product : Schema
+public sealed class Product : Schema
 {
-    private readonly ProductId _id;
-    private readonly ProductTitle _title;
-    private readonly ProductDescription _description;
-    private readonly ProductStatus _status;
-    private readonly ProductPrice _price;
+    public required ProductId Id { get; init; }
+    public required ProductTitle Title { get; init; }
+    public required ProductDescription Description { get; init; }
+    public required ProductStatus Status { get; init; }
+    public required ProductPrice Price { get; init; }
 
-    public Product(ProductId id, ProductTitle title, ProductDescription description, ProductStatus status, ProductPrice price)
+    public ProductPrimitives ToPrimitives()
     {
-        _id = id;
-        _title = title;
-        _description = description;
-        _status = status;
-        _price = price;
+        return new ProductPrimitives
+        {
+            Id = Id.GetValue(),
+            Title = Title.GetValue(),
+            Description = Description.GetValue(),
+            Status = Status.GetValue(),
+            Price = Price.GetValue()
+        };
     }
 
-    public Guid Id
+    public bool IsEqualTo(Product comparer)
     {
-        get
-        {
-            return _id.GetValue();
-        }
-    }
-
-    public int Price
-    {
-        get
-        {
-            return _price.GetValue();
-        }
-    }
-
-    public string Title
-    {
-        get
-        {
-            return _title.GetValue();
-        }
-    }
-
-    public string Description
-    {
-        get
-        {
-            return _description.GetValue();
-        }
-    }
-
-    public ProductStatusValue Status
-    {
-        get
-        {
-            return _status.GetValue();
-        }
+        return Id.GetValue() == comparer.Id.GetValue() &&
+               Title.GetValue() == comparer.Title.GetValue() &&
+               Description.GetValue() == comparer.Description.GetValue() &&
+               Status.GetValue() == comparer.Status.GetValue() &&
+               Price.GetValue() == comparer.Price.GetValue();
     }
 }

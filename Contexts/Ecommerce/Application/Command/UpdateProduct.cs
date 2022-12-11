@@ -4,10 +4,11 @@ using MediatR;
 using System.Net;
 
 using Common.Application.HttpUtil;
+
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 
-public class UpdateProductCommand : IRequest<HttpResultResponse>
+public sealed class UpdateProductCommand : IRequest<HttpResultResponse>
 {
     public Guid Id { get; init; }
     public int? Price { get; init; }
@@ -16,7 +17,7 @@ public class UpdateProductCommand : IRequest<HttpResultResponse>
     public int? Status { get; init; }
 }
 
-public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpResultResponse>
+public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpResultResponse>
 {
     private readonly IProductService productService;
 

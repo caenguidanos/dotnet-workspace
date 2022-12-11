@@ -10,7 +10,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
-public class PostgresDatabase
+public sealed class PostgresDatabase
 {
     private DockerClient _docker { get; init; }
     private string _postgresDatabase { get; init; }

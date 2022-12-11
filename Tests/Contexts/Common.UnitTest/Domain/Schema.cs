@@ -6,7 +6,7 @@ using Common.Domain;
 using Common.Fixture.Application.Tests;
 
 [Category(TestCategory.Unit)]
-public class SchemaTest
+public sealed class SchemaTest
 {
     [Test]
     public void GivenEmptyEntity_WhenEditTimeStampAttributes_ThenReflectChanges()

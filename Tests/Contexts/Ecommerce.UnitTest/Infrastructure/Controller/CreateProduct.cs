@@ -6,12 +6,13 @@ using System.Net;
 
 using Common.Application.HttpUtil;
 using Common.Fixture.Application.Tests;
+
 using Ecommerce.Application.Command;
 using Ecommerce.Infrastructure.Controller;
 using Ecommerce.Infrastructure.DataTransfer;
 
 [Category(TestCategory.Unit)]
-public class CreateProduct
+public sealed class CreateProduct
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 

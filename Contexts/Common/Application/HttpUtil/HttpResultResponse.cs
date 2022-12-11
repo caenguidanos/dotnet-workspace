@@ -2,12 +2,13 @@ namespace Common.Application.HttpUtil;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public class HttpResultResponse : ActionResult
+public sealed class HttpResultResponse : ActionResult
 {
     public object? Body { get; set; }
     public required HttpStatusCode StatusCode { get; set; }

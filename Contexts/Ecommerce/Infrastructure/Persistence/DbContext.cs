@@ -7,7 +7,7 @@ public interface IDbContext
     string GetConnectionString();
 }
 
-public class DbContext : IDbContext
+public sealed class DbContext : IDbContext
 {
     private string _connectionString { get; init; }
 

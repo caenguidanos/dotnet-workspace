@@ -4,16 +4,18 @@ using Dapper;
 using Moq;
 using Npgsql;
 
-using Common.Fixture.Infrastructure.Database;
 using Common.Fixture.Application.Tests;
+using Common.Fixture.Infrastructure.Database;
 
+using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Model;
+using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
 [Category(TestCategory.Integration)]
-public class GetProductByIdTest
+public sealed class GetProductByIdTest
 {
     private PostgresDatabase _postgresDatabase { get; init; }
 
@@ -61,14 +63,19 @@ public class GetProductByIdTest
         var productRepository = new ProductRepository(_dbContext);
 
         var productId = Guid.Parse("092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
-        var product = await productRepository.GetById(productId, CancellationToken.None);
 
-        Assert.That(product, Is.Not.Null);
-        Assert.That(product.Id, Is.EqualTo(productId));
-        Assert.That(product.Title, Is.EqualTo("American Professional II Stratocaster"));
-        Assert.That(product.Description, Is.EqualTo("Great guitar"));
-        Assert.That(product.Price, Is.EqualTo(219900));
-        Assert.That(product.Status, Is.EqualTo(ProductStatusValue.Published));
+        var currentProduct = new Product
+        {
+            Id = new ProductId(productId),
+            Title = new ProductTitle("American Professional II Stratocaster"),
+            Description = new ProductDescription("Great guitar"),
+            Status = new ProductStatus(ProductStatusValue.Published),
+            Price = new ProductPrice(219900)
+        };
+
+        var retrievedProduct = await productRepository.GetById(productId, CancellationToken.None);
+
+        Assert.That(currentProduct.IsEqualTo(retrievedProduct), Is.True);
     }
 
     [Test, Order(2)]

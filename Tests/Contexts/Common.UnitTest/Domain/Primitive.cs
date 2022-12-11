@@ -4,7 +4,7 @@ using Common.Domain;
 using Common.Fixture.Application.Tests;
 
 [Category(TestCategory.Unit)]
-public class PrimitiveTest
+public sealed class PrimitiveTest
 {
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowArgumentOutOfRangeException()

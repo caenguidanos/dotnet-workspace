@@ -1,6 +1,6 @@
 namespace Ecommerce.Domain.Exceptions;
 
-public class ProductNotFoundException : Exception
+public sealed class ProductNotFoundException : Exception
 {
     public ProductNotFoundException()
     {
@@ -17,7 +17,7 @@ public class ProductNotFoundException : Exception
     }
 }
 
-public class ProductTitleInvalidException : Exception
+public sealed class ProductTitleInvalidException : Exception
 {
     public ProductTitleInvalidException()
     {
@@ -34,7 +34,7 @@ public class ProductTitleInvalidException : Exception
     }
 }
 
-public class ProductDescriptionInvalidException : Exception
+public sealed class ProductDescriptionInvalidException : Exception
 {
     public ProductDescriptionInvalidException()
     {
@@ -51,7 +51,7 @@ public class ProductDescriptionInvalidException : Exception
     }
 }
 
-public class ProductPriceInvalidException : Exception
+public sealed class ProductPriceInvalidException : Exception
 {
     public ProductPriceInvalidException()
     {
@@ -68,7 +68,7 @@ public class ProductPriceInvalidException : Exception
     }
 }
 
-public class ProductStatusInvalidException : Exception
+public sealed class ProductStatusInvalidException : Exception
 {
     public ProductStatusInvalidException()
     {
@@ -85,7 +85,7 @@ public class ProductStatusInvalidException : Exception
     }
 }
 
-public class ProductPersistenceException : Exception
+public sealed class ProductPersistenceException : Exception
 {
     public ProductPersistenceException()
     {

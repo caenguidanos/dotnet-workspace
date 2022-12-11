@@ -13,7 +13,7 @@ using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
 using Ecommerce.Infrastructure.Persistence;
 
-public class ProductRepository : IProductRepository
+public sealed class ProductRepository : IProductRepository
 {
     private IDbContext _dbContext { get; init; }
 
@@ -43,12 +43,14 @@ public class ProductRepository : IProductRepository
 
             Func<ProductPrimitives, Product> productsSelector = p =>
             {
-                var product = new Product(
-                    new ProductId(p.Id),
-                    new ProductTitle(p.Title),
-                    new ProductDescription(p.Description),
-                    new ProductStatus((ProductStatusValue)p.Status),
-                    new ProductPrice(p.Price));
+                var product = new Product
+                {
+                    Id = new ProductId(p.Id),
+                    Title = new ProductTitle(p.Title),
+                    Description = new ProductDescription(p.Description),
+                    Status = new ProductStatus(p.Status),
+                    Price = new ProductPrice(p.Price)
+                };
 
                 product.AddTimeStamp(p.updated_at, p.created_at);
 
@@ -90,12 +92,14 @@ public class ProductRepository : IProductRepository
                 throw new ProductNotFoundException();
             }
 
-            var product = new Product(
-                new ProductId(result.Id),
-                new ProductTitle(result.Title),
-                new ProductDescription(result.Description),
-                new ProductStatus((ProductStatusValue)result.Status),
-                new ProductPrice(result.Price));
+            var product = new Product
+            {
+                Id = new ProductId(result.Id),
+                Title = new ProductTitle(result.Title),
+                Description = new ProductDescription(result.Description),
+                Status = new ProductStatus(result.Status),
+                Price = new ProductPrice(result.Price)
+            };
 
             product.AddTimeStamp(result.updated_at, result.created_at);
 
@@ -124,12 +128,14 @@ public class ProductRepository : IProductRepository
                 VALUES (@Id, @Title, @Description, @Price, @Status)
             ";
 
+            var primitives = product.ToPrimitives();
+
             var parameters = new DynamicParameters();
-            parameters.Add("Id", product.Id);
-            parameters.Add("Title", product.Title);
-            parameters.Add("Description", product.Description);
-            parameters.Add("Price", product.Price);
-            parameters.Add("Status", product.Status);
+            parameters.Add("Id", primitives.Id);
+            parameters.Add("Title", primitives.Title);
+            parameters.Add("Description", primitives.Description);
+            parameters.Add("Price", primitives.Price);
+            parameters.Add("Status", primitives.Status);
 
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
@@ -192,12 +198,14 @@ public class ProductRepository : IProductRepository
                 WHERE id = @Id
             ";
 
+            var primitives = product.ToPrimitives();
+
             var parameters = new DynamicParameters();
-            parameters.Add("Id", product.Id);
-            parameters.Add("Title", product.Title);
-            parameters.Add("Description", product.Description);
-            parameters.Add("Price", product.Price);
-            parameters.Add("Status", product.Status);
+            parameters.Add("Id", primitives.Id);
+            parameters.Add("Title", primitives.Title);
+            parameters.Add("Description", primitives.Description);
+            parameters.Add("Price", primitives.Price);
+            parameters.Add("Status", primitives.Status);
 
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 

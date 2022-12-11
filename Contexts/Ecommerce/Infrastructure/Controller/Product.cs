@@ -10,7 +10,7 @@ using Ecommerce.Infrastructure.DataTransfer;
 
 [ApiController]
 [Route("[controller]")]
-public class ProductController : ControllerBase
+public sealed class ProductController : ControllerBase
 {
     private ISender _sender { get; init; }
 

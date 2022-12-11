@@ -7,7 +7,7 @@ using Common.Domain;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Model;
 
-public class ProductId : Primitive<Guid>
+public sealed class ProductId : Primitive<Guid>
 {
     public ProductId(Guid value)
         : base(value)
@@ -20,7 +20,7 @@ public class ProductId : Primitive<Guid>
     }
 }
 
-public class ProductPrice : Primitive<int>
+public sealed class ProductPrice : Primitive<int>
 {
     public ProductPrice(int value)
         : base(value)
@@ -43,7 +43,7 @@ public class ProductPrice : Primitive<int>
     }
 }
 
-public class ProductDescription : Primitive<string>
+public sealed class ProductDescription : Primitive<string>
 {
     public ProductDescription(string value)
         : base(value)
@@ -64,7 +64,7 @@ public class ProductDescription : Primitive<string>
     }
 }
 
-public class ProductStatus : Primitive<ProductStatusValue>
+public sealed class ProductStatus : Primitive<ProductStatusValue>
 {
     public ProductStatus(ProductStatusValue value)
         : base(value)
@@ -82,7 +82,7 @@ public class ProductStatus : Primitive<ProductStatusValue>
     }
 }
 
-public class ProductTitle : Primitive<string>
+public sealed class ProductTitle : Primitive<string>
 {
     public ProductTitle(string value)
         : base(value)
