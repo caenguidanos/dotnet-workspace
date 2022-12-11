@@ -12,4 +12,4 @@ jobs:
       - name: Update diagram
         uses: githubocto/repo-visualizer@main
         with:
-          excluded_paths: "ignore,.github,bin,obj,.vscode,.gitignore,Workspace.sln,.editorconfig,.docker-compose.yaml,Makefile,README.md"
+          excluded_paths: "ignore,.github,bin,obj,.vscode,.gitignore,workspace.sln,.editorconfig,.docker-compose.yaml,makefile,README.md,.dockerignore,appsettings.*,properties"

@@ -76,6 +76,8 @@ public sealed class GetProductByIdTest
         var retrievedProduct = await productRepository.GetById(productId, CancellationToken.None);
 
         Assert.That(currentProduct.IsEqualTo(retrievedProduct), Is.True);
+        Assert.That(retrievedProduct.created_at, Is.Not.EqualTo(default(DateTime)));
+        Assert.That(retrievedProduct.updated_at, Is.Not.EqualTo(default(DateTime)));
     }
 
     [Test, Order(2)]

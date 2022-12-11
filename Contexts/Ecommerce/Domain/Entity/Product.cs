@@ -21,7 +21,9 @@ public sealed class Product : Schema
             Title = Title.GetValue(),
             Description = Description.GetValue(),
             Status = Status.GetValue(),
-            Price = Price.GetValue()
+            Price = Price.GetValue(),
+            created_at = created_at,
+            updated_at = updated_at
         };
     }
 
