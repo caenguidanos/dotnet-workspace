@@ -6,6 +6,8 @@
 
 > Docker is required for development and testing purposes
 
+![Visualization of the codebase](./diagram.svg)
+
 ## Start infra
 
 ```bash
