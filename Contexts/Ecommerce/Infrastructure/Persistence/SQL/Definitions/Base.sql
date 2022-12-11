@@ -16,9 +16,3 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
-CREATE TRIGGER set_timestamp BEFORE UPDATE
-ON public.basetime
-FOR EACH ROW
-WHEN (OLD.* IS DISTINCT FROM NEW.*)
-EXECUTE PROCEDURE public.update_timestamp();

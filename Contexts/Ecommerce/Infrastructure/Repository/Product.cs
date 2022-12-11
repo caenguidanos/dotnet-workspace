@@ -5,8 +5,6 @@ using Npgsql;
 
 using System.Data;
 
-using Common.Infrastructure.Database;
-
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
@@ -148,7 +146,7 @@ public sealed class ProductRepository : IProductRepository
             {
                 var postgresException = (PostgresException)ex;
 
-                if (postgresException.SqlState.Equals(PostgresErrorCode.UniqueViolation))
+                if (postgresException.SqlState.Equals(PostgresErrorCodes.UniqueViolation))
                 {
                     if (postgresException.ConstraintName is not null)
                     {
@@ -159,7 +157,7 @@ public sealed class ProductRepository : IProductRepository
                     }
                 }
 
-                if (postgresException.SqlState.Equals(PostgresErrorCode.CheckViolation))
+                if (postgresException.SqlState.Equals(PostgresErrorCodes.CheckViolation))
                 {
                     if (postgresException.ConstraintName is not null)
                     {
@@ -257,7 +255,7 @@ public sealed class ProductRepository : IProductRepository
             {
                 var postgresException = (PostgresException)ex;
 
-                if (postgresException.SqlState.Equals(PostgresErrorCode.UniqueViolation))
+                if (postgresException.SqlState.Equals(PostgresErrorCodes.UniqueViolation))
                 {
                     if (postgresException.ConstraintName is not null)
                     {
@@ -268,7 +266,7 @@ public sealed class ProductRepository : IProductRepository
                     }
                 }
 
-                if (postgresException.SqlState.Equals(PostgresErrorCode.CheckViolation))
+                if (postgresException.SqlState.Equals(PostgresErrorCodes.CheckViolation))
                 {
                     if (postgresException.ConstraintName is not null)
                     {

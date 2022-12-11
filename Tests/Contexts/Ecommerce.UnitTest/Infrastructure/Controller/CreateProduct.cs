@@ -5,15 +5,13 @@ using Moq;
 using System.Net;
 
 using Common.Application.HttpUtil;
-using Common.Fixture.Application.Tests;
 
 using Ecommerce.Application.Command;
 using Ecommerce.Infrastructure.Controller;
 using Ecommerce.Infrastructure.DataTransfer;
 using Ecommerce.Domain.Model;
 
-[Category(TestCategory.Unit)]
-public sealed class CreateProduct
+public sealed class CreateProductUnitTest
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 

@@ -1,6 +1,7 @@
 namespace Ecommerce.Application.Command;
 
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mime;
 
@@ -20,18 +21,20 @@ public readonly struct CreateProductCommand : IRequest<HttpResultResponse>
 
 public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpResultResponse>
 {
-    private readonly IProductService productService;
+    private readonly ILogger _logger;
+    private readonly IProductService _productService;
 
-    public CreateProductHandler(IProductService productService)
+    public CreateProductHandler(ILogger<CreateProductHandler> logger, IProductService productService)
     {
-        this.productService = productService;
+        _logger = logger;
+        _productService = productService;
     }
 
     public async Task<HttpResultResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var createdProductId = await productService.AddNewProduct(
+            var createdProductId = await _productService.AddNewProduct(
                   request.Title,
                   request.Description,
                   request.Status,
@@ -47,12 +50,14 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex.ToString());
+
             if (ex
                 is ProductTitleInvalidException
+                or ProductTitleUniqueException
                 or ProductDescriptionInvalidException
                 or ProductPriceInvalidException
-                or ProductStatusInvalidException
-                or ProductTitleUniqueException)
+                or ProductStatusInvalidException)
             {
                 return new HttpResultResponse(cancellationToken)
                 {

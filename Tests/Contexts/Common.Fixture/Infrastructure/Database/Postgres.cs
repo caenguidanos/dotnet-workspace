@@ -109,7 +109,8 @@ public sealed class PostgresDatabase
 
     public async Task DisposeAsync()
     {
-        await _docker.Containers.RemoveContainerAsync(_postgresContainerName, new ContainerRemoveParameters { Force = true });
+        await _docker.Containers.RemoveContainerAsync(_postgresContainerName,
+            new ContainerRemoveParameters { RemoveVolumes = true, Force = true });
 
         _docker.Dispose();
     }

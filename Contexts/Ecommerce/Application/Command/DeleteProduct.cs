@@ -1,6 +1,7 @@
 namespace Ecommerce.Application.Command;
 
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System.Net;
 
 using Common.Application.HttpUtil;
@@ -15,18 +16,20 @@ public readonly struct DeleteProductCommand : IRequest<HttpResultResponse>
 
 public sealed class DeleteProductHandler : IRequestHandler<DeleteProductCommand, HttpResultResponse>
 {
-    private readonly IProductService productService;
+    private readonly ILogger _logger;
+    private readonly IProductService _productService;
 
-    public DeleteProductHandler(IProductService productService)
+    public DeleteProductHandler(ILogger<DeleteProductHandler> logger, IProductService productService)
     {
-        this.productService = productService;
+        _logger = logger;
+        _productService = productService;
     }
 
     public async Task<HttpResultResponse> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            await productService.DeleteProduct(request.Id, cancellationToken);
+            await _productService.DeleteProduct(request.Id, cancellationToken);
 
             return new HttpResultResponse(cancellationToken)
             {
@@ -35,6 +38,8 @@ public sealed class DeleteProductHandler : IRequestHandler<DeleteProductCommand,
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex.ToString());
+
             if (ex is ProductNotFoundException)
             {
                 return new HttpResultResponse(cancellationToken)

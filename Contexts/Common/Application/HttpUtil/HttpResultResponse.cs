@@ -2,7 +2,7 @@ namespace Common.Application.HttpUtil;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Globalization;
 using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
@@ -34,21 +34,26 @@ public sealed class HttpResultResponse : IActionResult
 
         if (Body is null)
         {
+            string defaultPayload = HttpStatusText.From(StatusCode);
+            context.HttpContext.Response.ContentLength = defaultPayload.Length;
             context.HttpContext.Response.ContentType = MediaTypeNames.Text.Plain;
-            await context.HttpContext.Response.WriteAsync(HttpStatusText.From(StatusCode), _cancellationToken);
+            await context.HttpContext.Response.WriteAsync(defaultPayload, _cancellationToken);
             return;
         }
 
         if (Body is string or int or bool)
         {
+            string stringifiedPayload = Body.ToString() ?? string.Empty;
+            context.HttpContext.Response.ContentLength = stringifiedPayload.Length;
             context.HttpContext.Response.ContentType = ContentType;
-            await context.HttpContext.Response.WriteAsync(Body.ToString(), _cancellationToken);
+            await context.HttpContext.Response.WriteAsync(stringifiedPayload, _cancellationToken);
             return;
         }
 
-        string payload = JsonSerializer.Serialize(Body, options: _jsonSerializerOptions);
+        string fromSerializerPayload = JsonSerializer.Serialize(Body, options: _jsonSerializerOptions);
+        context.HttpContext.Response.ContentLength = fromSerializerPayload.Length;
         context.HttpContext.Response.ContentType = ContentType;
-        await context.HttpContext.Response.WriteAsync(payload, _cancellationToken);
+        await context.HttpContext.Response.WriteAsync(fromSerializerPayload, _cancellationToken);
         return;
     }
 }

@@ -1,6 +1,7 @@
 namespace Ecommerce.Application.Command;
 
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System.Net;
 
 using Common.Application.HttpUtil;
@@ -19,18 +20,20 @@ public readonly struct UpdateProductCommand : IRequest<HttpResultResponse>
 
 public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpResultResponse>
 {
-    private readonly IProductService productService;
+    private readonly ILogger _logger;
+    private readonly IProductService _productService;
 
-    public UpdateProductHandler(IProductService productService)
+    public UpdateProductHandler(ILogger<UpdateProductHandler> logger, IProductService productService)
     {
-        this.productService = productService;
+        _logger = logger;
+        _productService = productService;
     }
 
     public async Task<HttpResultResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            await productService.UpdateProduct(request.Id, request, cancellationToken);
+            await _productService.UpdateProduct(request.Id, request, cancellationToken);
 
             return new HttpResultResponse(cancellationToken)
             {
@@ -39,6 +42,8 @@ public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand,
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex.ToString());
+
             if (ex is ProductNotFoundException)
             {
                 return new HttpResultResponse(cancellationToken)
@@ -49,6 +54,7 @@ public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand,
 
             if (ex
                 is ProductTitleInvalidException
+                or ProductTitleUniqueException
                 or ProductDescriptionInvalidException
                 or ProductPriceInvalidException
                 or ProductStatusInvalidException)

@@ -12,7 +12,7 @@ public sealed class ProductUpdatedHandler : INotificationHandler<ProductUpdatedE
     public Task Handle(ProductUpdatedEvent notification, CancellationToken cancellationToken)
     {
         // do stuff...
-        Console.WriteLine("ecommerce_product_created");
+        Console.WriteLine("ecommerce_product_updated");
 
         return Task.CompletedTask;
     }

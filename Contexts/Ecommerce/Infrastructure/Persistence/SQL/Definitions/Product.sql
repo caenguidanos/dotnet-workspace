@@ -19,7 +19,13 @@ CREATE TABLE public.product (
 	CHECK (
 		status = 0 OR -- CLOSED
 		status = 1    -- PUBLISHED
-	),
+	)
 ) INHERITS (public.basetime);
 
 CREATE INDEX product_by_id ON public.product (id);
+
+CREATE TRIGGER set_timestamp BEFORE UPDATE
+ON public.product
+FOR EACH ROW
+WHEN (OLD.* IS DISTINCT FROM NEW.*)
+EXECUTE PROCEDURE public.update_timestamp();

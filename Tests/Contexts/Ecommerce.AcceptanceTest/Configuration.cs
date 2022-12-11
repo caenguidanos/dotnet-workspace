@@ -1,8 +1,9 @@
-namespace Ecommerce.IntegrationTest;
+namespace Ecommerce.AcceptanceTest;
 
-public class Config
+public static class AcceptanceTestConfiguration
 {
-    public static readonly List<string> postgresDatabaseVolumes = new(){
+    public readonly static List<string> containerVolumes = new()
+    {
         $"{Environment.CurrentDirectory}/SQL/Definitions:/var/lib/sql/denifitions",
         $"{Environment.CurrentDirectory}/SQL/Init.sh:/docker-entrypoint-initdb.d/init.sh"
     };

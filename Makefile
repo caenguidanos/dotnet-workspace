@@ -5,17 +5,20 @@ check:
 	dotnet build
 	dotnet test
 
-infra-dev:
+infra-start:
 	docker-compose up
 
 infra-down:
 	docker-compose down
 
-webapi-dev:
+webapi-start:
 	dotnet watch --project ./Apps/MySaaS/Backend/Api/Api.csproj
 
 test-unit:
-	dotnet test --filter Category=Unit
+	dotnet test --filter Name~UnitTest
 
 test-integration:
-	dotnet test --filter Category=Integration
+	dotnet test --filter Name~IntegrationTest
+
+test-acceptance:
+	dotnet test --filter Name~AcceptanceTest

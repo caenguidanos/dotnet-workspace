@@ -4,25 +4,23 @@ using Dapper;
 using Moq;
 using Npgsql;
 
-using Common.Fixture.Application.Tests;
 using Common.Fixture.Infrastructure.Database;
 
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
-[Category(TestCategory.Integration)]
-public sealed class DeleteProductTest
+public sealed class DeleteProductIntegrationTest
 {
     private PostgresDatabase _postgresDatabase { get; init; }
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
 
-    public DeleteProductTest()
+    public DeleteProductIntegrationTest()
     {
         _postgresDatabase = new PostgresDatabase(
             name: "ecommerce",
-            volumes: Config.postgresDatabaseVolumes);
+            volumes: IntegrationTestConfiguration.containerVolumes);
     }
 
     [OneTimeSetUp]
@@ -32,8 +30,8 @@ public sealed class DeleteProductTest
 
         Mock
             .Get(_dbContext)
-            .Setup(dbContext => dbContext
-                .GetConnectionString()).Returns(connectionString);
+            .Setup(dbContext => dbContext.GetConnectionString())
+            .Returns(connectionString);
     }
 
     [OneTimeTearDown]
@@ -42,7 +40,7 @@ public sealed class DeleteProductTest
         await _postgresDatabase.DisposeAsync();
     }
 
-    [Test, Order(1)]
+    [Test]
     public async Task GivenProductsInDatabase_WhenDelete_ThenPass()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
@@ -57,13 +55,12 @@ public sealed class DeleteProductTest
 
         await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
-        var productRepository = new ProductRepository(_dbContext);
-
         var productId = Guid.Parse("092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
-        await productRepository.Delete(productId, CancellationToken.None);
+
+        await new ProductRepository(_dbContext).Delete(productId, CancellationToken.None);
     }
 
-    [Test, Order(2)]
+    [Test]
     public async Task GivenProductsInDatabase_WhenDelete_ThenThrowNotFoundException()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
@@ -78,27 +75,9 @@ public sealed class DeleteProductTest
 
         await conn.ExecuteAsync(sql).ConfigureAwait(false);
 
-        var productRepository = new ProductRepository(_dbContext);
-
         var productId = Guid.Parse("092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
-        Assert.ThrowsAsync<ProductNotFoundException>(async () => await productRepository.Delete(productId, CancellationToken.None));
-    }
-
-    [Test]
-    public async Task GivenNoTableInDatabase_WhenDelete_ThenThrowsException()
-    {
-        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
-        await conn.OpenAsync();
-
-        string sql = @"
-            DROP TABLE public.product;
-        ";
-
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
-
-        var productRepository = new ProductRepository(_dbContext);
-
-        Assert.ThrowsAsync<ProductPersistenceException>(async () => await productRepository.Delete(Guid.NewGuid(), CancellationToken.None));
+        Assert.ThrowsAsync<ProductNotFoundException>(
+            async () => await new ProductRepository(_dbContext).Delete(productId, CancellationToken.None));
     }
 }

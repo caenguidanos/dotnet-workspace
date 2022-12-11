@@ -3,10 +3,8 @@ namespace Common.UnitTest.Domain;
 using System.Globalization;
 
 using Common.Domain;
-using Common.Fixture.Application.Tests;
 
-[Category(TestCategory.Unit)]
-public sealed class SchemaTest
+public sealed class SchemaTestUnitTest
 {
     [Test]
     public void GivenEmptyEntity_WhenEditTimeStampAttributes_ThenReflectChanges()

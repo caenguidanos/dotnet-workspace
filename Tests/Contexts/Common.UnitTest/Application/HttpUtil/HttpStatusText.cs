@@ -3,10 +3,8 @@ namespace Common.UnitTest.Application.HttpUtil;
 using System.Net;
 
 using Common.Application.HttpUtil;
-using Common.Fixture.Application.Tests;
 
-[Category(TestCategory.Unit)]
-public sealed class HttpStatusTextTest
+public sealed class HttpStatusTextUnitTest
 {
     [Test]
     public void GivenStatusTextGenerator_WhenPassDifferentValidStatusValues_ThenParseToString()

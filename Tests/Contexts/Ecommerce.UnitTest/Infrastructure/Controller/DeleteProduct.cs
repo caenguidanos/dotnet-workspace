@@ -5,13 +5,11 @@ using Moq;
 using System.Net;
 
 using Common.Application.HttpUtil;
-using Common.Fixture.Application.Tests;
 
 using Ecommerce.Application.Command;
 using Ecommerce.Infrastructure.Controller;
 
-[Category(TestCategory.Unit)]
-public sealed class ProductDeleteById
+public sealed class ProductDeleteByIdUnitTest
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 

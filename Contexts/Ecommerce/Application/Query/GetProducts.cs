@@ -1,6 +1,7 @@
 namespace Ecommerce.Application.Query;
 
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Net.Mime;
 
@@ -15,18 +16,20 @@ public readonly struct GetProductsQuery : IRequest<HttpResultResponse>
 
 public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, HttpResultResponse>
 {
-    private readonly IProductRepository productRepository;
+    private readonly ILogger _logger;
+    private readonly IProductRepository _productRepository;
 
-    public GetProductsHandler(IProductRepository productRepository)
+    public GetProductsHandler(ILogger<GetProductsHandler> logger, IProductRepository productRepository)
     {
-        this.productRepository = productRepository;
+        _logger = logger;
+        _productRepository = productRepository;
     }
 
     public async Task<HttpResultResponse> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         try
         {
-            var products = await productRepository.Get(cancellationToken);
+            var products = await _productRepository.Get(cancellationToken);
 
             return new HttpResultResponse(cancellationToken)
             {
@@ -37,6 +40,8 @@ public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, HttpR
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex.ToString());
+
             if (ex is ProductPersistenceException)
             {
                 return new HttpResultResponse(cancellationToken)
