@@ -100,7 +100,10 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string title = string.Empty;
-        for (var i = 0; i < 257; i++) title += "a";
+        for (int i = 0; i < 257; i++)
+        {
+            title += "a";
+        }
 
         string sql = @"
             TRUNCATE public.product;
@@ -168,7 +171,10 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string description = string.Empty;
-        for (var i = 0; i < 601; i++) description += "a";
+        for (int i = 0; i < 601; i++)
+        {
+            description += "a";
+        }
 
         string sql = @"
             TRUNCATE public.product;

@@ -2,7 +2,6 @@ namespace Common.Application.HttpUtil;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Globalization;
 using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
