@@ -31,7 +31,7 @@ public sealed class DbSeed : IDbSeed
             VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
 
             INSERT INTO public.product (id, title, description, price, status)
-            VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'Antelope Orion +32', 'Great audio interface', 300000, 1);
+            VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'Antelope Orion +32', 'Great audio interface', 300000, 0);
         ";
 
         await conn.ExecuteAsync(sql).ConfigureAwait(false);

@@ -8,6 +8,9 @@ check:
 infra-dev:
 	docker-compose up
 
+infra-down:
+	docker-compose down
+
 webapi-dev:
 	dotnet watch --project ./Apps/MySaaS/Backend/Api/Api.csproj
 

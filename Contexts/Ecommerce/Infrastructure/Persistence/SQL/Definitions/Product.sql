@@ -1,9 +1,25 @@
-CREATE TABLE IF NOT EXISTS public.product (
-	title text NOT NULL,
+CREATE TABLE public.product (
+	title text UNIQUE NOT NULL,
 	description text NOT NULL,
 	price integer NOT NULL,
 	status integer NOT NULL,
-	PRIMARY KEY (id)
+	PRIMARY KEY (id),
+	CHECK (
+		length(title) >= 5 AND
+		length(title) <= 256
+	),
+	CHECK (
+		length(description) >= 5 AND
+		length(description) <= 600
+	),
+	CHECK (
+		price >= 100 AND
+		price <= 100000000
+	),
+	CHECK (
+		status = 0 OR -- CLOSED
+		status = 1    -- PUBLISHED
+	),
 ) INHERITS (public.basetime);
 
-CREATE INDEX IF NOT EXISTS product_by_id ON public.product (id);
+CREATE INDEX product_by_id ON public.product (id);

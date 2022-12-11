@@ -51,7 +51,8 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
                 is ProductTitleInvalidException
                 or ProductDescriptionInvalidException
                 or ProductPriceInvalidException
-                or ProductStatusInvalidException)
+                or ProductStatusInvalidException
+                or ProductTitleUniqueException)
             {
                 return new HttpResultResponse(cancellationToken)
                 {

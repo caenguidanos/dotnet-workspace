@@ -73,7 +73,7 @@ public sealed class SaveProductTest
 
         var product = await productRepository.GetById(newProductId, CancellationToken.None);
 
-        Assert.That(newProduct.IsEqualTo(product), Is.True);
+        Assert.That(newProduct.ShallowEqual(product), Is.True);
     }
 
     [Test, Order(2)]
@@ -103,6 +103,34 @@ public sealed class SaveProductTest
         };
 
         Assert.ThrowsAsync<ProductPersistenceException>(async () => await productRepository.Save(product, CancellationToken.None));
+    }
+
+    public async Task GivenProductWithSameTitle_WhenSave_ThenThrowException()
+    {
+        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+        await conn.OpenAsync();
+
+        string sql = @"
+            TRUNCATE public.product;
+
+            INSERT INTO public.product (id, title, description, price, status)
+            VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
+        ";
+
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+
+        var productRepository = new ProductRepository(_dbContext);
+
+        var product = new Product
+        {
+            Id = new ProductId(Product.NewID()),
+            Title = new ProductTitle("merican Professional II Stratocaster"),
+            Description = new ProductDescription("Super description 1"),
+            Status = new ProductStatus(ProductStatusValue.Published),
+            Price = new ProductPrice(200)
+        };
+
+        Assert.ThrowsAsync<ProductTitleUniqueException>(async () => await productRepository.Save(product, CancellationToken.None));
     }
 
     [Test]

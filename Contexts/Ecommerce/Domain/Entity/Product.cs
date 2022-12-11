@@ -1,5 +1,7 @@
 namespace Ecommerce.Domain.Entity;
 
+using System.Globalization;
+
 using Common.Domain;
 
 using Ecommerce.Domain.ValueObject;
@@ -27,12 +29,23 @@ public sealed class Product : Schema
         };
     }
 
-    public bool IsEqualTo(Product comparer)
+    public bool DeepEqual(Product comparer)
     {
+        var locale = new CultureInfo("en-US");
+
+        return ShallowEqual(comparer) &&
+                 created_at.ToString(locale) == comparer.created_at.ToString(locale) &&
+                 updated_at.ToString(locale) == comparer.updated_at.ToString(locale);
+    }
+
+    public bool ShallowEqual(Product comparer)
+    {
+        var locale = new CultureInfo("en-US");
+
         return Id.GetValue() == comparer.Id.GetValue() &&
-               Title.GetValue() == comparer.Title.GetValue() &&
-               Description.GetValue() == comparer.Description.GetValue() &&
-               Status.GetValue() == comparer.Status.GetValue() &&
-               Price.GetValue() == comparer.Price.GetValue();
+                 Title.GetValue() == comparer.Title.GetValue() &&
+                 Description.GetValue() == comparer.Description.GetValue() &&
+                 Status.GetValue() == comparer.Status.GetValue() &&
+                 Price.GetValue() == comparer.Price.GetValue();
     }
 }

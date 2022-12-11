@@ -8,7 +8,7 @@ using System.Net.Mime;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-public sealed class HttpResultResponse : ActionResult
+public sealed class HttpResultResponse : IActionResult
 {
     public object? Body { get; set; }
     public required HttpStatusCode StatusCode { get; set; }
@@ -28,7 +28,7 @@ public sealed class HttpResultResponse : ActionResult
         _cancellationToken = cancellationToken;
     }
 
-    public override async Task ExecuteResultAsync(ActionContext context)
+    public async Task ExecuteResultAsync(ActionContext context)
     {
         context.HttpContext.Response.StatusCode = (int)StatusCode;
 

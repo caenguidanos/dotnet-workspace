@@ -34,6 +34,23 @@ public sealed class ProductTitleInvalidException : Exception
     }
 }
 
+public sealed class ProductTitleUniqueException : Exception
+{
+    public ProductTitleUniqueException()
+    {
+    }
+
+    public ProductTitleUniqueException(string paramName)
+        : base(paramName)
+    {
+    }
+
+    public ProductTitleUniqueException(string paramName, Exception inner)
+        : base(paramName, inner)
+    {
+    }
+}
+
 public sealed class ProductDescriptionInvalidException : Exception
 {
     public ProductDescriptionInvalidException()

@@ -5,6 +5,8 @@ using Npgsql;
 
 using System.Data;
 
+using Common.Infrastructure.Database;
+
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
@@ -58,11 +60,11 @@ public sealed class ProductRepository : IProductRepository
 
             return result.Select(productsSelector).AsList();
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            if (exception is PostgresException)
+            if (ex is PostgresException)
             {
-                throw new ProductPersistenceException(exception.Message);
+                throw new ProductPersistenceException(ex.Message);
             }
 
             throw;
@@ -104,11 +106,11 @@ public sealed class ProductRepository : IProductRepository
 
             return product;
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            if (exception is PostgresException)
+            if (ex is PostgresException)
             {
-                throw new ProductPersistenceException(exception.Message);
+                throw new ProductPersistenceException(ex.Message);
             }
 
             throw;
@@ -140,11 +142,50 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            if (exception is PostgresException)
+            if (ex is PostgresException)
             {
-                throw new ProductPersistenceException(exception.Message);
+                var postgresException = (PostgresException)ex;
+
+                if (postgresException.SqlState.Equals(PostgresErrorCode.UniqueViolation))
+                {
+                    if (postgresException.ConstraintName is not null)
+                    {
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.UniqueTitle))
+                        {
+                            throw new ProductTitleUniqueException();
+                        }
+                    }
+                }
+
+                if (postgresException.SqlState.Equals(PostgresErrorCode.CheckViolation))
+                {
+                    if (postgresException.ConstraintName is not null)
+                    {
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckTitle))
+                        {
+                            throw new ProductTitleInvalidException();
+                        }
+
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckDescription))
+                        {
+                            throw new ProductDescriptionInvalidException();
+                        }
+
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckStatus))
+                        {
+                            throw new ProductStatusInvalidException();
+                        }
+
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckPrice))
+                        {
+                            throw new ProductPriceInvalidException();
+                        }
+                    }
+                }
+
+                throw new ProductPersistenceException(ex.Message);
             }
 
             throw;
@@ -173,11 +214,11 @@ public sealed class ProductRepository : IProductRepository
                 throw new ProductNotFoundException();
             }
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            if (exception is PostgresException)
+            if (ex is PostgresException)
             {
-                throw new ProductPersistenceException(exception.Message);
+                throw new ProductPersistenceException(ex.Message);
             }
 
             throw;
@@ -210,11 +251,50 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
         }
-        catch (Exception exception)
+        catch (Exception ex)
         {
-            if (exception is PostgresException)
+            if (ex is PostgresException)
             {
-                throw new ProductPersistenceException(exception.Message);
+                var postgresException = (PostgresException)ex;
+
+                if (postgresException.SqlState.Equals(PostgresErrorCode.UniqueViolation))
+                {
+                    if (postgresException.ConstraintName is not null)
+                    {
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.UniqueTitle))
+                        {
+                            throw new ProductTitleUniqueException();
+                        }
+                    }
+                }
+
+                if (postgresException.SqlState.Equals(PostgresErrorCode.CheckViolation))
+                {
+                    if (postgresException.ConstraintName is not null)
+                    {
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckTitle))
+                        {
+                            throw new ProductTitleInvalidException();
+                        }
+
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckDescription))
+                        {
+                            throw new ProductDescriptionInvalidException();
+                        }
+
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckStatus))
+                        {
+                            throw new ProductStatusInvalidException();
+                        }
+
+                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckPrice))
+                        {
+                            throw new ProductPriceInvalidException();
+                        }
+                    }
+                }
+
+                throw new ProductPersistenceException(ex.Message);
             }
 
             throw;
