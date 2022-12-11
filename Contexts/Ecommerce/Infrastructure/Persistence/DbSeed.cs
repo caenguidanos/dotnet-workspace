@@ -21,7 +21,7 @@ public sealed class DbSeed : IDbSeed
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
 
-        string sql = @"
+        const string sql = @"
             TRUNCATE public.product;
 
             INSERT INTO public.product (id, title, description, price, status)

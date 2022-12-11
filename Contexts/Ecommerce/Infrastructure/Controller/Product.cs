@@ -27,8 +27,7 @@ public sealed class ProductController : ControllerBase
     {
         var query = new GetProductsQuery();
 
-        var actionResult = await _sender.Send(query, cancellationToken);
-        return actionResult;
+        return await _sender.Send(query, cancellationToken);
     }
 
     [HttpGet("{id:guid}")]
@@ -40,8 +39,7 @@ public sealed class ProductController : ControllerBase
     {
         var query = new GetProductQuery { Id = id };
 
-        var actionResult = await _sender.Send(query, cancellationToken);
-        return actionResult;
+        return await _sender.Send(query, cancellationToken);
     }
 
     [HttpPost]
@@ -59,8 +57,7 @@ public sealed class ProductController : ControllerBase
             Status = body.Status,
         };
 
-        var actionResult = await _sender.Send(command, cancellationToken);
-        return actionResult;
+        return await _sender.Send(command, cancellationToken);
     }
 
     [HttpDelete("{id:guid}")]
@@ -72,8 +69,7 @@ public sealed class ProductController : ControllerBase
     {
         var command = new RemoveProductCommand { Id = id };
 
-        var actionResult = await _sender.Send(command, cancellationToken);
-        return actionResult;
+        return await _sender.Send(command, cancellationToken);
     }
 
     [HttpPatch("{id:guid}")]
@@ -93,7 +89,6 @@ public sealed class ProductController : ControllerBase
             Status = body.Status
         };
 
-        var actionResult = await _sender.Send(command, cancellationToken);
-        return actionResult;
+        return await _sender.Send(command, cancellationToken);
     }
 }

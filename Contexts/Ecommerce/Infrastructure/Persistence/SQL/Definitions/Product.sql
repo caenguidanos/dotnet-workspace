@@ -20,7 +20,7 @@ CREATE TABLE public.product (
 		status = 0 OR -- CLOSED
 		status = 1    -- PUBLISHED
 	)
-) INHERITS (public.basetime);
+) INHERITS (public.base);
 
 CREATE INDEX product_by_id ON public.product (id);
 
