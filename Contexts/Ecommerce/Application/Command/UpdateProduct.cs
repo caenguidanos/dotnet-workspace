@@ -8,7 +8,7 @@ using Common.Application.HttpUtil;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 
-public sealed class UpdateProductCommand : IRequest<HttpResultResponse>
+public readonly struct UpdateProductCommand : IRequest<HttpResultResponse>
 {
     public Guid Id { get; init; }
     public int? Price { get; init; }

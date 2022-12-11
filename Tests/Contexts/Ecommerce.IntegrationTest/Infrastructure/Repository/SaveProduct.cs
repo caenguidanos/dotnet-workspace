@@ -59,7 +59,7 @@ public sealed class SaveProductTest
 
         var productRepository = new ProductRepository(_dbContext);
 
-        var newProductId = Product.NewID();
+        var newProductId = Common.Domain.Schema.NewID();
         var newProduct = new Product
         {
             Id = new ProductId(newProductId),
@@ -121,7 +121,7 @@ public sealed class SaveProductTest
 
         var product = new Product
         {
-            Id = new ProductId(Product.NewID()),
+            Id = new ProductId(Common.Domain.Schema.NewID()),
             Title = new ProductTitle("Super title 1"),
             Description = new ProductDescription("Super description 1"),
             Status = new ProductStatus(ProductStatusValue.Published),

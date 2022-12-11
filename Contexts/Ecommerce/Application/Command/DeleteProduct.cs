@@ -8,7 +8,7 @@ using Common.Application.HttpUtil;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 
-public sealed class DeleteProductCommand : IRequest<HttpResultResponse>
+public readonly struct DeleteProductCommand : IRequest<HttpResultResponse>
 {
     public required Guid Id { get; init; }
 }

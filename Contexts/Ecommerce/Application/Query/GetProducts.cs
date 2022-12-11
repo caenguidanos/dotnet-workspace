@@ -9,7 +9,7 @@ using Common.Application.HttpUtil;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
 
-public sealed class GetProductsQuery : IRequest<HttpResultResponse>
+public readonly struct GetProductsQuery : IRequest<HttpResultResponse>
 {
 }
 

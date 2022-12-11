@@ -9,7 +9,7 @@ using Common.Application.HttpUtil;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
 
-public sealed class GetProductQuery : IRequest<HttpResultResponse>
+public readonly struct GetProductQuery : IRequest<HttpResultResponse>
 {
     public required Guid Id { get; init; }
 }

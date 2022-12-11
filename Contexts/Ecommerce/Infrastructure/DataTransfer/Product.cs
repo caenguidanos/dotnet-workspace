@@ -18,7 +18,7 @@ public sealed class ProductPrimitives : SchemaPrimitives
     public required ProductStatusValue Status { get; set; }
 }
 
-public class CreateProductHttpRequestBody
+public struct CreateProductHttpRequestBody
 {
     public required string Title { get; set; }
     public required string Description { get; set; }
@@ -26,7 +26,7 @@ public class CreateProductHttpRequestBody
     public required int Status { get; set; }
 }
 
-public class UpdateProductHttpRequestBody
+public struct UpdateProductHttpRequestBody
 {
     public string? Title { get; set; }
     public string? Description { get; set; }

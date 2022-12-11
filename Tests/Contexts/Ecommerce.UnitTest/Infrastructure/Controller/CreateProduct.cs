@@ -10,6 +10,7 @@ using Common.Fixture.Application.Tests;
 using Ecommerce.Application.Command;
 using Ecommerce.Infrastructure.Controller;
 using Ecommerce.Infrastructure.DataTransfer;
+using Ecommerce.Domain.Model;
 
 [Category(TestCategory.Unit)]
 public sealed class CreateProduct
@@ -25,7 +26,13 @@ public sealed class CreateProduct
     [Test]
     public async Task GivenNewProduct_WhenRequestSender_ThenPass()
     {
-        var newProduct = Mock.Of<CreateProductHttpRequestBody>();
+        var requestBody = new CreateProductHttpRequestBody
+        {
+            Title = "Super title 1",
+            Description = "Super description 1",
+            Status = (int)ProductStatusValue.Published,
+            Price = 200
+        };
 
         Mock
             .Get(_sender)
@@ -40,7 +47,8 @@ public sealed class CreateProduct
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.CreateProduct(newProduct, CancellationToken.None);
+        var actionResult = await controller.CreateProduct(requestBody, CancellationToken.None);
+
         Assert.That(actionResult, Is.TypeOf<HttpResultResponse>());
     }
 }

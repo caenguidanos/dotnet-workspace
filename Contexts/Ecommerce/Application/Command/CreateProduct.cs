@@ -10,7 +10,7 @@ using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public sealed class CreateProductCommand : IRequest<HttpResultResponse>
+public readonly struct CreateProductCommand : IRequest<HttpResultResponse>
 {
     public required int Price { get; init; }
     public required string Title { get; init; }

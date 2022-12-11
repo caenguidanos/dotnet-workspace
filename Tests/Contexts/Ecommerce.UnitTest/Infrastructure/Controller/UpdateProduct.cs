@@ -26,7 +26,11 @@ public sealed class ProductUpdateById
     public async Task GivenProductIdAndProduct_WhenRequestSender_ThenPass()
     {
         var productId = Common.Domain.Schema.NewID();
-        var product = Mock.Of<UpdateProductHttpRequestBody>();
+
+        var requestBody = new UpdateProductHttpRequestBody
+        {
+            Title = "Super title 2",
+        };
 
         Mock
             .Get(_sender)
@@ -41,7 +45,7 @@ public sealed class ProductUpdateById
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.UpdateProduct(productId, product, CancellationToken.None);
+        var actionResult = await controller.UpdateProduct(productId, requestBody, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<HttpResultResponse>());
     }
 }

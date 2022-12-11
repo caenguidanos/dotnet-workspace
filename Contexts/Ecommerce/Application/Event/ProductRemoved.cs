@@ -2,7 +2,7 @@ namespace Ecommerce.Application.Event;
 
 using MediatR;
 
-public sealed class ProductRemovedEvent : INotification
+public readonly struct ProductRemovedEvent : INotification
 {
     public required Guid Product { get; init; }
 }

@@ -7,7 +7,6 @@ using System.Data;
 
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Exceptions;
-using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
