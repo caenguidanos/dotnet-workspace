@@ -4,7 +4,7 @@ using Common.Domain;
 
 using Ecommerce.Domain.Model;
 
-public sealed class ProductAck
+public struct ProductAck
 {
     public required Guid Id { get; set; }
 }
