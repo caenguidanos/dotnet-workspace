@@ -142,41 +142,39 @@ public sealed class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            if (ex is PostgresException)
+            if (ex is PostgresException postgresException)
             {
-                var postgresException = (PostgresException)ex;
-
-                if (postgresException.SqlState.Equals(PostgresErrorCodes.UniqueViolation))
+                if (postgresException.SqlState == PostgresErrorCodes.UniqueViolation)
                 {
                     if (postgresException.ConstraintName is not null)
                     {
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.UniqueTitle))
+                        if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                         {
                             throw new ProductTitleUniqueException();
                         }
                     }
                 }
 
-                if (postgresException.SqlState.Equals(PostgresErrorCodes.CheckViolation))
+                if (postgresException.SqlState == PostgresErrorCodes.CheckViolation)
                 {
                     if (postgresException.ConstraintName is not null)
                     {
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckTitle))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckTitle)
                         {
                             throw new ProductTitleInvalidException();
                         }
 
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckDescription))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckDescription)
                         {
                             throw new ProductDescriptionInvalidException();
                         }
 
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckStatus))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckStatus)
                         {
                             throw new ProductStatusInvalidException();
                         }
 
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckPrice))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckPrice)
                         {
                             throw new ProductPriceInvalidException();
                         }
@@ -251,41 +249,39 @@ public sealed class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            if (ex is PostgresException)
+            if (ex is PostgresException postgresException)
             {
-                var postgresException = (PostgresException)ex;
-
-                if (postgresException.SqlState.Equals(PostgresErrorCodes.UniqueViolation))
+                if (postgresException.SqlState == PostgresErrorCodes.UniqueViolation)
                 {
                     if (postgresException.ConstraintName is not null)
                     {
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.UniqueTitle))
+                        if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                         {
                             throw new ProductTitleUniqueException();
                         }
                     }
                 }
 
-                if (postgresException.SqlState.Equals(PostgresErrorCodes.CheckViolation))
+                if (postgresException.SqlState == PostgresErrorCodes.CheckViolation)
                 {
                     if (postgresException.ConstraintName is not null)
                     {
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckTitle))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckTitle)
                         {
                             throw new ProductTitleInvalidException();
                         }
 
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckDescription))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckDescription)
                         {
                             throw new ProductDescriptionInvalidException();
                         }
 
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckStatus))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckStatus)
                         {
                             throw new ProductStatusInvalidException();
                         }
 
-                        if (postgresException.ConstraintName.Equals(ProductConstraints.CheckPrice))
+                        if (postgresException.ConstraintName == ProductConstraints.CheckPrice)
                         {
                             throw new ProductPriceInvalidException();
                         }

@@ -21,7 +21,11 @@ public static class EcommerceModule
 
         services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IDbSeed, DbSeed>();
-        services.AddSingleton<IProductService, ProductService>();
+
+        services.AddSingleton<IProductCreatorService, ProductCreatorService>();
+        services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
+        services.AddSingleton<IProductRemoverService, ProductRemoverService>();
+
         services.AddSingleton<IProductRepository, ProductRepository>();
 
         return services;
@@ -31,8 +35,7 @@ public static class EcommerceModule
     {
         using var scope = host.Services.CreateScope();
 
-        scope.ServiceProvider
-            .GetRequiredService<IDbSeed>().RunAsync().Wait();
+        scope.ServiceProvider.GetRequiredService<IDbSeed>().RunAsync().Wait();
 
         return host;
     }

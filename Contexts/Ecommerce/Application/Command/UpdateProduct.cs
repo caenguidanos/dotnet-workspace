@@ -21,19 +21,19 @@ public readonly struct UpdateProductCommand : IRequest<HttpResultResponse>
 public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, HttpResultResponse>
 {
     private readonly ILogger _logger;
-    private readonly IProductService _productService;
+    private readonly IProductUpdaterService _productUpdaterService;
 
-    public UpdateProductHandler(ILogger<UpdateProductHandler> logger, IProductService productService)
+    public UpdateProductHandler(ILogger<UpdateProductHandler> logger, IProductUpdaterService productUpdaterService)
     {
         _logger = logger;
-        _productService = productService;
+        _productUpdaterService = productUpdaterService;
     }
 
     public async Task<HttpResultResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            await _productService.UpdateProduct(request.Id, request, cancellationToken);
+            await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
 
             return new HttpResultResponse(cancellationToken)
             {

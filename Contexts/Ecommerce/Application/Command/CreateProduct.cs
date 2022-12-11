@@ -22,19 +22,19 @@ public readonly struct CreateProductCommand : IRequest<HttpResultResponse>
 public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpResultResponse>
 {
     private readonly ILogger _logger;
-    private readonly IProductService _productService;
+    private readonly IProductCreatorService _productCreatorService;
 
-    public CreateProductHandler(ILogger<CreateProductHandler> logger, IProductService productService)
+    public CreateProductHandler(ILogger<CreateProductHandler> logger, IProductCreatorService productCreatorService)
     {
         _logger = logger;
-        _productService = productService;
+        _productCreatorService = productCreatorService;
     }
 
     public async Task<HttpResultResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var createdProductId = await _productService.AddNewProduct(
+            var createdProductId = await _productCreatorService.AddNewProduct(
                   request.Title,
                   request.Description,
                   request.Status,

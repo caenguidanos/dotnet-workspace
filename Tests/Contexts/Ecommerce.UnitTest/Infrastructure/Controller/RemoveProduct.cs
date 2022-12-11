@@ -9,7 +9,7 @@ using Common.Application.HttpUtil;
 using Ecommerce.Application.Command;
 using Ecommerce.Infrastructure.Controller;
 
-public sealed class ProductDeleteByIdUnitTest
+public sealed class RemoveProductUnitTest
 {
     private readonly ISender _sender = Mock.Of<ISender>();
 
@@ -27,7 +27,7 @@ public sealed class ProductDeleteByIdUnitTest
         Mock
             .Get(_sender)
             .Setup(sender => sender
-                .Send(It.IsAny<DeleteProductCommand>(), It.IsAny<CancellationToken>()))
+                .Send(It.IsAny<RemoveProductCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(
                         new HttpResultResponse(CancellationToken.None)
                         {
@@ -37,7 +37,7 @@ public sealed class ProductDeleteByIdUnitTest
 
         var controller = new ProductController(_sender);
 
-        var actionResult = await controller.DeleteProduct(productId, CancellationToken.None);
+        var actionResult = await controller.RemoveProduct(productId, CancellationToken.None);
         Assert.That(actionResult, Is.TypeOf<HttpResultResponse>());
     }
 }

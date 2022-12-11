@@ -9,27 +9,27 @@ using Common.Application.HttpUtil;
 using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 
-public readonly struct DeleteProductCommand : IRequest<HttpResultResponse>
+public readonly struct RemoveProductCommand : IRequest<HttpResultResponse>
 {
     public required Guid Id { get; init; }
 }
 
-public sealed class DeleteProductHandler : IRequestHandler<DeleteProductCommand, HttpResultResponse>
+public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, HttpResultResponse>
 {
     private readonly ILogger _logger;
-    private readonly IProductService _productService;
+    private readonly IProductRemoverService _productRemoverService;
 
-    public DeleteProductHandler(ILogger<DeleteProductHandler> logger, IProductService productService)
+    public RemoveProductHandler(ILogger<RemoveProductHandler> logger, IProductRemoverService productRemoverService)
     {
         _logger = logger;
-        _productService = productService;
+        _productRemoverService = productRemoverService;
     }
 
-    public async Task<HttpResultResponse> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
+    public async Task<HttpResultResponse> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            await _productService.DeleteProduct(request.Id, cancellationToken);
+            await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
 
             return new HttpResultResponse(cancellationToken)
             {

@@ -40,8 +40,6 @@ public sealed class Product : Schema
 
     public bool ShallowEqual(Product comparer)
     {
-        var locale = new CultureInfo("en-US");
-
         return Id.GetValue() == comparer.Id.GetValue() &&
                  Title.GetValue() == comparer.Title.GetValue() &&
                  Description.GetValue() == comparer.Description.GetValue() &&

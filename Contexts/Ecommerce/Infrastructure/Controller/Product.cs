@@ -68,9 +68,9 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> DeleteProduct([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
-        var command = new DeleteProductCommand { Id = id };
+        var command = new RemoveProductCommand { Id = id };
 
         var actionResult = await _sender.Send(command, cancellationToken);
         return actionResult;
