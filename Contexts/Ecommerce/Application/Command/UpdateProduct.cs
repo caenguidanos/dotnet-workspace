@@ -1,6 +1,6 @@
 namespace Ecommerce.Application.Command;
 
-using MediatR;
+using Mediator;
 using System.Net;
 
 using Common.Application.HttpUtil;
@@ -25,7 +25,7 @@ public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand,
         _productUpdaterService = productUpdaterService;
     }
 
-    public async Task<HttpResultResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<HttpResultResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
 

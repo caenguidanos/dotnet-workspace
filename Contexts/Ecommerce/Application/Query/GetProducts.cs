@@ -1,6 +1,6 @@
 namespace Ecommerce.Application.Query;
 
-using MediatR;
+using Mediator;
 using System.Net;
 using System.Net.Mime;
 
@@ -21,7 +21,7 @@ public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, HttpR
         _productRepository = productRepository;
     }
 
-    public async Task<HttpResultResponse> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<HttpResultResponse> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         var products = await _productRepository.Get(cancellationToken);
 

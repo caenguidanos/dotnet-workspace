@@ -1,6 +1,6 @@
 namespace Ecommerce.Application.Service;
 
-using MediatR;
+using Mediator;
 
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Event;

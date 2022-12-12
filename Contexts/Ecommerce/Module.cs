@@ -1,7 +1,6 @@
 namespace Ecommerce;
 
 using Dapper;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -17,7 +16,7 @@ public static class EcommerceModule
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
-        services.AddMediatR(typeof(EcommerceModule).Assembly);
+        services.AddMediator();
 
         services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IDbSeed, DbSeed>();

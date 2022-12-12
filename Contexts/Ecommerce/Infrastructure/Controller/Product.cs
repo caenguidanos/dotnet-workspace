@@ -1,6 +1,6 @@
 namespace Ecommerce.Infrastructure.Controller;
 
-using MediatR;
+using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> GetProducts(CancellationToken cancellationToken)
     {
         var query = new GetProductsQuery();
 
@@ -35,7 +35,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
         var query = new GetProductQuery { Id = id };
 
@@ -47,7 +47,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var command = new CreateProductCommand
         {
@@ -65,7 +65,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
         var command = new RemoveProductCommand { Id = id };
 
@@ -78,7 +78,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var command = new UpdateProductCommand
         {

@@ -1,6 +1,6 @@
 namespace Ecommerce.Application.Event;
 
-using MediatR;
+using Mediator;
 
 public readonly struct ProductUpdatedEvent : INotification
 {
@@ -9,11 +9,11 @@ public readonly struct ProductUpdatedEvent : INotification
 
 public sealed class ProductUpdatedHandler : INotificationHandler<ProductUpdatedEvent>
 {
-    public Task Handle(ProductUpdatedEvent notification, CancellationToken cancellationToken)
+    public ValueTask Handle(ProductUpdatedEvent notification, CancellationToken cancellationToken)
     {
         // do stuff...
         Console.WriteLine("ecommerce_product_updated");
 
-        return Task.CompletedTask;
+        return ValueTask.CompletedTask;
     }
 }

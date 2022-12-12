@@ -1,6 +1,6 @@
 namespace Ecommerce.UnitTest.Infrastructure.Controller;
 
-using MediatR;
+using Mediator;
 using Moq;
 using System.Net;
 

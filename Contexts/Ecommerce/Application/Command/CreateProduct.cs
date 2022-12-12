@@ -1,6 +1,6 @@
 namespace Ecommerce.Application.Command;
 
-using MediatR;
+using Mediator;
 using System.Net;
 using System.Net.Mime;
 
@@ -25,7 +25,7 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _productCreatorService = productCreatorService;
     }
 
-    public async Task<HttpResultResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<HttpResultResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var createdProductId = await _productCreatorService.AddNewProduct(
               request.Title,

@@ -1,6 +1,6 @@
 namespace Ecommerce.Application.Command;
 
-using MediatR;
+using Mediator;
 using System.Net;
 
 using Common.Application.HttpUtil;
@@ -20,7 +20,7 @@ public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand,
         _productRemoverService = productRemoverService;
     }
 
-    public async Task<HttpResultResponse> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<HttpResultResponse> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
     {
         await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
 
