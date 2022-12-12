@@ -21,11 +21,9 @@ public static class EcommerceModule
 
         services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IDbSeed, DbSeed>();
-
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
         services.AddSingleton<IProductRemoverService, ProductRemoverService>();
-
         services.AddSingleton<IProductRepository, ProductRepository>();
 
         return services;

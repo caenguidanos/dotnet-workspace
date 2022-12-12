@@ -1,4 +1,4 @@
-# dotnet workspace
+# dotnet
 
 - .NET 7
 - Dapper
