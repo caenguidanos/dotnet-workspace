@@ -16,6 +16,8 @@ builder.Services.AddCommonModule();
 builder.Services.AddEcommerceModule();
 
 var app = builder.Build();
+
+#if DEBUG
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,6 +25,7 @@ if (app.Environment.IsDevelopment())
 
     app.UseEcommerceDataSeed();
 }
+#endif
 
 app.MapControllers();
 
