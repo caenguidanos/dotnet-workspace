@@ -10,14 +10,9 @@ using Ecommerce.Infrastructure.Persistence;
 
 public sealed class ProductTableAcceptanceTest
 {
-    private PostgresDatabaseFactory _postgres { get; init; }
+    private readonly PostgresDatabaseFactory _postgres = new(template: "ecommerce");
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
-
-    public ProductTableAcceptanceTest()
-    {
-        _postgres = new PostgresDatabaseFactory(template: "ecommerce");
-    }
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()

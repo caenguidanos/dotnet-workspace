@@ -12,14 +12,9 @@ using Ecommerce.Infrastructure.Repository;
 
 public sealed class SaveProductIntegrationTest
 {
-    private PostgresDatabaseFactory _postgres { get; init; }
+    private readonly PostgresDatabaseFactory _postgres = new(template: "ecommerce");
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
-
-    public SaveProductIntegrationTest()
-    {
-        _postgres = new PostgresDatabaseFactory(template: "ecommerce");
-    }
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
