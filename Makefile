@@ -11,6 +11,9 @@ infra-start:
 infra-down:
 	docker-compose down
 
+webapi-watch:
+	dotnet watch --project ./Apps/MySaaS/Backend/Api/Api.csproj
+
 webapi-start:
 	dotnet run --configuration Release --project ./Apps/MySaaS/Backend/Api/Api.csproj
 
@@ -24,4 +27,5 @@ test-acceptance:
 	dotnet test --filter Name~AcceptanceTest
 
 test-stress:
-	k6 run Tests/Contexts/Ecommerce.StressTest/001.js
+	k6 run Tests/Contexts/Ecommerce.StressTest/Performance/GetProduct.js
+	k6 run Tests/Contexts/Ecommerce.StressTest/Spike/GetProduct.js
