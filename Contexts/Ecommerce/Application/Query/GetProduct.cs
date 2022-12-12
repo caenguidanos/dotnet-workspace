@@ -7,7 +7,6 @@ using System.Net.Mime;
 
 using Common.Application.HttpUtil;
 
-using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Repository;
 
 public readonly struct GetProductQuery : IRequest<HttpResultResponse>
@@ -17,52 +16,23 @@ public readonly struct GetProductQuery : IRequest<HttpResultResponse>
 
 public sealed class GetProductHandler : IRequestHandler<GetProductQuery, HttpResultResponse>
 {
-    private readonly ILogger _logger;
     private readonly IProductRepository _productRepository;
 
-    public GetProductHandler(ILogger<GetProductHandler> logger, IProductRepository productRepository)
+    public GetProductHandler(IProductRepository productRepository)
     {
-        _logger = logger;
         _productRepository = productRepository;
     }
 
     public async Task<HttpResultResponse> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
-        try
+
+        var product = await _productRepository.GetById(request.Id, cancellationToken);
+
+        return new HttpResultResponse()
         {
-            var product = await _productRepository.GetById(request.Id, cancellationToken);
-
-            return new HttpResultResponse(cancellationToken)
-            {
-                Body = product.ToPrimitives(),
-                StatusCode = HttpStatusCode.OK,
-                ContentType = MediaTypeNames.Application.Json,
-            };
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.ToString());
-
-            if (ex is ProductNotFoundException)
-            {
-                return new HttpResultResponse(cancellationToken)
-                {
-                    StatusCode = HttpStatusCode.NotFound,
-                };
-            }
-
-            if (ex is ProductPersistenceException)
-            {
-                return new HttpResultResponse(cancellationToken)
-                {
-                    StatusCode = HttpStatusCode.ServiceUnavailable,
-                };
-            }
-
-            return new HttpResultResponse(cancellationToken)
-            {
-                StatusCode = HttpStatusCode.NotImplemented,
-            };
-        }
+            Body = product.ToPrimitives(),
+            StatusCode = HttpStatusCode.OK,
+            ContentType = MediaTypeNames.Application.Json,
+        };
     }
 }

@@ -29,7 +29,7 @@ public sealed class ProductGetByIdUnitTest
             .Setup(sender => sender
                 .Send(It.IsAny<GetProductQuery>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(
-                        new HttpResultResponse(CancellationToken.None)
+                        new HttpResultResponse()
                         {
                             StatusCode = HttpStatusCode.OK
                         }

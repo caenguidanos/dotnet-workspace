@@ -35,7 +35,7 @@ public sealed class ProductUpdateByIdUnitTest
             .Setup(sender => sender
                 .Send(It.IsAny<UpdateProductCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(
-                        new HttpResultResponse(CancellationToken.None)
+                        new HttpResultResponse()
                         {
                             StatusCode = HttpStatusCode.Accepted
                         }

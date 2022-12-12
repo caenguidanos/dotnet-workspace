@@ -37,7 +37,7 @@ public sealed class CreateProductUnitTest
             .Setup(sender => sender
                 .Send(It.IsAny<CreateProductCommand>(), It.IsAny<CancellationToken>()))
                     .ReturnsAsync(
-                        new HttpResultResponse(CancellationToken.None)
+                        new HttpResultResponse()
                         {
                             StatusCode = HttpStatusCode.OK
                         }

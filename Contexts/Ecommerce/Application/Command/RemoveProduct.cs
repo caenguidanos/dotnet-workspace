@@ -5,8 +5,6 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 
 using Common.Application.HttpUtil;
-
-using Ecommerce.Domain.Exceptions;
 using Ecommerce.Domain.Service;
 
 public readonly struct RemoveProductCommand : IRequest<HttpResultResponse>
@@ -16,50 +14,20 @@ public readonly struct RemoveProductCommand : IRequest<HttpResultResponse>
 
 public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, HttpResultResponse>
 {
-    private readonly ILogger _logger;
     private readonly IProductRemoverService _productRemoverService;
 
-    public RemoveProductHandler(ILogger<RemoveProductHandler> logger, IProductRemoverService productRemoverService)
+    public RemoveProductHandler(IProductRemoverService productRemoverService)
     {
-        _logger = logger;
         _productRemoverService = productRemoverService;
     }
 
     public async Task<HttpResultResponse> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
     {
-        try
+        await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
+
+        return new HttpResultResponse()
         {
-            await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
-
-            return new HttpResultResponse(cancellationToken)
-            {
-                StatusCode = HttpStatusCode.Accepted,
-            };
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex.ToString());
-
-            if (ex is ProductNotFoundException)
-            {
-                return new HttpResultResponse(cancellationToken)
-                {
-                    StatusCode = HttpStatusCode.NotFound,
-                };
-            }
-
-            if (ex is ProductPersistenceException)
-            {
-                return new HttpResultResponse(cancellationToken)
-                {
-                    StatusCode = HttpStatusCode.ServiceUnavailable,
-                };
-            }
-
-            return new HttpResultResponse(cancellationToken)
-            {
-                StatusCode = HttpStatusCode.NotImplemented,
-            };
-        }
+            StatusCode = HttpStatusCode.Accepted,
+        };
     }
 }

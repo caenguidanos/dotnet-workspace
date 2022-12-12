@@ -13,19 +13,12 @@ public sealed class HttpResultResponse : IActionResult
     public required HttpStatusCode StatusCode { get; set; }
     public string ContentType { get; set; } = MediaTypeNames.Text.Plain;
 
-    private CancellationToken _cancellationToken { get; init; }
-
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
     {
         WriteIndented = false,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
     };
-
-    public HttpResultResponse(CancellationToken cancellationToken)
-    {
-        _cancellationToken = cancellationToken;
-    }
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
@@ -36,7 +29,7 @@ public sealed class HttpResultResponse : IActionResult
             string defaultPayload = HttpStatusText.From(StatusCode);
             context.HttpContext.Response.ContentLength = defaultPayload.Length;
             context.HttpContext.Response.ContentType = MediaTypeNames.Text.Plain;
-            await context.HttpContext.Response.WriteAsync(defaultPayload, _cancellationToken);
+            await context.HttpContext.Response.WriteAsync(defaultPayload, context.HttpContext.RequestAborted);
             return;
         }
 
@@ -45,14 +38,14 @@ public sealed class HttpResultResponse : IActionResult
             string stringifiedPayload = Body.ToString() ?? string.Empty;
             context.HttpContext.Response.ContentLength = stringifiedPayload.Length;
             context.HttpContext.Response.ContentType = ContentType;
-            await context.HttpContext.Response.WriteAsync(stringifiedPayload, _cancellationToken);
+            await context.HttpContext.Response.WriteAsync(stringifiedPayload, context.HttpContext.RequestAborted);
             return;
         }
 
         string fromSerializerPayload = JsonSerializer.Serialize(Body, options: _jsonSerializerOptions);
         context.HttpContext.Response.ContentLength = fromSerializerPayload.Length;
         context.HttpContext.Response.ContentType = ContentType;
-        await context.HttpContext.Response.WriteAsync(fromSerializerPayload, _cancellationToken);
+        await context.HttpContext.Response.WriteAsync(fromSerializerPayload, context.HttpContext.RequestAborted);
         return;
     }
 }
