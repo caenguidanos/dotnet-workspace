@@ -12,32 +12,24 @@ using Ecommerce.Infrastructure.Repository;
 
 public sealed class SaveProductIntegrationTest
 {
-    private PostgresDatabase _postgresDatabase { get; init; }
+    private PostgresDatabaseFactory _postgres { get; init; }
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
 
     public SaveProductIntegrationTest()
     {
-        _postgresDatabase = new PostgresDatabase(
-            name: "ecommerce",
-            volumes: IntegrationTestConfiguration.containerVolumes);
+        _postgres = new PostgresDatabaseFactory(template: "ecommerce");
     }
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
-        string connectionString = await _postgresDatabase.StartAsync();
+        string connectionString = await _postgres.StartAsync();
 
         Mock
             .Get(_dbContext)
             .Setup(dbContext => dbContext.GetConnectionString())
             .Returns(connectionString);
-    }
-
-    [OneTimeTearDown]
-    public async Task OneTimeTearDown()
-    {
-        await _postgresDatabase.DisposeAsync();
     }
 
     [Test]

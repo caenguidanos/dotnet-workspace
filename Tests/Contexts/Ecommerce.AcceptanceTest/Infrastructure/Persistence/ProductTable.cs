@@ -10,32 +10,24 @@ using Ecommerce.Infrastructure.Persistence;
 
 public sealed class ProductTableAcceptanceTest
 {
-    private PostgresDatabase _postgresDatabase { get; init; }
+    private PostgresDatabaseFactory _postgres { get; init; }
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
 
     public ProductTableAcceptanceTest()
     {
-        _postgresDatabase = new PostgresDatabase(
-            name: "ecommerce",
-            volumes: AcceptanceTestConfiguration.containerVolumes);
+        _postgres = new PostgresDatabaseFactory(template: "ecommerce");
     }
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
-        string connectionString = await _postgresDatabase.StartAsync();
+        string connectionString = await _postgres.StartAsync();
 
         Mock
             .Get(_dbContext)
             .Setup(dbContext => dbContext.GetConnectionString())
             .Returns(connectionString);
-    }
-
-    [OneTimeTearDown]
-    public async Task OneTimeTearDown()
-    {
-        await _postgresDatabase.DisposeAsync();
     }
 
     [Test]
@@ -45,9 +37,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
@@ -61,9 +53,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
@@ -77,9 +69,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', '1234', 'Great guitar', 219900, 1);
         ";
 
@@ -106,9 +98,9 @@ public sealed class ProductTableAcceptanceTest
         }
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', @Title, 'Great guitar', 219900, 1);
         ";
 
@@ -132,9 +124,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
@@ -148,9 +140,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', '1234', 219900, 1);
         ";
 
@@ -177,9 +169,9 @@ public sealed class ProductTableAcceptanceTest
         }
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', @Description, 219900, 1);
         ";
 
@@ -203,9 +195,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
@@ -219,9 +211,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 1, 1);
         ";
 
@@ -242,9 +234,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 100000001, 1);
         ";
 
@@ -265,9 +257,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 0);
         ";
 
@@ -281,9 +273,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
@@ -297,9 +289,9 @@ public sealed class ProductTableAcceptanceTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 98);
         ";
 

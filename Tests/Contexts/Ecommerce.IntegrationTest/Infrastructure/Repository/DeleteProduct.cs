@@ -12,32 +12,24 @@ using Ecommerce.Infrastructure.Repository;
 
 public sealed class DeleteProductIntegrationTest
 {
-    private PostgresDatabase _postgresDatabase { get; init; }
+    private PostgresDatabaseFactory _postgres { get; init; }
 
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
 
     public DeleteProductIntegrationTest()
     {
-        _postgresDatabase = new PostgresDatabase(
-            name: "ecommerce",
-            volumes: IntegrationTestConfiguration.containerVolumes);
+        _postgres = new PostgresDatabaseFactory(template: "ecommerce");
     }
 
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
-        string connectionString = await _postgresDatabase.StartAsync();
+        string connectionString = await _postgres.StartAsync();
 
         Mock
             .Get(_dbContext)
             .Setup(dbContext => dbContext.GetConnectionString())
             .Returns(connectionString);
-    }
-
-    [OneTimeTearDown]
-    public async Task OneTimeTearDown()
-    {
-        await _postgresDatabase.DisposeAsync();
     }
 
     [Test]
@@ -47,9 +39,9 @@ public sealed class DeleteProductIntegrationTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
@@ -67,9 +59,9 @@ public sealed class DeleteProductIntegrationTest
         await conn.OpenAsync();
 
         string sql = @"
-            TRUNCATE public.product;
+            TRUNCATE product;
 
-            INSERT INTO public.product (id, title, description, price, status)
+            INSERT INTO product (id, title, description, price, status)
             VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 

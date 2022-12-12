@@ -27,7 +27,7 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                SELECT * FROM public.product
+                SELECT * FROM product
             ";
 
             var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
@@ -75,7 +75,7 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                SELECT * FROM public.product WHERE id = @Id
+                SELECT * FROM product WHERE id = @Id
             ";
 
             var parameters = new DynamicParameters();
@@ -121,7 +121,7 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                INSERT INTO public.product (id, title, description, price, status)
+                INSERT INTO product (id, title, description, price, status)
                 VALUES (@Id, @Title, @Description, @Price, @Status)
             ";
 
@@ -196,7 +196,7 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                DELETE FROM public.product WHERE id = @Id
+                DELETE FROM product WHERE id = @Id
             ";
 
             var parameters = new DynamicParameters();
@@ -229,7 +229,7 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                UPDATE public.product
+                UPDATE product
                 SET title = @Title, description = @Description, price = @Price, status = @Status
                 WHERE id = @Id
             ";

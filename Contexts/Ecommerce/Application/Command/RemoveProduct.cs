@@ -1,7 +1,6 @@
 namespace Ecommerce.Application.Command;
 
 using MediatR;
-using Microsoft.Extensions.Logging;
 using System.Net;
 
 using Common.Application.HttpUtil;

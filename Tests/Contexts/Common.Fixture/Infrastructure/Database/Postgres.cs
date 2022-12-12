@@ -3,6 +3,7 @@ namespace Common.Fixture.Infrastructure.Database;
 using Docker.DotNet;
 using Docker.DotNet.Models;
 using Npgsql;
+using Dapper;
 
 using System.Data.Common;
 using System.Globalization;
@@ -10,60 +11,153 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 
+public sealed class PostgresDatabaseFactory
+{
+    private int _port { get; init; }
+    private string _template { get; init; }
+    private string _database { get; init; }
+
+    private const string _user = "root";
+    private const string _password = "root";
+
+    private readonly DbConnectionStringBuilder _masterConnectionString;
+    private readonly DbConnectionStringBuilder _consumerConnectionString;
+
+    public PostgresDatabaseFactory(string template, int port = 5432)
+    {
+        _port = port;
+        _template = template;
+
+        _database = GetRandomString(56);
+
+        _masterConnectionString = new DbConnectionStringBuilder()
+        {
+            { "User ID", _user },
+            { "Password", _password },
+            { "Server", "localhost" },
+            { "Port", _port },
+            { "Database", "postgres" },
+            { "Integrated Security", true },
+            { "Pooling", true }
+        };
+
+        _consumerConnectionString = new DbConnectionStringBuilder()
+        {
+            { "User ID", _user },
+            { "Password", _password },
+            { "Server", "localhost" },
+            { "Port", _port },
+            { "Database", _database },
+            { "Integrated Security", true },
+            { "Pooling", true }
+        };
+    }
+
+    public async Task<string> StartAsync()
+    {
+        await using var conn = new NpgsqlConnection(_masterConnectionString.ToString());
+        await conn.OpenAsync();
+
+        string sql = $"""
+            SELECT pg_terminate_backend(pid) 
+            FROM pg_stat_activity 
+            WHERE pid <> pg_backend_pid()
+            AND datname = '{_template}';
+
+            CREATE DATABASE {_database} TEMPLATE {_template};
+        """;
+
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+
+        return _consumerConnectionString.ToString();
+    }
+
+    public async Task DisposeAsync()
+    {
+        await using var conn = new NpgsqlConnection(_masterConnectionString.ToString());
+        await conn.OpenAsync();
+
+        string sql = $"""
+            SELECT pg_terminate_backend(pid) 
+            FROM pg_stat_activity 
+            WHERE pid <> pg_backend_pid()
+            AND datname = '{_database}';
+
+            DROP DATABASE {_database};
+        """;
+
+        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+    }
+
+    private static string GetRandomString(int length)
+    {
+        string allowedChars = "abcdefghijkmnopqrstuvwxyz";
+
+        char[] chars = new char[length];
+        var rd = new Random();
+
+        for (int i = 0; i < length; i++)
+        {
+            chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
+        }
+
+        return new string(chars);
+    }
+}
+
 public sealed class PostgresDatabase
 {
     private DockerClient _docker { get; init; }
-    private string _postgresDatabase { get; init; }
-    private List<string> _dockerContainerVolumes { get; init; }
-    private readonly string _postgresImageName = "postgres:15-alpine";
-    private readonly string _postgresContainerName = $"postgres-{Guid.NewGuid()}";
+    private string _database { get; init; }
+    private List<string> _initScripts { get; init; }
 
-    public PostgresDatabase(string name, List<string> volumes)
+    private const string _image = "postgres:15-alpine";
+    private readonly string _container = $"postgres-{Guid.NewGuid()}";
+
+    public PostgresDatabase(string database, List<string> initScripts)
     {
+        _database = database;
+        _initScripts = initScripts;
+
         var dockerDaemonUri = new Uri("npipe://./pipe/docker_engine");
 
-        bool isPlatformOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        bool isPlatformLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-
-        if (isPlatformLinux || isPlatformOSX)
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             dockerDaemonUri = new Uri("unix:///var/run/docker.sock");
         }
 
         _docker = new DockerClientConfiguration(dockerDaemonUri).CreateClient();
-
-        _postgresDatabase = name;
-        _dockerContainerVolumes = volumes;
     }
 
     public async Task<string> StartAsync()
     {
         int port = GetRandomUnusedPort();
 
-        var environment = new List<string>
-        {
-            "POSTGRES_USER=root",
-            "POSTGRES_PASSWORD=root",
-            $"POSTGRES_DB={_postgresDatabase}"
-        };
+        var locale = new CultureInfo("en-US");
+
+        const string user = "root";
+        const string password = "root";
+
+        var environment = new List<string> {
+            $"POSTGRES_USER={user}",
+            $"POSTGRES_PASSWORD={password}",
+            $"POSTGRES_DB={_database}" };
 
         var connectionString = new DbConnectionStringBuilder()
         {
-            { "User ID", "root" },
-            { "Password", "root" },
+            { "User ID", user },
+            { "Password", password },
             { "Server", "localhost" },
             { "Port", port },
-            { "Database", _postgresDatabase },
+            { "Database", _database },
             { "Integrated Security", true },
             { "Pooling", true }
         };
 
-        var locale = new CultureInfo("en-US");
-
         var hostConfig = new HostConfig
         {
 
-            Binds = _dockerContainerVolumes,
+            Binds = _initScripts,
             PortBindings = new Dictionary<string, IList<PortBinding>>
             {
                 {
@@ -81,17 +175,16 @@ public sealed class PostgresDatabase
         await _docker.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
-                Image = _postgresImageName,
-                Name = _postgresContainerName,
+                Image = _image,
+                Name = _container,
                 HostConfig = hostConfig,
                 Env = environment
             }
         );
 
-        await _docker.Containers.StartContainerAsync(_postgresContainerName, new ContainerStartParameters());
+        await _docker.Containers.StartContainerAsync(_container, new ContainerStartParameters());
 
         await using var conn = new NpgsqlConnection(connectionString.ToString());
-
         while (true)
         {
             try
@@ -109,7 +202,7 @@ public sealed class PostgresDatabase
 
     public async Task DisposeAsync()
     {
-        await _docker.Containers.RemoveContainerAsync(_postgresContainerName,
+        await _docker.Containers.RemoveContainerAsync(_container,
             new ContainerRemoveParameters { RemoveVolumes = true, Force = true });
 
         _docker.Dispose();

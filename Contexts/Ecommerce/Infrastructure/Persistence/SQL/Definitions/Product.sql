@@ -1,4 +1,4 @@
-CREATE TABLE public.product (
+CREATE TABLE product (
 	title text UNIQUE NOT NULL,
 	description text NOT NULL,
 	price integer NOT NULL,
@@ -20,12 +20,12 @@ CREATE TABLE public.product (
 		status = 0 OR -- CLOSED
 		status = 1    -- PUBLISHED
 	)
-) INHERITS (public.base);
+) INHERITS (base);
 
-CREATE INDEX product_by_id ON public.product (id);
+CREATE INDEX product_by_id ON product (id);
 
 CREATE TRIGGER set_timestamp BEFORE UPDATE
-ON public.product
+ON product
 FOR EACH ROW
 WHEN (OLD.* IS DISTINCT FROM NEW.*)
-EXECUTE PROCEDURE public.update_timestamp();
+EXECUTE PROCEDURE update_timestamp();
