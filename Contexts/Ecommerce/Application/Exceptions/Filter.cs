@@ -1,6 +1,7 @@
 namespace Ecommerce.Application.Exceptions;
 
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 using Common.Application.HttpUtil;
@@ -18,7 +19,10 @@ public class EcommerceExceptionFilter : IActionFilter
             case ProductNotFoundException:
                 context.Result = new HttpResultResponse()
                 {
-                    StatusCode = HttpStatusCode.NotFound,
+                    ProblemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.NotFound
+                    }
                 };
 
                 context.ExceptionHandled = true;
@@ -27,7 +31,10 @@ public class EcommerceExceptionFilter : IActionFilter
             case ProductTitleInvalidException:
                 context.Result = new HttpResultResponse()
                 {
-                    StatusCode = HttpStatusCode.BadRequest,
+                    ProblemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest
+                    }
                 };
 
                 context.ExceptionHandled = true;
@@ -36,7 +43,10 @@ public class EcommerceExceptionFilter : IActionFilter
             case ProductTitleUniqueException:
                 context.Result = new HttpResultResponse()
                 {
-                    StatusCode = HttpStatusCode.BadRequest,
+                    ProblemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest
+                    }
                 };
 
                 context.ExceptionHandled = true;
@@ -45,7 +55,10 @@ public class EcommerceExceptionFilter : IActionFilter
             case ProductDescriptionInvalidException:
                 context.Result = new HttpResultResponse()
                 {
-                    StatusCode = HttpStatusCode.BadRequest,
+                    ProblemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest
+                    }
                 };
 
                 context.ExceptionHandled = true;
@@ -54,7 +67,10 @@ public class EcommerceExceptionFilter : IActionFilter
             case ProductPriceInvalidException:
                 context.Result = new HttpResultResponse()
                 {
-                    StatusCode = HttpStatusCode.BadRequest,
+                    ProblemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest
+                    }
                 };
 
                 context.ExceptionHandled = true;
@@ -63,7 +79,10 @@ public class EcommerceExceptionFilter : IActionFilter
             case ProductStatusInvalidException:
                 context.Result = new HttpResultResponse()
                 {
-                    StatusCode = HttpStatusCode.BadRequest,
+                    ProblemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.BadRequest
+                    }
                 };
 
                 context.ExceptionHandled = true;
@@ -72,7 +91,10 @@ public class EcommerceExceptionFilter : IActionFilter
             case ProductPersistenceException:
                 context.Result = new HttpResultResponse()
                 {
-                    StatusCode = HttpStatusCode.ServiceUnavailable,
+                    ProblemDetails = new ProblemDetails
+                    {
+                        Status = (int)HttpStatusCode.ServiceUnavailable
+                    }
                 };
 
 

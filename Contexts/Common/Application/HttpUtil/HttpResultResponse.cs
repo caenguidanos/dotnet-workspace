@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 public sealed class HttpResultResponse : IActionResult
 {
     public object? Body { get; set; }
+    public ProblemDetails? ProblemDetails { get; set; }
     public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
     public string ContentType { get; set; } = MediaTypeNames.Text.Plain;
 
@@ -23,11 +24,20 @@ public sealed class HttpResultResponse : IActionResult
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
-        context.HttpContext.Response.StatusCode = (int)StatusCode;
+        if (ProblemDetails is not null)
+        {
+            string fromSerializer = JsonSerializer.Serialize(ProblemDetails, options: _jsonSerializerOptions);
+            context.HttpContext.Response.StatusCode = ProblemDetails.Status ?? throw new ArgumentNullException();
+            context.HttpContext.Response.ContentLength = fromSerializer.Length;
+            context.HttpContext.Response.ContentType = "application/problem+json";
+            await context.HttpContext.Response.WriteAsync(fromSerializer, context.HttpContext.RequestAborted);
+            return;
+        }
 
         if (Body is null)
         {
             string defaultPayload = HttpStatusText.From(StatusCode);
+            context.HttpContext.Response.StatusCode = (int)StatusCode;
             context.HttpContext.Response.ContentLength = defaultPayload.Length;
             context.HttpContext.Response.ContentType = MediaTypeNames.Text.Plain;
             await context.HttpContext.Response.WriteAsync(defaultPayload, context.HttpContext.RequestAborted);
@@ -37,6 +47,7 @@ public sealed class HttpResultResponse : IActionResult
         if (Body is string or int or bool)
         {
             string stringifiedPayload = Body.ToString() ?? string.Empty;
+            context.HttpContext.Response.StatusCode = (int)StatusCode;
             context.HttpContext.Response.ContentLength = stringifiedPayload.Length;
             context.HttpContext.Response.ContentType = ContentType;
             await context.HttpContext.Response.WriteAsync(stringifiedPayload, context.HttpContext.RequestAborted);
@@ -44,6 +55,7 @@ public sealed class HttpResultResponse : IActionResult
         }
 
         string fromSerializerPayload = JsonSerializer.Serialize(Body, options: _jsonSerializerOptions);
+        context.HttpContext.Response.StatusCode = (int)StatusCode;
         context.HttpContext.Response.ContentLength = fromSerializerPayload.Length;
         context.HttpContext.Response.ContentType = ContentType ?? MediaTypeNames.Application.Json;
         await context.HttpContext.Response.WriteAsync(fromSerializerPayload, context.HttpContext.RequestAborted);

@@ -1,6 +1,7 @@
 namespace Common.Application.Exceptions;
 
 using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 using Common.Application.HttpUtil;
@@ -18,7 +19,10 @@ public class FallbackExceptionFilter : IActionFilter
 
         context.Result = new HttpResultResponse()
         {
-            StatusCode = HttpStatusCode.NotImplemented,
+            ProblemDetails = new ProblemDetails
+            {
+                Status = (int)HttpStatusCode.NotFound
+            }
         };
 
         context.ExceptionHandled = true;
