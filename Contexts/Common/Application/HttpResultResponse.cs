@@ -52,37 +52,4 @@ public sealed class HttpResultResponse : IActionResult
         await context.HttpContext.Response.WriteAsync(defaultPayload, context.HttpContext.RequestAborted);
         return;
     }
-
-    public async Task ExecuteResultOnHttpContextAsync(HttpContext context)
-    {
-        if (Body is not null)
-        {
-            string fromSerializer = JsonSerializer.Serialize(Body, options: serializerOptions);
-
-            context.Response.ContentLength = fromSerializer.Length;
-
-            if (Body is ProblemDetails)
-            {
-                context.Response.StatusCode = ((ProblemDetails)Body).Status ?? 418;
-                context.Response.ContentType = "application/problem+json";
-            }
-            else
-            {
-                context.Response.StatusCode = (int)StatusCode;
-                context.Response.ContentType = ContentType;
-            }
-
-            await context.Response.WriteAsync(fromSerializer, context.RequestAborted);
-            return;
-        }
-
-        string defaultPayload = HttpStatusText.From(StatusCode);
-
-        context.Response.StatusCode = (int)StatusCode;
-        context.Response.ContentType = MediaTypeNames.Text.Plain;
-        context.Response.ContentLength = defaultPayload.Length;
-
-        await context.Response.WriteAsync(defaultPayload, context.RequestAborted);
-        return;
-    }
 }
