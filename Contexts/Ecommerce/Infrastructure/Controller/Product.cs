@@ -4,6 +4,7 @@ using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.Mime;
 
 using Common.Application;
 
@@ -16,9 +17,9 @@ using Ecommerce.Infrastructure.DataTransfer;
 public sealed class ProductController : ControllerBase
 {
     private ISender _sender { get; init; }
-    private IExceptionManager _exceptionManager { get; init; }
+    private IHttpExceptionManager _exceptionManager { get; init; }
 
-    public ProductController(ISender sender, IExceptionManager exceptionManager)
+    public ProductController(ISender sender, IHttpExceptionManager exceptionManager)
     {
         _sender = sender;
         _exceptionManager = exceptionManager;
@@ -38,12 +39,13 @@ public sealed class ProductController : ControllerBase
 
             return new HttpResultResponse
             {
-                Body = payload
+                Body = payload,
+                ContentType = MediaTypeNames.Application.Json
             };
         }
         catch (Exception ex)
         {
-            return _exceptionManager.HandleHttp(ex);
+            return _exceptionManager.Intercept(ex);
         }
     }
 
@@ -62,12 +64,13 @@ public sealed class ProductController : ControllerBase
 
             return new HttpResultResponse
             {
-                Body = payload
+                Body = payload,
+                ContentType = MediaTypeNames.Application.Json
             };
         }
         catch (Exception ex)
         {
-            return _exceptionManager.HandleHttp(ex);
+            return _exceptionManager.Intercept(ex);
         }
     }
 
@@ -92,12 +95,13 @@ public sealed class ProductController : ControllerBase
 
             return new HttpResultResponse
             {
-                Body = payload
+                Body = payload,
+                ContentType = MediaTypeNames.Application.Json
             };
         }
         catch (Exception ex)
         {
-            return _exceptionManager.HandleHttp(ex);
+            return _exceptionManager.Intercept(ex);
         }
     }
 
@@ -114,14 +118,11 @@ public sealed class ProductController : ControllerBase
 
             await _sender.Send(command, cancellationToken);
 
-            return new HttpResultResponse
-            {
-                StatusCode = HttpStatusCode.Accepted
-            };
+            return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
         }
         catch (Exception ex)
         {
-            return _exceptionManager.HandleHttp(ex);
+            return _exceptionManager.Intercept(ex);
         }
     }
 
@@ -146,14 +147,11 @@ public sealed class ProductController : ControllerBase
 
             await _sender.Send(command, cancellationToken);
 
-            return new HttpResultResponse
-            {
-                StatusCode = HttpStatusCode.Accepted
-            };
+            return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
         }
         catch (Exception ex)
         {
-            return _exceptionManager.HandleHttp(ex);
+            return _exceptionManager.Intercept(ex);
         }
     }
 }

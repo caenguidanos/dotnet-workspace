@@ -2,7 +2,7 @@ namespace Common;
 
 public static class Module
 {
-    public static IServiceCollection AddCommonModule(this IServiceCollection services)
+    public static IServiceCollection AddCommonServices(this IServiceCollection services)
     {
         return services;
     }

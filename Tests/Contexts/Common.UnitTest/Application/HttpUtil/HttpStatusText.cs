@@ -2,7 +2,7 @@ namespace Common.UnitTest.Application.HttpUtil;
 
 using System.Net;
 
-using Common.Application.HttpUtil;
+using Common.Application;
 
 public sealed class HttpStatusTextUnitTest
 {

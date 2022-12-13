@@ -15,21 +15,19 @@ using Ecommerce.Application.Exceptions;
 
 public static class EcommerceModule
 {
-    private static Dictionary<string, HttpResultResponse> exceptions = new();
-
-    public static IServiceCollection AddEcommerceModule(this IServiceCollection services)
+    public static IServiceCollection AddEcommerceServices(this IServiceCollection services)
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         services.AddMediator();
 
-        services.AddSingleton<IExceptionManager, ExceptionManager>();
         services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IDbSeed, DbSeed>();
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
         services.AddSingleton<IProductRemoverService, ProductRemoverService>();
         services.AddSingleton<IProductRepository, ProductRepository>();
+        services.AddSingleton<IHttpExceptionManager, ExceptionManager>();
 
         return services;
     }
@@ -43,3 +41,4 @@ public static class EcommerceModule
         return host;
     }
 }
+

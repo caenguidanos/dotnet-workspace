@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddProblemDetails();
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddResponseCompression(options =>
@@ -22,7 +21,6 @@ builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
 {
     options.Level = CompressionLevel.Fastest;
 });
-
 builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 {
     options.Level = CompressionLevel.SmallestSize;
@@ -32,8 +30,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
-builder.Services.AddCommonModule();
-builder.Services.AddEcommerceModule();
+
+builder.Services.AddCommonServices();
+builder.Services.AddEcommerceServices();
 
 var app = builder.Build();
 
@@ -42,16 +41,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    app.UseDeveloperExceptionPage();
+
     app.UseEcommerceDataSeed();
 }
 #endif
 
 app.UseResponseCompression();
-
 app.UseStatusCodePages();
 app.MapControllers();
 app.MapHealthChecks("/Healthz");
 app.UseCors();
-
 app.Run();
