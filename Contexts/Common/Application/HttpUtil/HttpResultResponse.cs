@@ -11,7 +11,7 @@ using System.Text.Json.Serialization;
 public sealed class HttpResultResponse : IActionResult
 {
     public object? Body { get; set; }
-    public required HttpStatusCode StatusCode { get; set; }
+    public HttpStatusCode StatusCode { get; set; } = HttpStatusCode.OK;
     public string ContentType { get; set; } = MediaTypeNames.Text.Plain;
 
     private static readonly JsonSerializerOptions _jsonSerializerOptions = new()
@@ -45,7 +45,7 @@ public sealed class HttpResultResponse : IActionResult
 
         string fromSerializerPayload = JsonSerializer.Serialize(Body, options: _jsonSerializerOptions);
         context.HttpContext.Response.ContentLength = fromSerializerPayload.Length;
-        context.HttpContext.Response.ContentType = ContentType;
+        context.HttpContext.Response.ContentType = ContentType ?? MediaTypeNames.Application.Json;
         await context.HttpContext.Response.WriteAsync(fromSerializerPayload, context.HttpContext.RequestAborted);
         return;
     }

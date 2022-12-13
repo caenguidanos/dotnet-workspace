@@ -1,8 +1,6 @@
 namespace Ecommerce.Application.Query;
 
 using Mediator;
-using System.Net;
-using System.Net.Mime;
 
 using Common.Application.HttpUtil;
 
@@ -30,8 +28,6 @@ public sealed class GetProductHandler : IRequestHandler<GetProductQuery, HttpRes
         return new HttpResultResponse()
         {
             Body = product.ToPrimitives(),
-            StatusCode = HttpStatusCode.OK,
-            ContentType = MediaTypeNames.Application.Json,
         };
     }
 }

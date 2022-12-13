@@ -1,8 +1,6 @@
 namespace Ecommerce.Application.Command;
 
 using Mediator;
-using System.Net;
-using System.Net.Mime;
 
 using Common.Application.HttpUtil;
 using Ecommerce.Domain.Service;
@@ -37,8 +35,6 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         return new HttpResultResponse()
         {
             Body = new ProductAck { Id = createdProductId },
-            StatusCode = HttpStatusCode.OK,
-            ContentType = MediaTypeNames.Application.Json,
         };
     }
 }
