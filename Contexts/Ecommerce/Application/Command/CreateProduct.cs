@@ -2,11 +2,12 @@ namespace Ecommerce.Application.Command;
 
 using Mediator;
 
-using Common.Application.HttpUtil;
+using Common.Application;
+
 using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public readonly struct CreateProductCommand : IRequest<HttpResultResponse>
+public readonly struct CreateProductCommand : IRequest<ProductAck>
 {
     public required int Price { get; init; }
     public required string Title { get; init; }
@@ -14,7 +15,7 @@ public readonly struct CreateProductCommand : IRequest<HttpResultResponse>
     public required int Status { get; init; }
 }
 
-public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, HttpResultResponse>
+public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductAck>
 {
     private readonly IProductCreatorService _productCreatorService;
 
@@ -23,7 +24,7 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _productCreatorService = productCreatorService;
     }
 
-    public async ValueTask<HttpResultResponse> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<ProductAck> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var createdProductId = await _productCreatorService.AddNewProduct(
               request.Title,
@@ -32,9 +33,6 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
               request.Price,
               cancellationToken);
 
-        return new HttpResultResponse()
-        {
-            Body = new ProductAck { Id = createdProductId },
-        };
+        return new ProductAck { Id = createdProductId };
     }
 }

@@ -1,4 +1,4 @@
-namespace Common.Application.HttpUtil;
+namespace Common.Application;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

@@ -1,17 +1,14 @@
 using Microsoft.AspNetCore.ResponseCompression;
-
 using System.IO.Compression;
 
 using Common;
-using Common.Application.Exceptions;
-
 using Ecommerce;
-using Ecommerce.Application.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Services.AddProblemDetails();
 builder.Services.AddApplicationInsightsTelemetry();
 
 builder.Services.AddResponseCompression(options =>
@@ -31,12 +28,7 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
     options.Level = CompressionLevel.SmallestSize;
 });
 
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<EcommerceExceptionFilter>();
-    options.Filters.Add<FallbackExceptionFilter>();
-});
-
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
@@ -50,13 +42,14 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-
+    app.UseDeveloperExceptionPage();
     app.UseEcommerceDataSeed();
 }
 #endif
 
 app.UseResponseCompression();
 
+app.UseStatusCodePages();
 app.MapControllers();
 app.MapHealthChecks("/Healthz");
 app.UseCors();

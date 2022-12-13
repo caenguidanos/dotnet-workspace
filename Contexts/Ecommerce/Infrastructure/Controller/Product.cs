@@ -3,6 +3,9 @@ namespace Ecommerce.Infrastructure.Controller;
 using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+
+using Common.Application;
 
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Query;
@@ -13,10 +16,12 @@ using Ecommerce.Infrastructure.DataTransfer;
 public sealed class ProductController : ControllerBase
 {
     private ISender _sender { get; init; }
+    private IExceptionManager _exceptionManager { get; init; }
 
-    public ProductController(ISender sender)
+    public ProductController(ISender sender, IExceptionManager exceptionManager)
     {
         _sender = sender;
+        _exceptionManager = exceptionManager;
     }
 
     [HttpGet]
@@ -25,9 +30,21 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> GetProducts(CancellationToken cancellationToken)
     {
-        var query = new GetProductsQuery();
+        try
+        {
+            var query = new GetProductsQuery();
 
-        return await _sender.Send(query, cancellationToken);
+            var payload = await _sender.Send(query, cancellationToken);
+
+            return new HttpResultResponse
+            {
+                Body = payload
+            };
+        }
+        catch (Exception ex)
+        {
+            return _exceptionManager.HandleHttp(ex);
+        }
     }
 
     [HttpGet("{id:guid}")]
@@ -37,9 +54,21 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
-        var query = new GetProductQuery { Id = id };
+        try
+        {
+            var query = new GetProductQuery { Id = id };
 
-        return await _sender.Send(query, cancellationToken);
+            var payload = await _sender.Send(query, cancellationToken);
+
+            return new HttpResultResponse
+            {
+                Body = payload
+            };
+        }
+        catch (Exception ex)
+        {
+            return _exceptionManager.HandleHttp(ex);
+        }
     }
 
     [HttpPost]
@@ -49,15 +78,27 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
-        var command = new CreateProductCommand
+        try
         {
-            Title = body.Title,
-            Description = body.Description,
-            Price = body.Price,
-            Status = body.Status,
-        };
+            var command = new CreateProductCommand
+            {
+                Title = body.Title,
+                Description = body.Description,
+                Price = body.Price,
+                Status = body.Status,
+            };
 
-        return await _sender.Send(command, cancellationToken);
+            var payload = await _sender.Send(command, cancellationToken);
+
+            return new HttpResultResponse
+            {
+                Body = payload
+            };
+        }
+        catch (Exception ex)
+        {
+            return _exceptionManager.HandleHttp(ex);
+        }
     }
 
     [HttpDelete("{id:guid}")]
@@ -67,9 +108,21 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
-        var command = new RemoveProductCommand { Id = id };
+        try
+        {
+            var command = new RemoveProductCommand { Id = id };
 
-        return await _sender.Send(command, cancellationToken);
+            await _sender.Send(command, cancellationToken);
+
+            return new HttpResultResponse
+            {
+                StatusCode = HttpStatusCode.Accepted
+            };
+        }
+        catch (Exception ex)
+        {
+            return _exceptionManager.HandleHttp(ex);
+        }
     }
 
     [HttpPatch("{id:guid}")]
@@ -80,15 +133,27 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
-        var command = new UpdateProductCommand
+        try
         {
-            Id = id,
-            Title = body.Title,
-            Description = body.Description,
-            Price = body.Price,
-            Status = body.Status
-        };
+            var command = new UpdateProductCommand
+            {
+                Id = id,
+                Title = body.Title,
+                Description = body.Description,
+                Price = body.Price,
+                Status = body.Status
+            };
 
-        return await _sender.Send(command, cancellationToken);
+            await _sender.Send(command, cancellationToken);
+
+            return new HttpResultResponse
+            {
+                StatusCode = HttpStatusCode.Accepted
+            };
+        }
+        catch (Exception ex)
+        {
+            return _exceptionManager.HandleHttp(ex);
+        }
     }
 }

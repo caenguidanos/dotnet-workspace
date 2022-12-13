@@ -1,17 +1,15 @@
 namespace Ecommerce.Application.Command;
 
 using Mediator;
-using System.Net;
 
-using Common.Application.HttpUtil;
 using Ecommerce.Domain.Service;
 
-public readonly struct RemoveProductCommand : IRequest<HttpResultResponse>
+public readonly struct RemoveProductCommand : IRequest<Unit>
 {
     public required Guid Id { get; init; }
 }
 
-public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, HttpResultResponse>
+public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, Unit>
 {
     private readonly IProductRemoverService _productRemoverService;
 
@@ -20,13 +18,10 @@ public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand,
         _productRemoverService = productRemoverService;
     }
 
-    public async ValueTask<HttpResultResponse> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Unit> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
     {
         await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
 
-        return new HttpResultResponse()
-        {
-            StatusCode = HttpStatusCode.Accepted,
-        };
+        return Unit.Value;
     }
 }

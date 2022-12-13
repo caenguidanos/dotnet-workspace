@@ -2,15 +2,14 @@ namespace Ecommerce.Application.Query;
 
 using Mediator;
 
-using Common.Application.HttpUtil;
-
 using Ecommerce.Domain.Repository;
+using Ecommerce.Infrastructure.DataTransfer;
 
-public readonly struct GetProductsQuery : IRequest<HttpResultResponse>
+public readonly struct GetProductsQuery : IRequest<IEnumerable<ProductPrimitives>>
 {
 }
 
-public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, HttpResultResponse>
+public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, IEnumerable<ProductPrimitives>>
 {
     private readonly IProductRepository _productRepository;
 
@@ -19,13 +18,10 @@ public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, HttpR
         _productRepository = productRepository;
     }
 
-    public async ValueTask<HttpResultResponse> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<IEnumerable<ProductPrimitives>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         var products = await _productRepository.Get(cancellationToken);
 
-        return new HttpResultResponse()
-        {
-            Body = products.Select(product => product.ToPrimitives()),
-        };
+        return products.Select(product => product.ToPrimitives());
     }
 }

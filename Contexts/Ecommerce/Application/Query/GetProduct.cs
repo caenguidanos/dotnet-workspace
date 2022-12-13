@@ -2,16 +2,15 @@ namespace Ecommerce.Application.Query;
 
 using Mediator;
 
-using Common.Application.HttpUtil;
-
 using Ecommerce.Domain.Repository;
+using Ecommerce.Infrastructure.DataTransfer;
 
-public readonly struct GetProductQuery : IRequest<HttpResultResponse>
+public readonly struct GetProductQuery : IRequest<ProductPrimitives>
 {
     public required Guid Id { get; init; }
 }
 
-public sealed class GetProductHandler : IRequestHandler<GetProductQuery, HttpResultResponse>
+public sealed class GetProductHandler : IRequestHandler<GetProductQuery, ProductPrimitives>
 {
     private readonly IProductRepository _productRepository;
 
@@ -20,14 +19,11 @@ public sealed class GetProductHandler : IRequestHandler<GetProductQuery, HttpRes
         _productRepository = productRepository;
     }
 
-    public async ValueTask<HttpResultResponse> Handle(GetProductQuery request, CancellationToken cancellationToken)
+    public async ValueTask<ProductPrimitives> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
 
         var product = await _productRepository.GetById(request.Id, cancellationToken);
 
-        return new HttpResultResponse()
-        {
-            Body = product.ToPrimitives(),
-        };
+        return product.ToPrimitives();
     }
 }

@@ -4,20 +4,26 @@ using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+using Common.Application;
+
 using Ecommerce.Application.Service;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
+using Ecommerce.Application.Exceptions;
 
 public static class EcommerceModule
 {
+    private static Dictionary<string, HttpResultResponse> exceptions = new();
+
     public static IServiceCollection AddEcommerceModule(this IServiceCollection services)
     {
         DefaultTypeMap.MatchNamesWithUnderscores = true;
 
         services.AddMediator();
 
+        services.AddSingleton<IExceptionManager, ExceptionManager>();
         services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IDbSeed, DbSeed>();
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
