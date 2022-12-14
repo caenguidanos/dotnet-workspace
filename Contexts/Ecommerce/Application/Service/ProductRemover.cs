@@ -2,6 +2,8 @@ namespace Ecommerce.Application.Service;
 
 using Mediator;
 
+using Common.Domain;
+
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
@@ -17,10 +19,16 @@ public sealed class ProductRemoverService : IProductRemoverService
         _productRepository = productRepository;
     }
 
-    public async Task RemoveProduct(Guid id, CancellationToken cancellationToken)
+    public async Task<Result> RemoveProduct(Guid id, CancellationToken cancellationToken)
     {
-        await _productRepository.Delete(id, cancellationToken);
+        var deleteResult = await _productRepository.Delete(id, cancellationToken);
+        if (deleteResult.Err is not null)
+        {
+            return new Result(deleteResult.Err);
+        }
 
         await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
+
+        return new Result();
     }
 }

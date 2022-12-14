@@ -3,27 +3,27 @@ namespace Ecommerce.Domain.Entity;
 using System.Globalization;
 
 using Common.Domain;
-
-using Ecommerce.Domain.ValueObject;
+using Ecommerce.Domain.Error;
+using Ecommerce.Domain.Model;
 using Ecommerce.Infrastructure.DataTransfer;
 
 public sealed class Product : Schema
 {
-    public required ProductId Id { get; init; }
-    public required ProductTitle Title { get; init; }
-    public required ProductDescription Description { get; init; }
-    public required ProductStatus Status { get; init; }
-    public required ProductPrice Price { get; init; }
+    public required Guid Id { get; init; }
+    public required string Title { get; init; }
+    public required string Description { get; init; }
+    public required ProductStatusValue Status { get; init; }
+    public required int Price { get; init; }
 
     public ProductPrimitives ToPrimitives()
     {
         return new ProductPrimitives
         {
-            Id = Id.GetValue(),
-            Title = Title.GetValue(),
-            Description = Description.GetValue(),
-            Status = Status.GetValue(),
-            Price = Price.GetValue(),
+            Id = Id,
+            Title = Title,
+            Description = Description,
+            Status = Status,
+            Price = Price,
             created_at = created_at,
             updated_at = updated_at
         };
@@ -40,10 +40,37 @@ public sealed class Product : Schema
 
     public bool ShallowEqual(Product comparer)
     {
-        return Id.GetValue() == comparer.Id.GetValue() &&
-                 Title.GetValue() == comparer.Title.GetValue() &&
-                 Description.GetValue() == comparer.Description.GetValue() &&
-                 Status.GetValue() == comparer.Status.GetValue() &&
-                 Price.GetValue() == comparer.Price.GetValue();
+        return Id == comparer.Id &&
+                 Title == comparer.Title &&
+                 Description == comparer.Description &&
+                 Status == comparer.Status &&
+                 Price == comparer.Price;
+    }
+
+    protected override void Validate()
+    {
+        // Price
+        if (Price is < 100 or > (1_000_000 * 100))
+        {
+            AddError(new ProductPriceInvalidError());
+        }
+
+        // Description
+        if (Description.Length is < 5 or > 600)
+        {
+            AddError(new ProductDescriptionInvalidError());
+        }
+
+        //Status
+        if (!Enum.IsDefined(Status))
+        {
+            AddError(new ProductStatusInvalidError());
+        }
+
+        //Title
+        if (Title.Length is < 5 or > 256)
+        {
+            AddError(new ProductTitleInvalidError());
+        }
     }
 }

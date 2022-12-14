@@ -2,12 +2,13 @@ namespace Ecommerce.Application.Service;
 
 using Mediator;
 
+using Common.Domain;
+
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
-using Ecommerce.Domain.ValueObject;
 
 public sealed class ProductCreatorService : IProductCreatorService
 {
@@ -20,23 +21,30 @@ public sealed class ProductCreatorService : IProductCreatorService
         _productRepository = productRepository;
     }
 
-    public async Task<Guid> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
+    public async Task<Result<Guid?>> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
-        var newId = Common.Domain.Schema.NewID();
-
         var newProduct = new Product
         {
-            Id = new ProductId(newId),
-            Title = new ProductTitle(title),
-            Description = new ProductDescription(description),
-            Status = new ProductStatus((ProductStatusValue)status),
-            Price = new ProductPrice(price)
+            Id = Schema.NewID(),
+            Title = title,
+            Description = description,
+            Status = (ProductStatusValue)status,
+            Price = price
         };
 
-        await _productRepository.Save(newProduct, cancellationToken);
+        if (newProduct.HasError())
+        {
+            return new Result<Guid?>(null, newProduct.GetError());
+        }
 
-        await _publisher.Publish(new ProductCreatedEvent { Product = newId }, cancellationToken);
+        var saveResult = await _productRepository.Save(newProduct, cancellationToken);
+        if (saveResult.Err is not null)
+        {
+            return new Result<Guid?>(null, saveResult.Err);
+        }
 
-        return newProduct.Id.GetValue();
+        await _publisher.Publish(new ProductCreatedEvent { Product = newProduct.Id }, cancellationToken);
+
+        return new Result<Guid?>(newProduct.Id);
     }
 }

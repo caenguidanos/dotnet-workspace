@@ -17,12 +17,10 @@ using Ecommerce.Infrastructure.DataTransfer;
 public sealed class ProductController : ControllerBase
 {
     private ISender _sender { get; init; }
-    private IHttpExceptionManager _exceptionManager { get; init; }
 
-    public ProductController(ISender sender, IHttpExceptionManager exceptionManager)
+    public ProductController(ISender sender)
     {
         _sender = sender;
-        _exceptionManager = exceptionManager;
     }
 
     [HttpGet]
@@ -31,22 +29,27 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> GetProducts(CancellationToken cancellationToken)
     {
-        try
+        var query = new GetProductsQuery();
+
+        var result = await _sender.Send(query, cancellationToken);
+        if (result.Err is not null)
         {
-            var query = new GetProductsQuery();
-
-            var payload = await _sender.Send(query, cancellationToken);
-
             return new HttpResultResponse
             {
-                Body = payload,
-                ContentType = MediaTypeNames.Application.Json
+                Body = new ProblemDetails
+                {
+                    Status = result.Err.StatusCode,
+                    Detail = result.Err.Detail,
+                }
             };
         }
-        catch (Exception ex)
+
+        return new HttpResultResponse
         {
-            return _exceptionManager.Intercept(ex);
-        }
+            Body = result.Ok,
+            ContentType = MediaTypeNames.Application.Json
+        };
+
     }
 
     [HttpGet("{id:guid}")]
@@ -56,22 +59,26 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
-        try
+        var query = new GetProductQuery { Id = id };
+
+        var result = await _sender.Send(query, cancellationToken);
+        if (result.Err is not null)
         {
-            var query = new GetProductQuery { Id = id };
-
-            var payload = await _sender.Send(query, cancellationToken);
-
             return new HttpResultResponse
             {
-                Body = payload,
-                ContentType = MediaTypeNames.Application.Json
+                Body = new ProblemDetails
+                {
+                    Status = result.Err.StatusCode,
+                    Detail = result.Err.Detail,
+                }
             };
         }
-        catch (Exception ex)
+
+        return new HttpResultResponse
         {
-            return _exceptionManager.Intercept(ex);
-        }
+            Body = result.Ok,
+            ContentType = MediaTypeNames.Application.Json
+        };
     }
 
     [HttpPost]
@@ -81,28 +88,32 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
-        try
+        var command = new CreateProductCommand
         {
-            var command = new CreateProductCommand
-            {
-                Title = body.Title,
-                Description = body.Description,
-                Price = body.Price,
-                Status = body.Status,
-            };
+            Title = body.Title,
+            Description = body.Description,
+            Price = body.Price,
+            Status = body.Status,
+        };
 
-            var payload = await _sender.Send(command, cancellationToken);
-
+        var result = await _sender.Send(command, cancellationToken);
+        if (result.Err is not null)
+        {
             return new HttpResultResponse
             {
-                Body = payload,
-                ContentType = MediaTypeNames.Application.Json
+                Body = new ProblemDetails
+                {
+                    Status = result.Err.StatusCode,
+                    Detail = result.Err.Detail,
+                }
             };
         }
-        catch (Exception ex)
+
+        return new HttpResultResponse
         {
-            return _exceptionManager.Intercept(ex);
-        }
+            Body = result.Ok,
+            ContentType = MediaTypeNames.Application.Json
+        };
     }
 
     [HttpDelete("{id:guid}")]
@@ -112,18 +123,22 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
-        try
-        {
-            var command = new RemoveProductCommand { Id = id };
+        var command = new RemoveProductCommand { Id = id };
 
-            await _sender.Send(command, cancellationToken);
-
-            return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
-        }
-        catch (Exception ex)
+        var result = await _sender.Send(command, cancellationToken);
+        if (result.Err is not null)
         {
-            return _exceptionManager.Intercept(ex);
+            return new HttpResultResponse
+            {
+                Body = new ProblemDetails
+                {
+                    Status = result.Err.StatusCode,
+                    Detail = result.Err.Detail,
+                }
+            };
         }
+
+        return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
     }
 
     [HttpPatch("{id:guid}")]
@@ -134,24 +149,28 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
     public async ValueTask<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
-        try
+        var command = new UpdateProductCommand
         {
-            var command = new UpdateProductCommand
+            Id = id,
+            Title = body.Title,
+            Description = body.Description,
+            Price = body.Price,
+            Status = body.Status
+        };
+
+        var result = await _sender.Send(command, cancellationToken);
+        if (result.Err is not null)
+        {
+            return new HttpResultResponse
             {
-                Id = id,
-                Title = body.Title,
-                Description = body.Description,
-                Price = body.Price,
-                Status = body.Status
+                Body = new ProblemDetails
+                {
+                    Status = result.Err.StatusCode,
+                    Detail = result.Err.Detail,
+                }
             };
-
-            await _sender.Send(command, cancellationToken);
-
-            return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
         }
-        catch (Exception ex)
-        {
-            return _exceptionManager.Intercept(ex);
-        }
+
+        return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
     }
 }

@@ -22,34 +22,36 @@ public sealed class HttpResultResponse : IActionResult
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
-        if (Body is not null)
+        if (Body is null)
         {
-            string fromSerializer = JsonSerializer.Serialize(Body, options: serializerOptions);
+            string defaultPayload = HttpStatusText.From(StatusCode);
 
-            context.HttpContext.Response.ContentLength = fromSerializer.Length;
+            context.HttpContext.Response.StatusCode = (int)StatusCode;
+            context.HttpContext.Response.ContentType = MediaTypeNames.Text.Plain;
+            context.HttpContext.Response.ContentLength = defaultPayload.Length;
 
-            if (Body is ProblemDetails)
-            {
-                context.HttpContext.Response.StatusCode = ((ProblemDetails)Body).Status ?? 418;
-                context.HttpContext.Response.ContentType = "application/problem+json";
-            }
-            else
-            {
-                context.HttpContext.Response.StatusCode = (int)StatusCode;
-                context.HttpContext.Response.ContentType = ContentType;
-            }
-
-            await context.HttpContext.Response.WriteAsync(fromSerializer, context.HttpContext.RequestAborted);
+            await context.HttpContext.Response.WriteAsync(defaultPayload, context.HttpContext.RequestAborted);
             return;
         }
 
-        string defaultPayload = HttpStatusText.From(StatusCode);
+        if (Body is ProblemDetails)
+        {
+            string s0 = JsonSerializer.Serialize(Body, options: serializerOptions);
+
+            context.HttpContext.Response.StatusCode = ((ProblemDetails)Body).Status ?? 418;
+            context.HttpContext.Response.ContentType = "application/problem+json";
+            context.HttpContext.Response.ContentLength = s0.Length;
+
+            await context.HttpContext.Response.WriteAsync(s0, context.HttpContext.RequestAborted);
+            return;
+        }
+
+        string s1 = JsonSerializer.Serialize(Body, options: serializerOptions);
 
         context.HttpContext.Response.StatusCode = (int)StatusCode;
-        context.HttpContext.Response.ContentType = MediaTypeNames.Text.Plain;
-        context.HttpContext.Response.ContentLength = defaultPayload.Length;
+        context.HttpContext.Response.ContentType = ContentType;
+        context.HttpContext.Response.ContentLength = s1.Length;
 
-        await context.HttpContext.Response.WriteAsync(defaultPayload, context.HttpContext.RequestAborted);
-        return;
+        await context.HttpContext.Response.WriteAsync(s1, context.HttpContext.RequestAborted);
     }
 }

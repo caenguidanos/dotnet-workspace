@@ -2,13 +2,14 @@ namespace Ecommerce.Application.Service;
 
 using Mediator;
 
+using Common.Domain;
+
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
-using Ecommerce.Domain.ValueObject;
 
 public sealed class ProductUpdaterService : IProductUpdaterService
 {
@@ -21,26 +22,43 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         _productRepository = productRepository;
     }
 
-    public async Task UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Result> UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
     {
-        var existingProduct = await _productRepository.GetById(id, cancellationToken);
-
-        string productTitle = command.Title ?? existingProduct.Title.GetValue();
-        string productDescription = command.Description ?? existingProduct.Description.GetValue();
-        int productStatus = command.Status ?? (int)existingProduct.Status.GetValue();
-        int productPrice = command.Price ?? existingProduct.Price.GetValue();
-
-        var existingProductWithUpdates = new Product
+        var getByIdResult = await _productRepository.GetById(id, cancellationToken);
+        if (getByIdResult.Err is not null)
         {
-            Id = new ProductId(id),
-            Title = new ProductTitle(productTitle),
-            Description = new ProductDescription(productDescription),
-            Status = new ProductStatus((ProductStatusValue)productStatus),
-            Price = new ProductPrice(productPrice)
+            return new Result(getByIdResult.Err);
+        }
+
+        if (getByIdResult.Ok is null)
+        {
+            throw new ArgumentNullException();
+        }
+
+        var product = getByIdResult.Ok;
+
+        var updatedProduct = new Product
+        {
+            Id = id,
+            Title = command.Title ?? product.Title,
+            Description = command.Description ?? product.Description,
+            Status = (ProductStatusValue)(command.Status ?? (int)product.Status),
+            Price = command.Price ?? product.Price
         };
 
-        await _productRepository.Update(existingProductWithUpdates, cancellationToken);
+        if (updatedProduct.HasError())
+        {
+            return new Result(updatedProduct.GetError());
+        }
+
+        var updateResult = await _productRepository.Update(updatedProduct, cancellationToken);
+        if (updateResult.Err is not null)
+        {
+            return new Result(updateResult.Err);
+        }
 
         await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
+
+        return new Result();
     }
 }

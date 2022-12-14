@@ -2,12 +2,12 @@ namespace Ecommerce.Application.Command;
 
 using Mediator;
 
-using Common.Application;
+using Common.Domain;
 
 using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public readonly struct CreateProductCommand : IRequest<ProductAck>
+public readonly struct CreateProductCommand : IRequest<Result<ProductAck?>>
 {
     public required int Price { get; init; }
     public required string Title { get; init; }
@@ -15,7 +15,7 @@ public readonly struct CreateProductCommand : IRequest<ProductAck>
     public required int Status { get; init; }
 }
 
-public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, ProductAck>
+public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, Result<ProductAck?>>
 {
     private readonly IProductCreatorService _productCreatorService;
 
@@ -24,15 +24,27 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _productCreatorService = productCreatorService;
     }
 
-    public async ValueTask<ProductAck> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<ProductAck?>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
-        var createdProductId = await _productCreatorService.AddNewProduct(
+        var result = await _productCreatorService.AddNewProduct(
               request.Title,
               request.Description,
               request.Status,
               request.Price,
               cancellationToken);
 
-        return new ProductAck { Id = createdProductId };
+        if (result.Err is not null)
+        {
+            return new Result<ProductAck?>(null, result.Err);
+        }
+
+        if (result.Ok is null)
+        {
+            throw new ArgumentNullException();
+        }
+
+        var ack = new ProductAck { Id = (Guid)result.Ok };
+
+        return new Result<ProductAck?>(ack);
     }
 }

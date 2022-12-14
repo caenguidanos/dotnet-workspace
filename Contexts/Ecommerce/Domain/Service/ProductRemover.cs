@@ -1,6 +1,8 @@
 namespace Ecommerce.Domain.Service;
 
+using Common.Domain;
+
 public interface IProductRemoverService
 {
-    Task RemoveProduct(Guid id, CancellationToken cancellationToken);
+    Task<Result> RemoveProduct(Guid id, CancellationToken cancellationToken);
 }

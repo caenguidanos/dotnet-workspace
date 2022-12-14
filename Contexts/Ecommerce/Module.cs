@@ -4,14 +4,11 @@ using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using Common.Application;
-
 using Ecommerce.Application.Service;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
-using Ecommerce.Application.Exceptions;
 
 public static class EcommerceModule
 {
@@ -23,11 +20,11 @@ public static class EcommerceModule
 
         services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IDbSeed, DbSeed>();
+
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
         services.AddSingleton<IProductRemoverService, ProductRemoverService>();
         services.AddSingleton<IProductRepository, ProductRepository>();
-        services.AddSingleton<IHttpExceptionManager, ExceptionManager>();
 
         return services;
     }

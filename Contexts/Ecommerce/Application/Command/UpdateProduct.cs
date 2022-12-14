@@ -1,13 +1,12 @@
 namespace Ecommerce.Application.Command;
 
 using Mediator;
-using System.Net;
 
-using Common.Application;
+using Common.Domain;
 
 using Ecommerce.Domain.Service;
 
-public readonly struct UpdateProductCommand : IRequest<Unit>
+public readonly struct UpdateProductCommand : IRequest<Result>
 {
     public Guid Id { get; init; }
     public int? Price { get; init; }
@@ -16,7 +15,7 @@ public readonly struct UpdateProductCommand : IRequest<Unit>
     public int? Status { get; init; }
 }
 
-public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Unit>
+public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result>
 {
     private readonly IProductUpdaterService _productUpdaterService;
 
@@ -25,10 +24,8 @@ public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand,
         _productUpdaterService = productUpdaterService;
     }
 
-    public async ValueTask<Unit> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
-
-        return Unit.Value;
+        return await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
     }
 }

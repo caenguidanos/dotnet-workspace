@@ -3,10 +3,11 @@ namespace Ecommerce.Infrastructure.Repository;
 using Dapper;
 using Npgsql;
 
+using Common.Domain;
+
 using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Exceptions;
+using Ecommerce.Domain.Error;
 using Ecommerce.Domain.Repository;
-using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
 using Ecommerce.Infrastructure.Persistence;
 
@@ -19,7 +20,7 @@ public sealed class ProductRepository : IProductRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Product>> Get(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<Product>>> Get(CancellationToken cancellationToken)
     {
         try
         {
@@ -35,39 +36,41 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
             if (result is null)
             {
-                return Enumerable.Empty<Product>();
+                return new Result<IEnumerable<Product>>(Enumerable.Empty<Product>());
             }
 
-            Func<ProductPrimitives, Product> productsSelector = p =>
+            var products = new List<Product>();
+
+            foreach (var item in result)
             {
                 var product = new Product
                 {
-                    Id = new ProductId(p.Id),
-                    Title = new ProductTitle(p.Title),
-                    Description = new ProductDescription(p.Description),
-                    Status = new ProductStatus(p.Status),
-                    Price = new ProductPrice(p.Price)
+                    Id = item.Id,
+                    Title = item.Title,
+                    Description = item.Description,
+                    Status = item.Status,
+                    Price = item.Price
                 };
 
-                product.AddTimeStamp(p.updated_at, p.created_at);
+                if (product.HasError())
+                {
+                    return new Result<IEnumerable<Product>>(null, product.GetError());
+                }
 
-                return product;
-            };
+                product.AddTimeStamp(item.updated_at, item.created_at);
 
-            return result.Select(productsSelector).AsList();
-        }
-        catch (Exception ex)
-        {
-            if (ex is PostgresException)
-            {
-                throw new ProductPersistenceException(ex.Message);
+                products.Add(product);
             }
 
-            throw;
+            return new Result<IEnumerable<Product>>(products);
+        }
+        catch (Exception)
+        {
+            return new Result<IEnumerable<Product>>(null, new ProductPersistenceError());
         }
     }
 
-    public async Task<Product> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<Product>> GetById(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -86,34 +89,34 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command).ConfigureAwait(false);
             if (result is null)
             {
-                throw new ProductNotFoundException();
+                return new Result<Product>(null, new ProductNotFoundError());
             }
 
             var product = new Product
             {
-                Id = new ProductId(result.Id),
-                Title = new ProductTitle(result.Title),
-                Description = new ProductDescription(result.Description),
-                Status = new ProductStatus(result.Status),
-                Price = new ProductPrice(result.Price)
+                Id = result.Id,
+                Title = result.Title,
+                Description = result.Description,
+                Status = result.Status,
+                Price = result.Price
             };
+
+            if (product.HasError())
+            {
+                return new Result<Product>(null, product.GetError());
+            }
 
             product.AddTimeStamp(result.updated_at, result.created_at);
 
-            return product;
+            return new Result<Product>(product);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            if (ex is PostgresException)
-            {
-                throw new ProductPersistenceException(ex.Message);
-            }
-
-            throw;
+            return new Result<Product>(null, new ProductPersistenceError());
         }
     }
 
-    public async Task Save(Product product, CancellationToken cancellationToken)
+    public async Task<Result> Save(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -137,58 +140,60 @@ public sealed class ProductRepository : IProductRepository
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
+
+            return new Result();
         }
         catch (Exception ex)
         {
-            if (ex is not PostgresException postgresException)
+            if (ex is PostgresException postgresException)
             {
-                throw;
-            }
-
-            switch (postgresException.SqlState)
-            {
-                case PostgresErrorCodes.UniqueViolation:
-                    {
-                        if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
+                switch (postgresException.SqlState)
+                {
+                    case PostgresErrorCodes.UniqueViolation:
                         {
-                            throw new ProductTitleUniqueException();
+                            if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
+                            {
+                                return new Result(new ProductTitleUniqueError());
+                            }
+
+                            break;
+                        }
+                    case PostgresErrorCodes.CheckViolation:
+                        {
+                            switch (postgresException.ConstraintName)
+                            {
+                                case ProductConstraints.CheckTitle:
+                                    return new Result(new ProductTitleInvalidError());
+
+
+                                case ProductConstraints.CheckDescription:
+                                    return new Result(new ProductDescriptionInvalidError());
+
+
+                                case ProductConstraints.CheckStatus:
+                                    return new Result(new ProductStatusInvalidError());
+
+
+                                case ProductConstraints.CheckPrice:
+                                    return new Result(new ProductPriceInvalidError());
+
+                                default:
+                                    break;
+                            }
+
+                            break;
                         }
 
+                    default:
                         break;
-                    }
-                case PostgresErrorCodes.CheckViolation:
-                    {
-                        switch (postgresException.ConstraintName)
-                        {
-                            case ProductConstraints.CheckTitle:
-                                throw new ProductTitleInvalidException();
-
-                            case ProductConstraints.CheckDescription:
-                                throw new ProductDescriptionInvalidException();
-
-                            case ProductConstraints.CheckStatus:
-                                throw new ProductStatusInvalidException();
-
-                            case ProductConstraints.CheckPrice:
-                                throw new ProductPriceInvalidException();
-
-                            default:
-                                break;
-                        }
-
-                        break;
-                    }
-
-                default:
-                    break;
+                }
             }
 
-            throw new ProductPersistenceException(ex.Message);
-
+            return new Result(new ProductPersistenceError());
         }
     }
 
-    public async Task Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<Result> Delete(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -207,21 +212,18 @@ public sealed class ProductRepository : IProductRepository
             int result = await conn.ExecuteAsync(command).ConfigureAwait(false);
             if (result is 0)
             {
-                throw new ProductNotFoundException();
-            }
-        }
-        catch (Exception ex)
-        {
-            if (ex is PostgresException)
-            {
-                throw new ProductPersistenceException(ex.Message);
+                return new Result(new ProductNotFoundError());
             }
 
-            throw;
+            return new Result();
+        }
+        catch (Exception)
+        {
+            return new Result(new ProductPersistenceError());
         }
     }
 
-    public async Task Update(Product product, CancellationToken cancellationToken)
+    public async Task<Result> Update(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -246,53 +248,56 @@ public sealed class ProductRepository : IProductRepository
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
+
+            return new Result();
         }
         catch (Exception ex)
         {
-            if (ex is not PostgresException postgresException)
+            if (ex is PostgresException postgresException)
             {
-                throw;
-            }
-
-            switch (postgresException.SqlState)
-            {
-                case PostgresErrorCodes.UniqueViolation:
-                    {
-                        if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
+                switch (postgresException.SqlState)
+                {
+                    case PostgresErrorCodes.UniqueViolation:
                         {
-                            throw new ProductTitleUniqueException();
+                            if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
+                            {
+                                return new Result(new ProductTitleUniqueError());
+                            }
+
+                            break;
+                        }
+                    case PostgresErrorCodes.CheckViolation:
+                        {
+                            switch (postgresException.ConstraintName)
+                            {
+                                case ProductConstraints.CheckTitle:
+                                    return new Result(new ProductTitleInvalidError());
+
+
+                                case ProductConstraints.CheckDescription:
+                                    return new Result(new ProductDescriptionInvalidError());
+
+
+                                case ProductConstraints.CheckStatus:
+                                    return new Result(new ProductStatusInvalidError());
+
+
+                                case ProductConstraints.CheckPrice:
+                                    return new Result(new ProductPriceInvalidError());
+
+                                default:
+                                    break;
+                            }
+
+                            break;
                         }
 
+                    default:
                         break;
-                    }
-                case PostgresErrorCodes.CheckViolation:
-                    {
-                        switch (postgresException.ConstraintName)
-                        {
-                            case ProductConstraints.CheckTitle:
-                                throw new ProductTitleInvalidException();
-
-                            case ProductConstraints.CheckDescription:
-                                throw new ProductDescriptionInvalidException();
-
-                            case ProductConstraints.CheckStatus:
-                                throw new ProductStatusInvalidException();
-
-                            case ProductConstraints.CheckPrice:
-                                throw new ProductPriceInvalidException();
-
-                            default:
-                                break;
-                        }
-
-                        break;
-                    }
-
-                default:
-                    break;
+                }
             }
 
-            throw new ProductPersistenceException(ex.Message);
+            return new Result(new ProductPersistenceError());
         }
     }
 }
