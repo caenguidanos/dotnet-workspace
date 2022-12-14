@@ -5,12 +5,12 @@ using Mediator;
 using Ecommerce.Domain.Service;
 using Common.Domain;
 
-public readonly struct RemoveProductCommand : IRequest<Result>
+public readonly struct RemoveProductCommand : IRequest<Result<bool>>
 {
     public required Guid Id { get; init; }
 }
 
-public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, Result>
+public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, Result<bool>>
 {
     private readonly IProductRemoverService _productRemoverService;
 
@@ -19,7 +19,7 @@ public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand,
         _productRemoverService = productRemoverService;
     }
 
-    public async ValueTask<Result> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<bool>> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
     {
         return await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
     }

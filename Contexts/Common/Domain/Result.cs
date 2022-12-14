@@ -1,23 +1,19 @@
 namespace Common.Domain;
 
-public readonly struct Result
+public class Result<S>
 {
-    public readonly IError? Err;
+    public S Ok { get; set; } = default(S)!;
 
-    public Result(IError? err = null)
+    public IError? Err { get; set; } = null;
+
+    public dynamic Switch<H, T>(Func<S, H> onValue, Func<IError, T> onError)
+        where H : notnull where T : notnull
     {
-        Err = err;
-    }
-}
+        if (Err is not null)
+        {
+            return onError(Err);
+        }
 
-public readonly struct Result<TResult>
-{
-    public readonly TResult? Ok;
-    public readonly IError? Err;
-
-    public Result(TResult? ok, IError? err = null)
-    {
-        Ok = ok;
-        Err = err;
+        return onValue(Ok);
     }
 }

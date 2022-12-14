@@ -19,16 +19,17 @@ public sealed class ProductRemoverService : IProductRemoverService
         _productRepository = productRepository;
     }
 
-    public async Task<Result> RemoveProduct(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<bool>> RemoveProduct(Guid id, CancellationToken cancellationToken)
     {
-        var deleteResult = await _productRepository.Delete(id, cancellationToken);
-        if (deleteResult.Err is not null)
+        var result = await _productRepository.Delete(id, cancellationToken);
+
+        if (result.Err is not null)
         {
-            return new Result(deleteResult.Err);
+            return new Result<bool> { Err = result.Err };
         }
 
         await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
 
-        return new Result();
+        return new Result<bool> { };
     }
 }

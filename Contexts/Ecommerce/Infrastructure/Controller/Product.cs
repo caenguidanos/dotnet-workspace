@@ -32,24 +32,22 @@ public sealed class ProductController : ControllerBase
         var query = new GetProductsQuery();
 
         var result = await _sender.Send(query, cancellationToken);
-        if (result.Err is not null)
-        {
-            return new HttpResultResponse
+
+        return result.Switch(
+            Ok => new HttpResultResponse
+            {
+                Body = Ok,
+                ContentType = MediaTypeNames.Application.Json
+            },
+            Err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = result.Err.StatusCode,
-                    Detail = result.Err.Detail,
+                    Status = Err.StatusCode,
+                    Detail = Err.Detail,
                 }
-            };
-        }
-
-        return new HttpResultResponse
-        {
-            Body = result.Ok,
-            ContentType = MediaTypeNames.Application.Json
-        };
-
+            }
+        );
     }
 
     [HttpGet("{id:guid}")]
@@ -62,23 +60,22 @@ public sealed class ProductController : ControllerBase
         var query = new GetProductQuery { Id = id };
 
         var result = await _sender.Send(query, cancellationToken);
-        if (result.Err is not null)
-        {
-            return new HttpResultResponse
+
+        return result.Switch(
+            Ok => new HttpResultResponse
+            {
+                Body = Ok,
+                ContentType = MediaTypeNames.Application.Json
+            },
+            Err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = result.Err.StatusCode,
-                    Detail = result.Err.Detail,
+                    Status = Err.StatusCode,
+                    Detail = Err.Detail,
                 }
-            };
-        }
-
-        return new HttpResultResponse
-        {
-            Body = result.Ok,
-            ContentType = MediaTypeNames.Application.Json
-        };
+            }
+        );
     }
 
     [HttpPost]
@@ -97,23 +94,22 @@ public sealed class ProductController : ControllerBase
         };
 
         var result = await _sender.Send(command, cancellationToken);
-        if (result.Err is not null)
-        {
-            return new HttpResultResponse
+
+        return result.Switch(
+            Ok => new HttpResultResponse
+            {
+                Body = Ok,
+                ContentType = MediaTypeNames.Application.Json
+            },
+            Err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = result.Err.StatusCode,
-                    Detail = result.Err.Detail,
+                    Status = Err.StatusCode,
+                    Detail = Err.Detail,
                 }
-            };
-        }
-
-        return new HttpResultResponse
-        {
-            Body = result.Ok,
-            ContentType = MediaTypeNames.Application.Json
-        };
+            }
+        );
     }
 
     [HttpDelete("{id:guid}")]
@@ -126,19 +122,21 @@ public sealed class ProductController : ControllerBase
         var command = new RemoveProductCommand { Id = id };
 
         var result = await _sender.Send(command, cancellationToken);
-        if (result.Err is not null)
-        {
-            return new HttpResultResponse
+
+        return result.Switch(
+            Ok => new HttpResultResponse
+            {
+                StatusCode = HttpStatusCode.Accepted
+            },
+            Err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = result.Err.StatusCode,
-                    Detail = result.Err.Detail,
+                    Status = Err.StatusCode,
+                    Detail = Err.Detail,
                 }
-            };
-        }
-
-        return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
+            }
+        );
     }
 
     [HttpPatch("{id:guid}")]
@@ -159,18 +157,20 @@ public sealed class ProductController : ControllerBase
         };
 
         var result = await _sender.Send(command, cancellationToken);
-        if (result.Err is not null)
-        {
-            return new HttpResultResponse
+
+        return result.Switch(
+            Ok => new HttpResultResponse
+            {
+                StatusCode = HttpStatusCode.Accepted
+            },
+            Err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = result.Err.StatusCode,
-                    Detail = result.Err.Detail,
+                    Status = Err.StatusCode,
+                    Detail = Err.Detail,
                 }
-            };
-        }
-
-        return new HttpResultResponse { StatusCode = HttpStatusCode.Accepted };
+            }
+        );
     }
 }

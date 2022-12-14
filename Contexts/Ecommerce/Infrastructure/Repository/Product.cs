@@ -36,7 +36,7 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
             if (result is null)
             {
-                return new Result<IEnumerable<Product>>(Enumerable.Empty<Product>());
+                return new Result<IEnumerable<Product>> { Ok = Enumerable.Empty<Product>() };
             }
 
             var products = new List<Product>();
@@ -54,7 +54,7 @@ public sealed class ProductRepository : IProductRepository
 
                 if (product.HasError())
                 {
-                    return new Result<IEnumerable<Product>>(null, product.GetError());
+                    return new Result<IEnumerable<Product>> { Err = product.GetError() };
                 }
 
                 product.AddTimeStamp(item.updated_at, item.created_at);
@@ -62,11 +62,11 @@ public sealed class ProductRepository : IProductRepository
                 products.Add(product);
             }
 
-            return new Result<IEnumerable<Product>>(products);
+            return new Result<IEnumerable<Product>> { Ok = products };
         }
         catch (Exception)
         {
-            return new Result<IEnumerable<Product>>(null, new ProductPersistenceError());
+            return new Result<IEnumerable<Product>> { Err = new ProductPersistenceError() };
         }
     }
 
@@ -89,7 +89,7 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command).ConfigureAwait(false);
             if (result is null)
             {
-                return new Result<Product>(null, new ProductNotFoundError());
+                return new Result<Product> { Err = new ProductNotFoundError() };
             }
 
             var product = new Product
@@ -103,20 +103,20 @@ public sealed class ProductRepository : IProductRepository
 
             if (product.HasError())
             {
-                return new Result<Product>(null, product.GetError());
+                return new Result<Product> { Err = product.GetError() };
             }
 
             product.AddTimeStamp(result.updated_at, result.created_at);
 
-            return new Result<Product>(product);
+            return new Result<Product> { Ok = product };
         }
         catch (Exception)
         {
-            return new Result<Product>(null, new ProductPersistenceError());
+            return new Result<Product> { Err = new ProductPersistenceError() };
         }
     }
 
-    public async Task<Result> Save(Product product, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Save(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -141,7 +141,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
 
-            return new Result();
+            return new Result<bool> { };
         }
         catch (Exception ex)
         {
@@ -153,7 +153,7 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result(new ProductTitleUniqueError());
+                                return new Result<bool> { Err = new ProductTitleUniqueError() };
                             }
 
                             break;
@@ -163,19 +163,16 @@ public sealed class ProductRepository : IProductRepository
                             switch (postgresException.ConstraintName)
                             {
                                 case ProductConstraints.CheckTitle:
-                                    return new Result(new ProductTitleInvalidError());
-
+                                    return new Result<bool> { Err = new ProductTitleInvalidError() };
 
                                 case ProductConstraints.CheckDescription:
-                                    return new Result(new ProductDescriptionInvalidError());
-
+                                    return new Result<bool> { Err = new ProductDescriptionInvalidError() };
 
                                 case ProductConstraints.CheckStatus:
-                                    return new Result(new ProductStatusInvalidError());
-
+                                    return new Result<bool> { Err = new ProductStatusInvalidError() };
 
                                 case ProductConstraints.CheckPrice:
-                                    return new Result(new ProductPriceInvalidError());
+                                    return new Result<bool> { Err = new ProductPriceInvalidError() };
 
                                 default:
                                     break;
@@ -189,11 +186,11 @@ public sealed class ProductRepository : IProductRepository
                 }
             }
 
-            return new Result(new ProductPersistenceError());
+            return new Result<bool> { Err = new ProductPersistenceError() };
         }
     }
 
-    public async Task<Result> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Delete(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -212,18 +209,18 @@ public sealed class ProductRepository : IProductRepository
             int result = await conn.ExecuteAsync(command).ConfigureAwait(false);
             if (result is 0)
             {
-                return new Result(new ProductNotFoundError());
+                return new Result<bool> { Err = new ProductNotFoundError() };
             }
 
-            return new Result();
+            return new Result<bool> { };
         }
         catch (Exception)
         {
-            return new Result(new ProductPersistenceError());
+            return new Result<bool> { Err = new ProductPersistenceError() };
         }
     }
 
-    public async Task<Result> Update(Product product, CancellationToken cancellationToken)
+    public async Task<Result<bool>> Update(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -249,7 +246,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command).ConfigureAwait(false);
 
-            return new Result();
+            return new Result<bool> { };
         }
         catch (Exception ex)
         {
@@ -261,7 +258,7 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result(new ProductTitleUniqueError());
+                                return new Result<bool> { Err = new ProductTitleUniqueError() };
                             }
 
                             break;
@@ -271,19 +268,16 @@ public sealed class ProductRepository : IProductRepository
                             switch (postgresException.ConstraintName)
                             {
                                 case ProductConstraints.CheckTitle:
-                                    return new Result(new ProductTitleInvalidError());
-
+                                    return new Result<bool> { Err = new ProductTitleInvalidError() };
 
                                 case ProductConstraints.CheckDescription:
-                                    return new Result(new ProductDescriptionInvalidError());
-
+                                    return new Result<bool> { Err = new ProductDescriptionInvalidError() };
 
                                 case ProductConstraints.CheckStatus:
-                                    return new Result(new ProductStatusInvalidError());
-
+                                    return new Result<bool> { Err = new ProductStatusInvalidError() };
 
                                 case ProductConstraints.CheckPrice:
-                                    return new Result(new ProductPriceInvalidError());
+                                    return new Result<bool> { Err = new ProductPriceInvalidError() };
 
                                 default:
                                     break;
@@ -297,7 +291,7 @@ public sealed class ProductRepository : IProductRepository
                 }
             }
 
-            return new Result(new ProductPersistenceError());
+            return new Result<bool> { Err = new ProductPersistenceError() };
         }
     }
 }

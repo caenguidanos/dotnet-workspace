@@ -23,17 +23,15 @@ public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, Resul
     public async ValueTask<Result<IEnumerable<ProductPrimitives>>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         var result = await _productRepository.Get(cancellationToken);
+
         if (result.Err is not null)
         {
-            return new Result<IEnumerable<ProductPrimitives>>(null, result.Err);
+            return new Result<IEnumerable<ProductPrimitives>> { Err = result.Err };
         }
 
-        if (result.Ok is null)
+        return new Result<IEnumerable<ProductPrimitives>>
         {
-            throw new ArgumentNullException();
-        }
-
-        return new Result<IEnumerable<ProductPrimitives>>(
-            result.Ok.Select(product => product.ToPrimitives()), null);
+            Ok = result.Ok.Select(product => product.ToPrimitives()),
+        };
     }
 }

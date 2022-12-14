@@ -4,5 +4,5 @@ using Common.Domain;
 
 public interface IProductRemoverService
 {
-    Task<Result> RemoveProduct(Guid id, CancellationToken cancellationToken);
+    Task<Result<bool>> RemoveProduct(Guid id, CancellationToken cancellationToken);
 }

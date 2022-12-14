@@ -22,43 +22,38 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         _productRepository = productRepository;
     }
 
-    public async Task<Result> UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Result<bool>> UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
     {
         var getByIdResult = await _productRepository.GetById(id, cancellationToken);
+
         if (getByIdResult.Err is not null)
         {
-            return new Result(getByIdResult.Err);
+            return new Result<bool> { Err = getByIdResult.Err };
         }
-
-        if (getByIdResult.Ok is null)
-        {
-            throw new ArgumentNullException();
-        }
-
-        var product = getByIdResult.Ok;
 
         var updatedProduct = new Product
         {
             Id = id,
-            Title = command.Title ?? product.Title,
-            Description = command.Description ?? product.Description,
-            Status = (ProductStatusValue)(command.Status ?? (int)product.Status),
-            Price = command.Price ?? product.Price
+            Title = command.Title ?? getByIdResult.Ok.Title,
+            Description = command.Description ?? getByIdResult.Ok.Description,
+            Status = (ProductStatusValue)(command.Status ?? (int)getByIdResult.Ok.Status),
+            Price = command.Price ?? getByIdResult.Ok.Price
         };
 
         if (updatedProduct.HasError())
         {
-            return new Result(updatedProduct.GetError());
+            return new Result<bool> { Err = updatedProduct.GetError() };
         }
 
         var updateResult = await _productRepository.Update(updatedProduct, cancellationToken);
+
         if (updateResult.Err is not null)
         {
-            return new Result(updateResult.Err);
+            return new Result<bool> { Err = updateResult.Err };
         }
 
         await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
 
-        return new Result();
+        return new Result<bool> { };
     }
 }

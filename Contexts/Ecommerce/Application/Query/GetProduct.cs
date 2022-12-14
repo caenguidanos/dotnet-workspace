@@ -2,9 +2,10 @@ namespace Ecommerce.Application.Query;
 
 using Mediator;
 
+using Common.Domain;
+
 using Ecommerce.Domain.Repository;
 using Ecommerce.Infrastructure.DataTransfer;
-using Common.Domain;
 
 public readonly struct GetProductQuery : IRequest<Result<ProductPrimitives>>
 {
@@ -24,16 +25,12 @@ public sealed class GetProductHandler : IRequestHandler<GetProductQuery, Result<
     {
 
         var result = await _productRepository.GetById(request.Id, cancellationToken);
+
         if (result.Err is not null)
         {
-            return new Result<ProductPrimitives>(null, result.Err);
+            return new Result<ProductPrimitives> { Err = result.Err };
         }
 
-        if (result.Ok is null)
-        {
-            throw new ArgumentNullException();
-        }
-
-        return new Result<ProductPrimitives>(result.Ok.ToPrimitives());
+        return new Result<ProductPrimitives> { Ok = result.Ok.ToPrimitives() };
     }
 }

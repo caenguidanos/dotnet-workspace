@@ -21,7 +21,7 @@ public sealed class ProductCreatorService : IProductCreatorService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<Guid?>> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
         var newProduct = new Product
         {
@@ -34,17 +34,18 @@ public sealed class ProductCreatorService : IProductCreatorService
 
         if (newProduct.HasError())
         {
-            return new Result<Guid?>(null, newProduct.GetError());
+            return new Result<Guid> { Err = newProduct.GetError() };
         }
 
         var saveResult = await _productRepository.Save(newProduct, cancellationToken);
+
         if (saveResult.Err is not null)
         {
-            return new Result<Guid?>(null, saveResult.Err);
+            return new Result<Guid> { Err = saveResult.Err };
         }
 
         await _publisher.Publish(new ProductCreatedEvent { Product = newProduct.Id }, cancellationToken);
 
-        return new Result<Guid?>(newProduct.Id);
+        return new Result<Guid> { Ok = newProduct.Id };
     }
 }
