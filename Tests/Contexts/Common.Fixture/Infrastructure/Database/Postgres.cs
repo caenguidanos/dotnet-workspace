@@ -67,7 +67,7 @@ public sealed class PostgresDatabaseFactory
             CREATE DATABASE {_database} TEMPLATE {_template};
         """;
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
 
         return _consumerConnectionString.ToString();
     }
@@ -86,7 +86,7 @@ public sealed class PostgresDatabaseFactory
             DROP DATABASE {_database};
         """;
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
     }
 
     private static string GetRandomString(int length)

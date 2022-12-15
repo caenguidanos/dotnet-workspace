@@ -1,8 +1,10 @@
 namespace Common.Domain;
 
-public class Schema
+using System.Globalization;
+
+public class Schema<TEntity, TPrimitives>
 {
-    private readonly List<IError> _errors = new();
+    protected static readonly CultureInfo locale = new("en-US");
 
     public DateTime created_at { get; private set; }
     public DateTime updated_at { get; private set; }
@@ -18,23 +20,12 @@ public class Schema
         created_at = createdAt;
     }
 
-    public void AddError(IError error)
+    public virtual bool IsEqual(TEntity comparer)
     {
-        _errors.Add(error);
+        throw new NotImplementedException();
     }
 
-    public bool HasError()
-    {
-        Validate();
-        return _errors.Count > 0;
-    }
-
-    public IError GetError()
-    {
-        return _errors.First();
-    }
-
-    protected virtual void Validate()
+    public virtual TPrimitives ToPrimitives()
     {
         throw new NotImplementedException();
     }
@@ -42,6 +33,6 @@ public class Schema
 
 public class SchemaPrimitives
 {
-    public DateTime created_at { get; set; }
-    public DateTime updated_at { get; set; }
+    public required DateTime created_at { get; set; }
+    public required DateTime updated_at { get; set; }
 }

@@ -8,6 +8,7 @@ using Common.Domain;
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Error;
 using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
 using Ecommerce.Infrastructure.Persistence;
 
@@ -33,7 +34,7 @@ public sealed class ProductRepository : IProductRepository
 
             var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
 
-            var result = await conn.QueryAsync<ProductPrimitives>(command).ConfigureAwait(false);
+            var result = await conn.QueryAsync<ProductPrimitives>(command);
             if (result is null)
             {
                 return new Result<IEnumerable<Product>> { Ok = Enumerable.Empty<Product>() };
@@ -43,18 +44,21 @@ public sealed class ProductRepository : IProductRepository
 
             foreach (var item in result)
             {
-                var product = new Product
+                Product product;
+                try
                 {
-                    Id = item.Id,
-                    Title = item.Title,
-                    Description = item.Description,
-                    Status = item.Status,
-                    Price = item.Price
-                };
-
-                if (product.HasError())
+                    product = new Product
+                    {
+                        Id = new ProductId(item.Id),
+                        Title = new ProductTitle(item.Title),
+                        Description = new ProductDescription(item.Description),
+                        Status = new ProductStatus(item.Status),
+                        Price = new ProductPrice(item.Price)
+                    };
+                }
+                catch (ProductError ex)
                 {
-                    return new Result<IEnumerable<Product>> { Err = product.GetError() };
+                    return new Result<IEnumerable<Product>> { Err = (IError)ex };
                 }
 
                 product.AddTimeStamp(item.updated_at, item.created_at);
@@ -86,24 +90,27 @@ public sealed class ProductRepository : IProductRepository
 
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-            var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command).ConfigureAwait(false);
+            var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command);
             if (result is null)
             {
                 return new Result<Product> { Err = new ProductNotFoundError() };
             }
 
-            var product = new Product
+            Product product;
+            try
             {
-                Id = result.Id,
-                Title = result.Title,
-                Description = result.Description,
-                Status = result.Status,
-                Price = result.Price
-            };
-
-            if (product.HasError())
+                product = new Product
+                {
+                    Id = new ProductId(result.Id),
+                    Title = new ProductTitle(result.Title),
+                    Description = new ProductDescription(result.Description),
+                    Status = new ProductStatus(result.Status),
+                    Price = new ProductPrice(result.Price)
+                };
+            }
+            catch (ProductError ex)
             {
-                return new Result<Product> { Err = product.GetError() };
+                return new Result<Product> { Err = (IError)ex };
             }
 
             product.AddTimeStamp(result.updated_at, result.created_at);
@@ -139,7 +146,7 @@ public sealed class ProductRepository : IProductRepository
 
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-            await conn.ExecuteAsync(command).ConfigureAwait(false);
+            await conn.ExecuteAsync(command);
 
             return new Result<bool> { };
         }
@@ -206,7 +213,7 @@ public sealed class ProductRepository : IProductRepository
 
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-            int result = await conn.ExecuteAsync(command).ConfigureAwait(false);
+            int result = await conn.ExecuteAsync(command);
             if (result is 0)
             {
                 return new Result<bool> { Err = new ProductNotFoundError() };
@@ -244,7 +251,7 @@ public sealed class ProductRepository : IProductRepository
 
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-            await conn.ExecuteAsync(command).ConfigureAwait(false);
+            await conn.ExecuteAsync(command);
 
             return new Result<bool> { };
         }

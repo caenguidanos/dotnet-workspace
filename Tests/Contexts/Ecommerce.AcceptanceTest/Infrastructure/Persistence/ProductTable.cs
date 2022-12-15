@@ -38,7 +38,7 @@ public sealed class ProductTableAcceptanceTest
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
     }
 
     [Test]
@@ -54,7 +54,7 @@ public sealed class ProductTableAcceptanceTest
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
     }
 
     [Test]
@@ -71,7 +71,7 @@ public sealed class ProductTableAcceptanceTest
         ";
 
         var exception = Assert.ThrowsAsync<PostgresException>(
-            async () => await conn.ExecuteAsync(sql).ConfigureAwait(false));
+            async () => await conn.ExecuteAsync(sql));
 
         if (exception is not null)
         {
@@ -103,7 +103,7 @@ public sealed class ProductTableAcceptanceTest
         paramters.Add("Title", title);
 
         var exception = Assert.ThrowsAsync<PostgresException>(
-            async () => await conn.ExecuteAsync(sql, paramters).ConfigureAwait(false));
+            async () => await conn.ExecuteAsync(sql, paramters));
 
         if (exception is not null)
         {
@@ -125,7 +125,7 @@ public sealed class ProductTableAcceptanceTest
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
     }
 
     [Test]
@@ -142,7 +142,7 @@ public sealed class ProductTableAcceptanceTest
         ";
 
         var exception = Assert.ThrowsAsync<PostgresException>(
-            async () => await conn.ExecuteAsync(sql).ConfigureAwait(false));
+            async () => await conn.ExecuteAsync(sql));
 
         if (exception is not null)
         {
@@ -174,7 +174,7 @@ public sealed class ProductTableAcceptanceTest
         paramters.Add("Description", description);
 
         var exception = Assert.ThrowsAsync<PostgresException>(
-            async () => await conn.ExecuteAsync(sql, paramters).ConfigureAwait(false));
+            async () => await conn.ExecuteAsync(sql, paramters));
 
         if (exception is not null)
         {
@@ -196,7 +196,7 @@ public sealed class ProductTableAcceptanceTest
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
     }
 
     [Test]
@@ -213,7 +213,7 @@ public sealed class ProductTableAcceptanceTest
         ";
 
         var exception = Assert.ThrowsAsync<PostgresException>(
-            async () => await conn.ExecuteAsync(sql).ConfigureAwait(false));
+            async () => await conn.ExecuteAsync(sql));
 
         if (exception is not null)
         {
@@ -236,7 +236,7 @@ public sealed class ProductTableAcceptanceTest
         ";
 
         var exception = Assert.ThrowsAsync<PostgresException>(
-            async () => await conn.ExecuteAsync(sql).ConfigureAwait(false));
+            async () => await conn.ExecuteAsync(sql));
 
         if (exception is not null)
         {
@@ -258,7 +258,7 @@ public sealed class ProductTableAcceptanceTest
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 0);
         ";
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
     }
 
     [Test]
@@ -274,7 +274,7 @@ public sealed class ProductTableAcceptanceTest
             VALUES ('5436a253-25d5-4315-b985-01a671874acb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
         ";
 
-        await conn.ExecuteAsync(sql).ConfigureAwait(false);
+        await conn.ExecuteAsync(sql);
     }
 
     [Test]
@@ -291,7 +291,7 @@ public sealed class ProductTableAcceptanceTest
         ";
 
         var exception = Assert.ThrowsAsync<PostgresException>(
-            async () => await conn.ExecuteAsync(sql).ConfigureAwait(false));
+            async () => await conn.ExecuteAsync(sql));
 
         if (exception is not null)
         {

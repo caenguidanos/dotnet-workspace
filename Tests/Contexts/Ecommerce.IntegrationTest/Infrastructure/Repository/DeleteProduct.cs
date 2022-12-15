@@ -29,7 +29,7 @@ public sealed class DeleteProductIntegrationTest
     //         VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
     //     ";
 
-    //     await conn.ExecuteAsync(sql).ConfigureAwait(false);
+    //     await conn.ExecuteAsync(sql);
 
     //     var productId = Guid.Parse("092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
@@ -49,7 +49,7 @@ public sealed class DeleteProductIntegrationTest
     //         VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
     //     ";
 
-    //     await conn.ExecuteAsync(sql).ConfigureAwait(false);
+    //     await conn.ExecuteAsync(sql);
 
     //     var productId = Guid.Parse("092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 

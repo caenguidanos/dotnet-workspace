@@ -2,9 +2,9 @@ namespace Common.Domain;
 
 public class Result<S>
 {
-    public S Ok { get; set; } = default(S)!;
+    public S Ok { get; set; } = default!;
 
-    public IError? Err { get; set; } = null;
+    public IError? Err { get; set; }
 
     public dynamic Switch<H, T>(Func<S, H> onValue, Func<IError, T> onError)
         where H : notnull where T : notnull

@@ -35,7 +35,7 @@ public sealed class GetProductsIntegrationTest
     //         VALUES ('71a4c1e7-625f-4576-b7a5-188537da5bfe', 'Antelope Orion +32', 'Great audio interface', 300000, 1);
     //     ";
 
-    //     await conn.ExecuteAsync(sql).ConfigureAwait(false);
+    //     await conn.ExecuteAsync(sql);
 
     //     var productRepository = new ProductRepository(_dbContext);
 
@@ -49,7 +49,7 @@ public sealed class GetProductsIntegrationTest
     //     await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
     //     await conn.OpenAsync();
 
-    //     await conn.ExecuteAsync("TRUNCATE product").ConfigureAwait(false);
+    //     await conn.ExecuteAsync("TRUNCATE product");
 
     //     var productRepository = new ProductRepository(_dbContext);
 

@@ -4,44 +4,47 @@ using System.Net;
 
 using Common.Domain;
 
-public sealed class ProductNotFoundError : IError
+public class ProductError : Exception
+{ }
+
+public sealed class ProductNotFoundError : ProductError, IError
 {
     public int StatusCode { get; } = (int)HttpStatusCode.NotFound;
     public string Detail { get; } = "NotFound";
 }
 
-public sealed class ProductTitleInvalidError : IError
+public sealed class ProductTitleInvalidError : ProductError, IError
 {
     public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductTitleUniqueError : IError
+public sealed class ProductTitleUniqueError : ProductError, IError
 {
     public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductDescriptionInvalidError : IError
+public sealed class ProductDescriptionInvalidError : ProductError, IError
 {
     public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductPriceInvalidError : IError
+public sealed class ProductPriceInvalidError : ProductError, IError
 {
     public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductStatusInvalidError : IError
+public sealed class ProductStatusInvalidError : ProductError, IError
 {
     public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public string Detail { get; } = "BadRequest";
 }
 
 
-public sealed class ProductPersistenceError : IError
+public sealed class ProductPersistenceError : ProductError, IError
 {
     public int StatusCode { get; } = (int)HttpStatusCode.ServiceUnavailable;
     public string Detail { get; } = "ServiceUnavailable";
