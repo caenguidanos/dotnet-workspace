@@ -4,48 +4,51 @@ using System.Net;
 
 using Common.Domain;
 
-public class ProductError : Exception
-{ }
-
-public sealed class ProductNotFoundError : ProductError, IError
+public class ProductError : Exception, IError
 {
-    public int StatusCode { get; } = (int)HttpStatusCode.NotFound;
-    public string Detail { get; } = "NotFound";
+    public int StatusCode { get; set; }
+    public string Detail { get; set; } = string.Empty;
 }
 
-public sealed class ProductTitleInvalidError : ProductError, IError
+public sealed class ProductNotFoundError : ProductError
 {
-    public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
-    public string Detail { get; } = "BadRequest";
+    public new int StatusCode { get; } = (int)HttpStatusCode.NotFound;
+    public new string Detail { get; } = "NotFound";
 }
 
-public sealed class ProductTitleUniqueError : ProductError, IError
+public sealed class ProductTitleInvalidError : ProductError
 {
-    public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
-    public string Detail { get; } = "BadRequest";
+    public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
+    public new string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductDescriptionInvalidError : ProductError, IError
+public sealed class ProductTitleUniqueError : ProductError
 {
-    public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
-    public string Detail { get; } = "BadRequest";
+    public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
+    public new string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductPriceInvalidError : ProductError, IError
+public sealed class ProductDescriptionInvalidError : ProductError
 {
-    public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
-    public string Detail { get; } = "BadRequest";
+    public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
+    public new string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductStatusInvalidError : ProductError, IError
+public sealed class ProductPriceInvalidError : ProductError
 {
-    public int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
-    public string Detail { get; } = "BadRequest";
+    public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
+    public new string Detail { get; } = "BadRequest";
+}
+
+public sealed class ProductStatusInvalidError : ProductError
+{
+    public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
+    public new string Detail { get; } = "BadRequest";
 }
 
 
-public sealed class ProductPersistenceError : ProductError, IError
+public sealed class ProductPersistenceError : ProductError
 {
-    public int StatusCode { get; } = (int)HttpStatusCode.ServiceUnavailable;
-    public string Detail { get; } = "ServiceUnavailable";
+    public new int StatusCode { get; } = (int)HttpStatusCode.ServiceUnavailable;
+    public new string Detail { get; } = "ServiceUnavailable";
 }

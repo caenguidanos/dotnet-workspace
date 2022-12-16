@@ -1,19 +1,50 @@
 namespace Common.Domain;
 
-public class Result<S>
+public enum ResultState : byte
 {
-    public S Ok { get; set; } = default!;
+    Faulted,
+    Success
+}
 
-    public IError? Err { get; set; }
+public readonly struct Result<A, E>
+{
+    internal readonly ResultState State;
+    public readonly A Ok;
+    public readonly E Err;
 
-    public dynamic Switch<H, T>(Func<S, H> onValue, Func<IError, T> onError)
-        where H : notnull where T : notnull
+    public Result(A value)
     {
-        if (Err is not null)
-        {
-            return onError(Err);
-        }
+        State = ResultState.Success;
+        Ok = value;
+        Err = default!;
+    }
 
-        return onValue(Ok);
+    public Result(E e)
+    {
+        State = ResultState.Faulted;
+        Err = e;
+        Ok = default!;
+    }
+
+    public bool IsFaulted
+    {
+        get
+        {
+            return State == ResultState.Faulted;
+        }
+    }
+
+    public R Match<R>(Func<A, R> Succ, Func<E, R> Fail)
+    {
+        return IsFaulted
+                ? Fail(Err)
+                : Succ(Ok);
+    }
+
+    public async Task<R> MatchAsync<R>(Func<A, Task<R>> Succ, Func<E, Task<R>> Fail)
+    {
+        return IsFaulted
+            ? await Fail(Err)
+            : await Succ(Ok);
     }
 }

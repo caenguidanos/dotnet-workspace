@@ -2,15 +2,17 @@ namespace Ecommerce.Application.Command;
 
 using Mediator;
 
-using Ecommerce.Domain.Service;
 using Common.Domain;
 
-public readonly struct RemoveProductCommand : IRequest<Result<bool>>
+using Ecommerce.Domain.Error;
+using Ecommerce.Domain.Service;
+
+public readonly struct RemoveProductCommand : IRequest<Result<byte, ProductError>>
 {
     public required Guid Id { get; init; }
 }
 
-public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, Result<bool>>
+public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, Result<byte, ProductError>>
 {
     private readonly IProductRemoverService _productRemoverService;
 
@@ -19,7 +21,7 @@ public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand,
         _productRemoverService = productRemoverService;
     }
 
-    public async ValueTask<Result<bool>> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<byte, ProductError>> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
     {
         return await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
     }

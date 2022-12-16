@@ -7,6 +7,7 @@ using Common.Domain;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
+using Ecommerce.Domain.Error;
 
 public sealed class ProductRemoverService : IProductRemoverService
 {
@@ -19,17 +20,16 @@ public sealed class ProductRemoverService : IProductRemoverService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<bool>> RemoveProduct(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProductError>> RemoveProduct(Guid id, CancellationToken cancellationToken)
     {
         var result = await _productRepository.Delete(id, cancellationToken);
-
-        if (result.Err is not null)
+        if (result.IsFaulted)
         {
-            return new Result<bool> { Err = result.Err };
+            return new Result<byte, ProductError>(result.Err);
         }
 
         await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
 
-        return new Result<bool> { };
+        return new Result<byte, ProductError>();
     }
 }

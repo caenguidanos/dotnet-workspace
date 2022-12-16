@@ -5,8 +5,9 @@ using Mediator;
 using Common.Domain;
 
 using Ecommerce.Domain.Service;
+using Ecommerce.Domain.Error;
 
-public readonly struct UpdateProductCommand : IRequest<Result<bool>>
+public readonly struct UpdateProductCommand : IRequest<Result<byte, ProductError>>
 {
     public Guid Id { get; init; }
     public int? Price { get; init; }
@@ -15,7 +16,7 @@ public readonly struct UpdateProductCommand : IRequest<Result<bool>>
     public int? Status { get; init; }
 }
 
-public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result<bool>>
+public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result<byte, ProductError>>
 {
     private readonly IProductUpdaterService _productUpdaterService;
 
@@ -24,7 +25,7 @@ public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand,
         _productUpdaterService = productUpdaterService;
     }
 
-    public async ValueTask<Result<bool>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<byte, ProductError>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         return await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
     }

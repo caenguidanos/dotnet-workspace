@@ -33,7 +33,7 @@ public sealed class ProductController : ControllerBase
 
         var result = await _sender.Send(query, cancellationToken);
 
-        return result.Switch(
+        return result.Match(
             Ok => new HttpResultResponse
             {
                 Body = Ok,
@@ -61,7 +61,7 @@ public sealed class ProductController : ControllerBase
 
         var result = await _sender.Send(query, cancellationToken);
 
-        return result.Switch(
+        return result.Match(
             Ok => new HttpResultResponse
             {
                 Body = Ok,
@@ -95,7 +95,7 @@ public sealed class ProductController : ControllerBase
 
         var result = await _sender.Send(command, cancellationToken);
 
-        return result.Switch(
+        return result.Match(
             Ok => new HttpResultResponse
             {
                 Body = Ok,
@@ -123,7 +123,7 @@ public sealed class ProductController : ControllerBase
 
         var result = await _sender.Send(command, cancellationToken);
 
-        return result.Switch(
+        return result.Match(
             Ok => new HttpResultResponse
             {
                 StatusCode = HttpStatusCode.Accepted
@@ -158,7 +158,7 @@ public sealed class ProductController : ControllerBase
 
         var result = await _sender.Send(command, cancellationToken);
 
-        return result.Switch(
+        return result.Match(
             Ok => new HttpResultResponse
             {
                 StatusCode = HttpStatusCode.Accepted

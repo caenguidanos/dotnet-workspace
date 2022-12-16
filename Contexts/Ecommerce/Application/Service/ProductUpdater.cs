@@ -24,12 +24,12 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<bool>> UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProductError>> UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
     {
         var getByIdResult = await _productRepository.GetById(id, cancellationToken);
-        if (getByIdResult.Err is not null)
+        if (getByIdResult.IsFaulted)
         {
-            return new Result<bool> { Err = getByIdResult.Err };
+            return new Result<byte, ProductError>(getByIdResult.Err);
         }
 
         var previousProductState = getByIdResult.Ok.ToPrimitives();
@@ -54,18 +54,17 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         }
         catch (ProductError ex)
         {
-            return new Result<bool> { Err = (IError)ex };
+            return new Result<byte, ProductError>(ex);
         }
 
         var updateResult = await _productRepository.Update(product, cancellationToken);
-        if (updateResult.Err is not null)
+        if (updateResult.IsFaulted)
         {
-            return new Result<bool> { Err = updateResult.Err };
+            return new Result<byte, ProductError>(updateResult.Err);
         }
 
-        await _publisher.Publish(
-            new ProductUpdatedEvent { Product = id }, cancellationToken);
+        await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
 
-        return new Result<bool> { };
+        return new Result<byte, ProductError>();
     }
 }
