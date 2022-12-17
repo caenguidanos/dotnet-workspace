@@ -42,7 +42,6 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         var nextProductDescription = new ProductDescription(command.Description ?? currentProduct.Description);
         var nextProductStatus = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status));
         var nextProductPrice = new ProductPrice(command.Price ?? currentProduct.Price);
-
         var nextProduct = new Product
         {
             Id = nextProductId,
