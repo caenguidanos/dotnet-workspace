@@ -1,6 +1,7 @@
 namespace Ecommerce.Infrastructure.DataTransfer;
 
 using Common.Domain;
+
 using Ecommerce.Domain.Model;
 
 public sealed record ProductAck

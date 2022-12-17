@@ -4,7 +4,7 @@ using Dapper;
 using Npgsql;
 using Common.Domain;
 using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Error;
+using Ecommerce.Domain.Exception;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
@@ -19,7 +19,7 @@ public sealed class ProductRepository : IProductRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Result<IEnumerable<Product>, ProductException>> Get(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<Product>, ProblemDetailsException>> Get(CancellationToken cancellationToken)
     {
         try
         {
@@ -35,7 +35,7 @@ public sealed class ProductRepository : IProductRepository
             var results = await conn.QueryAsync<ProductPrimitives>(command);
             if (results is null)
             {
-                return new Result<IEnumerable<Product>, ProductException>(Enumerable.Empty<Product>());
+                return new Result<IEnumerable<Product>, ProblemDetailsException>(Enumerable.Empty<Product>());
             }
 
             var products = new List<Product>();
@@ -56,21 +56,21 @@ public sealed class ProductRepository : IProductRepository
                 var productIntegrityResult = product.CheckIntegrity();
                 if (productIntegrityResult.IsFaulted)
                 {
-                    return new Result<IEnumerable<Product>, ProductException>(productIntegrityResult.Error);
+                    return new Result<IEnumerable<Product>, ProblemDetailsException>(productIntegrityResult.Error);
                 }
 
                 products.Add(product);
             }
 
-            return new Result<IEnumerable<Product>, ProductException>(products);
+            return new Result<IEnumerable<Product>, ProblemDetailsException>(products);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return new Result<IEnumerable<Product>, ProductException>(new ProductPersistenceException());
+            return new Result<IEnumerable<Product>, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 
-    public async Task<Result<Product, ProductException>> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<Product, ProblemDetailsException>> GetById(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -89,7 +89,7 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command);
             if (result is null)
             {
-                return new Result<Product, ProductException>(new ProductNotFoundException());
+                return new Result<Product, ProblemDetailsException>(new ProductNotFoundException());
             }
 
             var product = new Product
@@ -106,18 +106,18 @@ public sealed class ProductRepository : IProductRepository
             var productIntegrityResult = product.CheckIntegrity();
             if (productIntegrityResult.IsFaulted)
             {
-                return new Result<Product, ProductException>(productIntegrityResult.Error);
+                return new Result<Product, ProblemDetailsException>(productIntegrityResult.Error);
             }
 
-            return new Result<Product, ProductException>(product);
+            return new Result<Product, ProblemDetailsException>(product);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return new Result<Product, ProductException>(new ProductPersistenceException());
+            return new Result<Product, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 
-    public async Task<Result<byte, ProductException>> Save(Product product, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProblemDetailsException>> Save(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -142,7 +142,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<byte, ProductException>();
+            return new Result<byte, ProblemDetailsException>();
         }
         catch (Exception ex)
         {
@@ -154,38 +154,21 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result<byte, ProductException>(new ProductTitleUniqueException());
+                                return new Result<byte, ProblemDetailsException>(new ProductTitleUniqueException());
                             }
-
-                            break;
-                        }
-                    case PostgresErrorCodes.CheckViolation:
-                        {
-                            switch (postgresException.ConstraintName)
-                            {
-                                case ProductConstraints.CheckTitle:
-                                    return new Result<byte, ProductException>(new ProductTitleInvalidException());
-
-                                case ProductConstraints.CheckDescription:
-                                    return new Result<byte, ProductException>(new ProductDescriptionInvalidException());
-
-                                case ProductConstraints.CheckStatus:
-                                    return new Result<byte, ProductException>(new ProductStatusInvalidException());
-
-                                case ProductConstraints.CheckPrice:
-                                    return new Result<byte, ProductException>(new ProductPriceInvalidException());
-                            }
-
                             break;
                         }
                 }
+
+                return new Result<byte, ProblemDetailsException>(
+                    new ProductPersistenceException(postgresException.MessageText));
             }
 
-            return new Result<byte, ProductException>(new ProductPersistenceException());
+            return new Result<byte, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 
-    public async Task<Result<byte, ProductException>> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProblemDetailsException>> Delete(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -204,18 +187,18 @@ public sealed class ProductRepository : IProductRepository
             int result = await conn.ExecuteAsync(command);
             if (result is 0)
             {
-                return new Result<byte, ProductException>(new ProductNotFoundException());
+                return new Result<byte, ProblemDetailsException>(new ProductNotFoundException());
             }
 
-            return new Result<byte, ProductException>();
+            return new Result<byte, ProblemDetailsException>();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return new Result<byte, ProductException>(new ProductPersistenceException());
+            return new Result<byte, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 
-    public async Task<Result<byte, ProductException>> Update(Product product, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProblemDetailsException>> Update(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -241,7 +224,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<byte, ProductException>();
+            return new Result<byte, ProblemDetailsException>();
         }
         catch (Exception ex)
         {
@@ -253,34 +236,18 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result<byte, ProductException>(new ProductTitleUniqueException());
-                            }
-
-                            break;
-                        }
-                    case PostgresErrorCodes.CheckViolation:
-                        {
-                            switch (postgresException.ConstraintName)
-                            {
-                                case ProductConstraints.CheckTitle:
-                                    return new Result<byte, ProductException>(new ProductTitleInvalidException());
-
-                                case ProductConstraints.CheckDescription:
-                                    return new Result<byte, ProductException>(new ProductDescriptionInvalidException());
-
-                                case ProductConstraints.CheckStatus:
-                                    return new Result<byte, ProductException>(new ProductStatusInvalidException());
-
-                                case ProductConstraints.CheckPrice:
-                                    return new Result<byte, ProductException>(new ProductPriceInvalidException());
+                                return new Result<byte, ProblemDetailsException>(new ProductTitleUniqueException());
                             }
 
                             break;
                         }
                 }
+
+                return new Result<byte, ProblemDetailsException>(
+                    new ProductPersistenceException(postgresException.MessageText));
             }
 
-            return new Result<byte, ProductException>(new ProductPersistenceException());
+            return new Result<byte, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 }

@@ -4,15 +4,14 @@ using Mediator;
 
 using Common.Domain;
 
-using Ecommerce.Domain.Error;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public readonly struct GetProductsQuery : IRequest<Result<IEnumerable<ProductPrimitives>, ProductException>>
+public readonly struct GetProductsQuery : IRequest<Result<IEnumerable<ProductPrimitives>, ProblemDetailsException>>
 {
 }
 
-public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<IEnumerable<ProductPrimitives>, ProductException>>
+public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, Result<IEnumerable<ProductPrimitives>, ProblemDetailsException>>
 {
     private readonly IProductRepository _productRepository;
 
@@ -21,14 +20,14 @@ public sealed class GetProductsHandler : IRequestHandler<GetProductsQuery, Resul
         _productRepository = productRepository;
     }
 
-    public async ValueTask<Result<IEnumerable<ProductPrimitives>, ProductException>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async ValueTask<Result<IEnumerable<ProductPrimitives>, ProblemDetailsException>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         var result = await _productRepository.Get(cancellationToken);
         if (result.IsFaulted)
         {
-            return new Result<IEnumerable<ProductPrimitives>, ProductException>(result.Error);
+            return new Result<IEnumerable<ProductPrimitives>, ProblemDetailsException>(result.Error);
         }
 
-        return new Result<IEnumerable<ProductPrimitives>, ProductException>(result.Value.Select(product => product.ToPrimitives()));
+        return new Result<IEnumerable<ProductPrimitives>, ProblemDetailsException>(result.Value.Select(product => product.ToPrimitives()));
     }
 }

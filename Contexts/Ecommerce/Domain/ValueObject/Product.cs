@@ -1,8 +1,8 @@
 namespace Ecommerce.Domain.ValueObject;
 
-using System.Globalization;
 using Common.Domain;
-using Ecommerce.Domain.Error;
+
+using Ecommerce.Domain.Exception;
 using Ecommerce.Domain.Model;
 
 public sealed record ProductId : Primitive<Guid>
@@ -14,6 +14,11 @@ public sealed record ProductId : Primitive<Guid>
 
     public override Guid Validate()
     {
+        if (Value == Guid.Empty)
+        {
+            throw new ProductIdInvalidException();
+        }
+
         return Value;
     }
 }
@@ -32,8 +37,6 @@ public sealed record ProductPrice : Primitive<int>
 
         if (Value < min || Value > max)
         {
-            _ = new CultureInfo("en-US");
-
             throw new ProductPriceInvalidException();
         }
 

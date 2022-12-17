@@ -10,21 +10,25 @@ public readonly struct Result<TSuccess, TError>
 {
     internal readonly ResultState State;
 
-    public readonly TSuccess Value;
-    public readonly TError Error;
+    public readonly TSuccess Value = default!;
+    public readonly TError Error = default!;
+
+    // for responses that not have any returned paylaod
+    public Result()
+    {
+        State = ResultState.Success;
+    }
 
     public Result(TSuccess value)
     {
         State = ResultState.Success;
         Value = value;
-        Error = default!;
     }
 
-    public Result(TError e)
+    public Result(TError value)
     {
         State = ResultState.Faulted;
-        Error = e;
-        Value = default!;
+        Error = value;
     }
 
     public bool IsFaulted

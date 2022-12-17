@@ -4,7 +4,7 @@ using Mediator;
 using Common.Domain;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Error;
+using Ecommerce.Domain.Exception;
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
@@ -21,7 +21,7 @@ public sealed class ProductCreatorService : IProductCreatorService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<Guid, ProductException>> AddNewProduct(
+    public async Task<Result<Guid, ProblemDetailsException>> AddNewProduct(
         string title,
         string description,
         int status,
@@ -40,17 +40,17 @@ public sealed class ProductCreatorService : IProductCreatorService
         var productIntegrityResult = product.CheckIntegrity();
         if (productIntegrityResult.IsFaulted)
         {
-            return new Result<Guid, ProductException>(productIntegrityResult.Error);
+            return new Result<Guid, ProblemDetailsException>(productIntegrityResult.Error);
         }
 
         var saveProductResult = await _productRepository.Save(product, cancellationToken);
         if (saveProductResult.IsFaulted)
         {
-            return new Result<Guid, ProductException>(saveProductResult.Error);
+            return new Result<Guid, ProblemDetailsException>(saveProductResult.Error);
         }
 
         var productPrimitives = product.ToPrimitives();
         await _publisher.Publish(new ProductCreatedEvent { Product = productPrimitives.Id }, cancellationToken);
-        return new Result<Guid, ProductException>(productPrimitives.Id);
+        return new Result<Guid, ProblemDetailsException>(productPrimitives.Id);
     }
 }

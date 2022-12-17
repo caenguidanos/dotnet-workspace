@@ -4,16 +4,15 @@ using Mediator;
 
 using Common.Domain;
 
-using Ecommerce.Domain.Error;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public readonly struct GetProductQuery : IRequest<Result<ProductPrimitives, ProductException>>
+public readonly struct GetProductQuery : IRequest<Result<ProductPrimitives, ProblemDetailsException>>
 {
     public required Guid Id { get; init; }
 }
 
-public sealed class GetProductHandler : IRequestHandler<GetProductQuery, Result<ProductPrimitives, ProductException>>
+public sealed class GetProductHandler : IRequestHandler<GetProductQuery, Result<ProductPrimitives, ProblemDetailsException>>
 {
     private readonly IProductRepository _productRepository;
 
@@ -22,14 +21,14 @@ public sealed class GetProductHandler : IRequestHandler<GetProductQuery, Result<
         _productRepository = productRepository;
     }
 
-    public async ValueTask<Result<ProductPrimitives, ProductException>> Handle(GetProductQuery request, CancellationToken cancellationToken)
+    public async ValueTask<Result<ProductPrimitives, ProblemDetailsException>> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var result = await _productRepository.GetById(request.Id, cancellationToken);
         if (result.IsFaulted)
         {
-            return new Result<ProductPrimitives, ProductException>(result.Error);
+            return new Result<ProductPrimitives, ProblemDetailsException>(result.Error);
         }
 
-        return new Result<ProductPrimitives, ProductException>(result.Value.ToPrimitives());
+        return new Result<ProductPrimitives, ProblemDetailsException>(result.Value.ToPrimitives());
     }
 }

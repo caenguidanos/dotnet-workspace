@@ -5,12 +5,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.Configure<RouteOptions>(options =>
+{
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = true;
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHealthChecks();
 
 builder.Services.AddCommonServices();
 builder.Services.AddEcommerceServices();
@@ -27,8 +30,8 @@ if (app.Environment.IsDevelopment())
 }
 #endif
 
-app.UseStatusCodePages();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
-app.MapHealthChecks("/Healthz");
 app.UseCors();
 app.Run();

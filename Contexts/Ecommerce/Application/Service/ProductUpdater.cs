@@ -1,15 +1,17 @@
 namespace Ecommerce.Application.Service;
 
 using Mediator;
+
 using Common.Domain;
+
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Error;
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
 using Ecommerce.Domain.ValueObject;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public sealed class ProductUpdaterService : IProductUpdaterService
 {
@@ -22,7 +24,7 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<byte, ProductException>> UpdateProduct(
+    public async Task<Result<ProductAck, ProblemDetailsException>> UpdateProduct(
         Guid id,
         UpdateProductCommand command,
         CancellationToken cancellationToken)
@@ -30,7 +32,7 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         var getProductByIdResult = await _productRepository.GetById(id, cancellationToken);
         if (getProductByIdResult.IsFaulted)
         {
-            return new Result<byte, ProductException>(getProductByIdResult.Error);
+            return new Result<ProductAck, ProblemDetailsException>(getProductByIdResult.Error);
         }
 
         var currentProduct = getProductByIdResult.Value.ToPrimitives();
@@ -53,16 +55,16 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         var productIntegrityResult = nextProduct.CheckIntegrity();
         if (productIntegrityResult.IsFaulted)
         {
-            return new Result<byte, ProductException>(productIntegrityResult.Error);
+            return new Result<ProductAck, ProblemDetailsException>(productIntegrityResult.Error);
         }
 
         var updateProductResult = await _productRepository.Update(nextProduct, cancellationToken);
         if (updateProductResult.IsFaulted)
         {
-            return new Result<byte, ProductException>(updateProductResult.Error);
+            return new Result<ProductAck, ProblemDetailsException>(updateProductResult.Error);
         }
 
         await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
-        return new Result<byte, ProductException>();
+        return new Result<ProductAck, ProblemDetailsException>(new ProductAck { Id = id });
     }
 }

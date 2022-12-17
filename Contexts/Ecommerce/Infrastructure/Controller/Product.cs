@@ -23,27 +23,23 @@ public sealed class ProductController : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> GetProducts(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
     {
         var query = new GetProductsQuery();
 
         var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(
-            ok => new HttpResultResponse
+            body => new HttpResultResponse
             {
-                Body = ok,
+                Body = body,
                 ContentType = MediaTypeNames.Application.Json
             },
-            err => new HttpResultResponse
+            exception => new HttpResultResponse
             {
-                Body = new ProblemDetails
-                {
-                    Status = err.StatusCode,
-                    Detail = err.Detail,
-                }
+                Body = exception.GetProblemDetails(instance: Request.Path)
             }
         );
     }
@@ -51,9 +47,9 @@ public sealed class ProductController : ControllerBase
     [HttpGet("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id,
+    public async Task<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id,
         CancellationToken cancellationToken)
     {
         var query = new GetProductQuery { Id = id };
@@ -61,18 +57,14 @@ public sealed class ProductController : ControllerBase
         var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(
-            ok => new HttpResultResponse
+            body => new HttpResultResponse
             {
-                Body = ok,
+                Body = body,
                 ContentType = MediaTypeNames.Application.Json
             },
-            err => new HttpResultResponse
+            exception => new HttpResultResponse
             {
-                Body = new ProblemDetails
-                {
-                    Status = err.StatusCode,
-                    Detail = err.Detail,
-                }
+                Body = exception.GetProblemDetails(instance: Request.Path)
             }
         );
     }
@@ -80,9 +72,9 @@ public sealed class ProductController : ControllerBase
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body,
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body,
         CancellationToken cancellationToken)
     {
         var command = new CreateProductCommand
@@ -96,18 +88,14 @@ public sealed class ProductController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
-            ok => new HttpResultResponse
+            body => new HttpResultResponse
             {
-                Body = ok,
+                Body = body,
                 ContentType = MediaTypeNames.Application.Json
             },
-            err => new HttpResultResponse
+            exception => new HttpResultResponse
             {
-                Body = new ProblemDetails
-                {
-                    Status = err.StatusCode,
-                    Detail = err.Detail,
-                }
+                Body = exception.GetProblemDetails(instance: Request.Path)
             }
         );
     }
@@ -115,9 +103,9 @@ public sealed class ProductController : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id,
+    public async Task<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id,
         CancellationToken cancellationToken)
     {
         var command = new RemoveProductCommand { Id = id };
@@ -125,17 +113,15 @@ public sealed class ProductController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
-            _ => new HttpResultResponse
+            body => new HttpResultResponse
             {
-                StatusCode = HttpStatusCode.Accepted
+                Body = body,
+                StatusCode = HttpStatusCode.Accepted,
+                ContentType = MediaTypeNames.Application.Json
             },
-            err => new HttpResultResponse
+            exception => new HttpResultResponse
             {
-                Body = new ProblemDetails
-                {
-                    Status = err.StatusCode,
-                    Detail = err.Detail,
-                }
+                Body = exception.GetProblemDetails(instance: Request.Path)
             }
         );
     }
@@ -144,9 +130,9 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id,
+    public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id,
         [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var command = new UpdateProductCommand
@@ -161,17 +147,15 @@ public sealed class ProductController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
-            _ => new HttpResultResponse
+            body => new HttpResultResponse
             {
-                StatusCode = HttpStatusCode.Accepted
+                Body = body,
+                StatusCode = HttpStatusCode.Accepted,
+                ContentType = MediaTypeNames.Application.Json
             },
-            err => new HttpResultResponse
+            exception => new HttpResultResponse
             {
-                Body = new ProblemDetails
-                {
-                    Status = err.StatusCode,
-                    Detail = err.Detail,
-                }
+                Body = exception.GetProblemDetails(instance: Request.Path)
             }
         );
     }
