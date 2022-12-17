@@ -2,9 +2,7 @@ namespace Ecommerce.Infrastructure.Repository;
 
 using Dapper;
 using Npgsql;
-
 using Common.Domain;
-
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Error;
 using Ecommerce.Domain.Repository;
@@ -21,7 +19,7 @@ public sealed class ProductRepository : IProductRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Result<IEnumerable<Product>, ProductError>> Get(CancellationToken cancellationToken)
+    public async Task<Result<IEnumerable<Product>, ProductException>> Get(CancellationToken cancellationToken)
     {
         try
         {
@@ -37,34 +35,42 @@ public sealed class ProductRepository : IProductRepository
             var results = await conn.QueryAsync<ProductPrimitives>(command);
             if (results is null)
             {
-                return new Result<IEnumerable<Product>, ProductError>(Enumerable.Empty<Product>());
+                return new Result<IEnumerable<Product>, ProductException>(Enumerable.Empty<Product>());
             }
 
-            var products = results.Select(productPrimitives =>
+            var products = new List<Product>();
+
+            foreach (var result in results)
+            {
+                var product = new Product
                 {
-                    var product = new Product
-                    {
-                        Id = new ProductId(productPrimitives.Id),
-                        Title = new ProductTitle(productPrimitives.Title),
-                        Description = new ProductDescription(productPrimitives.Description),
-                        Status = new ProductStatus(productPrimitives.Status),
-                        Price = new ProductPrice(productPrimitives.Price)
-                    };
+                    Id = new ProductId(result.Id),
+                    Title = new ProductTitle(result.Title),
+                    Description = new ProductDescription(result.Description),
+                    Status = new ProductStatus(result.Status),
+                    Price = new ProductPrice(result.Price)
+                };
 
-                    product.AddTimeStamp(productPrimitives.updated_at, productPrimitives.created_at);
+                product.AddTimeStamp(result.updated_at, result.created_at);
 
-                    return product;
-                });
+                var productIntegrityResult = product.CheckIntegrity();
+                if (productIntegrityResult.IsFaulted)
+                {
+                    return new Result<IEnumerable<Product>, ProductException>(productIntegrityResult.Error);
+                }
 
-            return new Result<IEnumerable<Product>, ProductError>(products);
+                products.Add(product);
+            }
+
+            return new Result<IEnumerable<Product>, ProductException>(products);
         }
         catch (Exception)
         {
-            return new Result<IEnumerable<Product>, ProductError>(new ProductPersistenceError());
+            return new Result<IEnumerable<Product>, ProductException>(new ProductPersistenceException());
         }
     }
 
-    public async Task<Result<Product, ProductError>> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<Product, ProductException>> GetById(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -83,37 +89,35 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command);
             if (result is null)
             {
-                return new Result<Product, ProductError>(new ProductNotFoundError());
+                return new Result<Product, ProductException>(new ProductNotFoundException());
             }
 
-            Product product;
-            try
+            var product = new Product
             {
-                product = new Product
-                {
-                    Id = new ProductId(result.Id),
-                    Title = new ProductTitle(result.Title),
-                    Description = new ProductDescription(result.Description),
-                    Status = new ProductStatus(result.Status),
-                    Price = new ProductPrice(result.Price)
-                };
-            }
-            catch (ProductError ex)
-            {
-                return new Result<Product, ProductError>(ex);
-            }
+                Id = new ProductId(result.Id),
+                Title = new ProductTitle(result.Title),
+                Description = new ProductDescription(result.Description),
+                Status = new ProductStatus(result.Status),
+                Price = new ProductPrice(result.Price)
+            };
 
             product.AddTimeStamp(result.updated_at, result.created_at);
 
-            return new Result<Product, ProductError>(product);
+            var productIntegrityResult = product.CheckIntegrity();
+            if (productIntegrityResult.IsFaulted)
+            {
+                return new Result<Product, ProductException>(productIntegrityResult.Error);
+            }
+
+            return new Result<Product, ProductException>(product);
         }
         catch (Exception)
         {
-            return new Result<Product, ProductError>(new ProductPersistenceError());
+            return new Result<Product, ProductException>(new ProductPersistenceException());
         }
     }
 
-    public async Task<Result<byte, ProductError>> Save(Product product, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProductException>> Save(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -138,7 +142,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<byte, ProductError>();
+            return new Result<byte, ProductException>();
         }
         catch (Exception ex)
         {
@@ -150,7 +154,7 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result<byte, ProductError>(new ProductTitleUniqueError());
+                                return new Result<byte, ProductException>(new ProductTitleUniqueException());
                             }
 
                             break;
@@ -160,34 +164,28 @@ public sealed class ProductRepository : IProductRepository
                             switch (postgresException.ConstraintName)
                             {
                                 case ProductConstraints.CheckTitle:
-                                    return new Result<byte, ProductError>(new ProductTitleInvalidError());
+                                    return new Result<byte, ProductException>(new ProductTitleInvalidException());
 
                                 case ProductConstraints.CheckDescription:
-                                    return new Result<byte, ProductError>(new ProductDescriptionInvalidError());
+                                    return new Result<byte, ProductException>(new ProductDescriptionInvalidException());
 
                                 case ProductConstraints.CheckStatus:
-                                    return new Result<byte, ProductError>(new ProductStatusInvalidError());
+                                    return new Result<byte, ProductException>(new ProductStatusInvalidException());
 
                                 case ProductConstraints.CheckPrice:
-                                    return new Result<byte, ProductError>(new ProductPriceInvalidError());
-
-                                default:
-                                    break;
+                                    return new Result<byte, ProductException>(new ProductPriceInvalidException());
                             }
 
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
 
-            return new Result<byte, ProductError>(new ProductPersistenceError());
+            return new Result<byte, ProductException>(new ProductPersistenceException());
         }
     }
 
-    public async Task<Result<byte, ProductError>> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProductException>> Delete(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -206,18 +204,18 @@ public sealed class ProductRepository : IProductRepository
             int result = await conn.ExecuteAsync(command);
             if (result is 0)
             {
-                return new Result<byte, ProductError>(new ProductNotFoundError());
+                return new Result<byte, ProductException>(new ProductNotFoundException());
             }
 
-            return new Result<byte, ProductError>();
+            return new Result<byte, ProductException>();
         }
         catch (Exception)
         {
-            return new Result<byte, ProductError>(new ProductPersistenceError());
+            return new Result<byte, ProductException>(new ProductPersistenceException());
         }
     }
 
-    public async Task<Result<byte, ProductError>> Update(Product product, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProductException>> Update(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -243,7 +241,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<byte, ProductError>();
+            return new Result<byte, ProductException>();
         }
         catch (Exception ex)
         {
@@ -255,7 +253,7 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result<byte, ProductError>(new ProductTitleUniqueError());
+                                return new Result<byte, ProductException>(new ProductTitleUniqueException());
                             }
 
                             break;
@@ -265,30 +263,24 @@ public sealed class ProductRepository : IProductRepository
                             switch (postgresException.ConstraintName)
                             {
                                 case ProductConstraints.CheckTitle:
-                                    return new Result<byte, ProductError>(new ProductTitleInvalidError());
+                                    return new Result<byte, ProductException>(new ProductTitleInvalidException());
 
                                 case ProductConstraints.CheckDescription:
-                                    return new Result<byte, ProductError>(new ProductDescriptionInvalidError());
+                                    return new Result<byte, ProductException>(new ProductDescriptionInvalidException());
 
                                 case ProductConstraints.CheckStatus:
-                                    return new Result<byte, ProductError>(new ProductStatusInvalidError());
+                                    return new Result<byte, ProductException>(new ProductStatusInvalidException());
 
                                 case ProductConstraints.CheckPrice:
-                                    return new Result<byte, ProductError>(new ProductPriceInvalidError());
-
-                                default:
-                                    break;
+                                    return new Result<byte, ProductException>(new ProductPriceInvalidException());
                             }
 
                             break;
                         }
-
-                    default:
-                        break;
                 }
             }
 
-            return new Result<byte, ProductError>(new ProductPersistenceError());
+            return new Result<byte, ProductException>(new ProductPersistenceException());
         }
     }
 }

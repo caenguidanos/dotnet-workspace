@@ -6,24 +6,25 @@ public enum ResultState : byte
     Success
 }
 
-public readonly struct Result<A, E>
+public readonly struct Result<TSuccess, TError>
 {
     internal readonly ResultState State;
-    public readonly A Ok;
-    public readonly E Err;
 
-    public Result(A value)
+    public readonly TSuccess Value;
+    public readonly TError Error;
+
+    public Result(TSuccess value)
     {
         State = ResultState.Success;
-        Ok = value;
-        Err = default!;
+        Value = value;
+        Error = default!;
     }
 
-    public Result(E e)
+    public Result(TError e)
     {
         State = ResultState.Faulted;
-        Err = e;
-        Ok = default!;
+        Error = e;
+        Value = default!;
     }
 
     public bool IsFaulted
@@ -34,17 +35,10 @@ public readonly struct Result<A, E>
         }
     }
 
-    public R Match<R>(Func<A, R> Succ, Func<E, R> Fail)
+    public TResult Match<TResult>(Func<TSuccess, TResult> Succ, Func<TError, TResult> Fail)
     {
         return IsFaulted
-                ? Fail(Err)
-                : Succ(Ok);
-    }
-
-    public async Task<R> MatchAsync<R>(Func<A, Task<R>> Succ, Func<E, Task<R>> Fail)
-    {
-        return IsFaulted
-            ? await Fail(Err)
-            : await Succ(Ok);
+                ? Fail(Error)
+                : Succ(Value);
     }
 }

@@ -13,7 +13,8 @@ public sealed class DbContext : IDbContext
 
     public DbContext(IConfiguration configuration)
     {
-        _connectionString = configuration.GetConnectionString("Ecommerce") ?? throw new InvalidDataException("Trying to get [ConnectionStrings]");
+        _connectionString = configuration.GetConnectionString("Ecommerce") ??
+                            throw new InvalidDataException("Trying to get [ConnectionStrings]");
     }
 
     public string GetConnectionString()

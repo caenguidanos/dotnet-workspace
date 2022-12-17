@@ -1,17 +1,17 @@
 namespace Ecommerce.Domain.Entity;
 
 using Common.Domain;
-
+using Ecommerce.Domain.Error;
 using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public sealed class Product : Schema<Product, ProductPrimitives>
+public sealed record Product : Schema<Product, ProductPrimitives>
 {
-    public required ProductId Id { get; init; }
-    public required ProductTitle Title { get; init; }
-    public required ProductDescription Description { get; init; }
-    public required ProductStatus Status { get; init; }
-    public required ProductPrice Price { get; init; }
+    public required ProductId Id { private get; init; }
+    public required ProductTitle Title { private get; init; }
+    public required ProductDescription Description { private get; init; }
+    public required ProductStatus Status { private get; init; }
+    public required ProductPrice Price { private get; init; }
 
     public override ProductPrimitives ToPrimitives()
     {
@@ -27,12 +27,21 @@ public sealed class Product : Schema<Product, ProductPrimitives>
         };
     }
 
-    public override bool IsEqual(Product comparer)
+    public Result<byte, ProductException> CheckIntegrity()
     {
-        return Id.GetValue() == comparer.Id.GetValue()
-            && Title.GetValue() == comparer.Title.GetValue()
-            && Description.GetValue() == comparer.Description.GetValue()
-            && Status.GetValue() == comparer.Status.GetValue()
-            && Price.GetValue() == comparer.Price.GetValue();
+        try
+        {
+            Id.Validate();
+            Title.Validate();
+            Description.Validate();
+            Status.Validate();
+            Price.Validate();
+
+            return new Result<byte, ProductException>();
+        }
+        catch (ProductException ex)
+        {
+            return new Result<byte, ProductException>(ex);
+        }
     }
 }

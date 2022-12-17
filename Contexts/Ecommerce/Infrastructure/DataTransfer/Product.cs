@@ -1,15 +1,14 @@
 namespace Ecommerce.Infrastructure.DataTransfer;
 
 using Common.Domain;
-
 using Ecommerce.Domain.Model;
 
-public record ProductAck
+public sealed record ProductAck
 {
     public required Guid Id { get; set; }
 }
 
-public sealed class ProductPrimitives : SchemaPrimitives
+public sealed record ProductPrimitives : SchemaPrimitives
 {
     public required Guid Id { get; set; }
     public required string Title { get; set; }

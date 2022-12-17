@@ -1,6 +1,6 @@
 namespace Common.Domain;
 
-public interface IError
+public interface IHttpError
 {
     public int StatusCode { get; }
     public string Detail { get; }

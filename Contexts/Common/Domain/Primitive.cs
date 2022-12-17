@@ -1,18 +1,21 @@
 namespace Common.Domain;
 
-public abstract class Primitive<TValue>
+public record Primitive<TValue>
 {
-    private TValue value { get; init; }
+    protected TValue Value { get; init; }
 
-    public Primitive(TValue value)
+    protected Primitive(TValue value)
     {
-        this.value = Validate(value);
+        this.Value = value;
     }
 
-    protected abstract TValue Validate(TValue value);
+    public virtual TValue Validate()
+    {
+        throw new NotImplementedException();
+    }
 
     public TValue GetValue()
     {
-        return value;
+        return Value;
     }
 }

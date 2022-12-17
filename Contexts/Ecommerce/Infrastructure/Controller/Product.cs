@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mime;
-
 using Common.Application;
-
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Query;
 using Ecommerce.Infrastructure.DataTransfer;
@@ -34,17 +32,17 @@ public sealed class ProductController : ControllerBase
         var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(
-            Ok => new HttpResultResponse
+            ok => new HttpResultResponse
             {
-                Body = Ok,
+                Body = ok,
                 ContentType = MediaTypeNames.Application.Json
             },
-            Err => new HttpResultResponse
+            err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = Err.StatusCode,
-                    Detail = Err.Detail,
+                    Status = err.StatusCode,
+                    Detail = err.Detail,
                 }
             }
         );
@@ -55,24 +53,25 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id,
+        CancellationToken cancellationToken)
     {
         var query = new GetProductQuery { Id = id };
 
         var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(
-            Ok => new HttpResultResponse
+            ok => new HttpResultResponse
             {
-                Body = Ok,
+                Body = ok,
                 ContentType = MediaTypeNames.Application.Json
             },
-            Err => new HttpResultResponse
+            err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = Err.StatusCode,
-                    Detail = Err.Detail,
+                    Status = err.StatusCode,
+                    Detail = err.Detail,
                 }
             }
         );
@@ -83,7 +82,8 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body,
+        CancellationToken cancellationToken)
     {
         var command = new CreateProductCommand
         {
@@ -96,17 +96,17 @@ public sealed class ProductController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
-            Ok => new HttpResultResponse
+            ok => new HttpResultResponse
             {
-                Body = Ok,
+                Body = ok,
                 ContentType = MediaTypeNames.Application.Json
             },
-            Err => new HttpResultResponse
+            err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = Err.StatusCode,
-                    Detail = Err.Detail,
+                    Status = err.StatusCode,
+                    Detail = err.Detail,
                 }
             }
         );
@@ -117,23 +117,24 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id,
+        CancellationToken cancellationToken)
     {
         var command = new RemoveProductCommand { Id = id };
 
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
-            Ok => new HttpResultResponse
+            _ => new HttpResultResponse
             {
                 StatusCode = HttpStatusCode.Accepted
             },
-            Err => new HttpResultResponse
+            err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = Err.StatusCode,
-                    Detail = Err.Detail,
+                    Status = err.StatusCode,
+                    Detail = err.Detail,
                 }
             }
         );
@@ -145,7 +146,8 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async ValueTask<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
+    public async ValueTask<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id,
+        [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var command = new UpdateProductCommand
         {
@@ -159,16 +161,16 @@ public sealed class ProductController : ControllerBase
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
-            Ok => new HttpResultResponse
+            _ => new HttpResultResponse
             {
                 StatusCode = HttpStatusCode.Accepted
             },
-            Err => new HttpResultResponse
+            err => new HttpResultResponse
             {
                 Body = new ProblemDetails
                 {
-                    Status = Err.StatusCode,
-                    Detail = Err.Detail,
+                    Status = err.StatusCode,
+                    Detail = err.Detail,
                 }
             }
         );

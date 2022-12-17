@@ -1,9 +1,7 @@
 namespace Ecommerce.Application.Service;
 
 using Mediator;
-
 using Common.Domain;
-
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
@@ -24,47 +22,47 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<byte, ProductError>> UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
+    public async Task<Result<byte, ProductException>> UpdateProduct(
+        Guid id,
+        UpdateProductCommand command,
+        CancellationToken cancellationToken)
     {
-        var getByIdResult = await _productRepository.GetById(id, cancellationToken);
-        if (getByIdResult.IsFaulted)
+        var getProductByIdResult = await _productRepository.GetById(id, cancellationToken);
+        if (getProductByIdResult.IsFaulted)
         {
-            return new Result<byte, ProductError>(getByIdResult.Err);
+            return new Result<byte, ProductException>(getProductByIdResult.Error);
         }
 
-        var previousProductState = getByIdResult.Ok.ToPrimitives();
+        var currentProduct = getProductByIdResult.Value.ToPrimitives();
 
-        Product product;
-        try
-        {
-            var nextProductId = new ProductId(id);
-            var nextProductTitle = new ProductTitle(command.Title ?? previousProductState.Title);
-            var nextProductDescription = new ProductDescription(command.Description ?? previousProductState.Description);
-            var nextProductStatus = new ProductStatus((ProductStatusValue)(command.Status ?? (int)previousProductState.Status));
-            var nextProductPrice = new ProductPrice(command.Price ?? previousProductState.Price);
+        var nextProductId = new ProductId(id);
+        var nextProductTitle = new ProductTitle(command.Title ?? currentProduct.Title);
+        var nextProductDescription = new ProductDescription(command.Description ?? currentProduct.Description);
+        var nextProductStatus = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status));
+        var nextProductPrice = new ProductPrice(command.Price ?? currentProduct.Price);
 
-            product = new Product
-            {
-                Id = nextProductId,
-                Title = nextProductTitle,
-                Description = nextProductDescription,
-                Status = nextProductStatus,
-                Price = nextProductPrice
-            };
-        }
-        catch (ProductError ex)
+        var nextProduct = new Product
         {
-            return new Result<byte, ProductError>(ex);
+            Id = nextProductId,
+            Title = nextProductTitle,
+            Description = nextProductDescription,
+            Status = nextProductStatus,
+            Price = nextProductPrice
+        };
+
+        var productIntegrityResult = nextProduct.CheckIntegrity();
+        if (productIntegrityResult.IsFaulted)
+        {
+            return new Result<byte, ProductException>(productIntegrityResult.Error);
         }
 
-        var updateResult = await _productRepository.Update(product, cancellationToken);
-        if (updateResult.IsFaulted)
+        var updateProductResult = await _productRepository.Update(nextProduct, cancellationToken);
+        if (updateProductResult.IsFaulted)
         {
-            return new Result<byte, ProductError>(updateResult.Err);
+            return new Result<byte, ProductException>(updateProductResult.Error);
         }
 
         await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
-
-        return new Result<byte, ProductError>();
+        return new Result<byte, ProductException>();
     }
 }

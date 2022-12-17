@@ -1,53 +1,51 @@
 namespace Ecommerce.Domain.Error;
 
 using System.Net;
-
 using Common.Domain;
 
-public class ProductError : Exception, IError
+public class ProductException : Exception, IHttpError
 {
     public int StatusCode { get; set; }
     public string Detail { get; set; } = string.Empty;
 }
 
-public sealed class ProductNotFoundError : ProductError
+public sealed class ProductNotFoundException : ProductException
 {
     public new int StatusCode { get; } = (int)HttpStatusCode.NotFound;
     public new string Detail { get; } = "NotFound";
 }
 
-public sealed class ProductTitleInvalidError : ProductError
+public sealed class ProductTitleInvalidException : ProductException
 {
     public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public new string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductTitleUniqueError : ProductError
+public sealed class ProductTitleUniqueException : ProductException
 {
     public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public new string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductDescriptionInvalidError : ProductError
+public sealed class ProductDescriptionInvalidException : ProductException
 {
     public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public new string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductPriceInvalidError : ProductError
+public sealed class ProductPriceInvalidException : ProductException
 {
     public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public new string Detail { get; } = "BadRequest";
 }
 
-public sealed class ProductStatusInvalidError : ProductError
+public sealed class ProductStatusInvalidException : ProductException
 {
     public new int StatusCode { get; } = (int)HttpStatusCode.BadRequest;
     public new string Detail { get; } = "BadRequest";
 }
 
-
-public sealed class ProductPersistenceError : ProductError
+public sealed class ProductPersistenceException : ProductException
 {
     public new int StatusCode { get; } = (int)HttpStatusCode.ServiceUnavailable;
     public new string Detail { get; } = "ServiceUnavailable";

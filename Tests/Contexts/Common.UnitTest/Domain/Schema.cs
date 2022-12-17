@@ -25,7 +25,7 @@ public sealed class SchemaTestUnitTest
         Assert.That(entity.updated_at.ToString(locale), Is.EqualTo(updatedAt.ToString(locale)));
     }
 
-    private sealed class EmptyEntity : Schema<EmptyEntity, EmptyEntity>
+    private sealed record EmptyEntity : Schema<EmptyEntity, EmptyEntity>
     {
     }
 }

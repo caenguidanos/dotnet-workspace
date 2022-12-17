@@ -5,17 +5,19 @@ using Common.Domain;
 public sealed class PrimitiveTestUnitTest
 {
     [Test]
-    public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowArgumentOutOfRangeException()
+    public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowsArgumentOutOfRangeException()
     {
-        Assert.Throws<ArgumentOutOfRangeException>(
-            () => new StringPrimitiveWithValidation("1234"));
+        var primitive = new StringPrimitiveWithValidation("1234");
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => primitive.Validate());
     }
 
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenNotThrowArgumentOutOfRangeException()
     {
-        Assert.DoesNotThrow(
-            () => new StringPrimitiveWithValidation("123456"));
+        var primitive = new StringPrimitiveWithValidation("123456");
+
+        Assert.DoesNotThrow(() => primitive.Validate());
     }
 
     [Test]
@@ -26,24 +28,24 @@ public sealed class PrimitiveTestUnitTest
         Assert.That(primitive.GetValue(), Is.EqualTo("123499"));
     }
 
-    private sealed class StringPrimitiveWithValidation : Primitive<string>
+    private sealed record StringPrimitiveWithValidation : Primitive<string>
     {
         public StringPrimitiveWithValidation(string value)
             : base(value)
         {
         }
 
-        protected override string Validate(string value)
+        public override string Validate()
         {
             int maxLength = 10;
             int minLength = 5;
 
-            if (value.Length < minLength || value.Length > maxLength)
+            if (Value.Length < minLength || Value.Length > maxLength)
             {
-                throw new ArgumentOutOfRangeException(value);
+                throw new ArgumentOutOfRangeException(Value);
             }
 
-            return value;
+            return Value;
         }
     }
 }

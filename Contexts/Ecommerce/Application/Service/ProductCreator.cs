@@ -1,9 +1,7 @@
 namespace Ecommerce.Application.Service;
 
 using Mediator;
-
 using Common.Domain;
-
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
 using Ecommerce.Domain.Error;
@@ -23,33 +21,36 @@ public sealed class ProductCreatorService : IProductCreatorService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<Guid, ProductError>> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
+    public async Task<Result<Guid, ProductException>> AddNewProduct(
+        string title,
+        string description,
+        int status,
+        int price,
+        CancellationToken cancellationToken)
     {
-        Product product;
-        try
+        var product = new Product
         {
-            product = new Product
-            {
-                Id = new ProductId(),
-                Title = new ProductTitle(title),
-                Description = new ProductDescription(description),
-                Status = new ProductStatus((ProductStatusValue)status),
-                Price = new ProductPrice(price)
-            };
-        }
-        catch (ProductError ex)
+            Id = new ProductId(),
+            Title = new ProductTitle(title),
+            Description = new ProductDescription(description),
+            Status = new ProductStatus((ProductStatusValue)status),
+            Price = new ProductPrice(price)
+        };
+
+        var productIntegrityResult = product.CheckIntegrity();
+        if (productIntegrityResult.IsFaulted)
         {
-            return new Result<Guid, ProductError>(ex);
+            return new Result<Guid, ProductException>(productIntegrityResult.Error);
         }
 
-        var saveResult = await _productRepository.Save(product, cancellationToken);
-        if (saveResult.IsFaulted)
+        var saveProductResult = await _productRepository.Save(product, cancellationToken);
+        if (saveProductResult.IsFaulted)
         {
-            return new Result<Guid, ProductError>(saveResult.Err);
+            return new Result<Guid, ProductException>(saveProductResult.Error);
         }
 
-        await _publisher.Publish(new ProductCreatedEvent { Product = product.Id.GetValue() }, cancellationToken);
-
-        return new Result<Guid, ProductError>(product.Id.GetValue());
+        var productPrimitives = product.ToPrimitives();
+        await _publisher.Publish(new ProductCreatedEvent { Product = productPrimitives.Id }, cancellationToken);
+        return new Result<Guid, ProductException>(productPrimitives.Id);
     }
 }
