@@ -109,7 +109,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> RemoveProduct(
+    public async Task<IActionResult> RemoveProductById(
         [FromRoute(Name = "id")] Guid id,
         CancellationToken cancellationToken)
     {
