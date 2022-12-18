@@ -2,8 +2,6 @@ namespace Ecommerce.IntegrationTest.Infrastructure.Controller;
 
 using Dapper;
 using Mediator;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Npgsql;
@@ -24,14 +22,14 @@ public sealed class GetProductsIntegrationTest
     [OneTimeSetUp]
     public async Task OneTimeSetUp()
     {
-        _services.AddEcommerceServices();
-
         string connectionString = await _postgres.StartAsync();
+
         Mock
             .Get(_dbContext)
             .Setup(dbContext => dbContext.GetConnectionString())
             .Returns(connectionString);
 
+        _services.AddEcommerceServices();
         _services.AddSingleton<IDbContext>(_dbContext);
     }
 
@@ -44,22 +42,17 @@ public sealed class GetProductsIntegrationTest
         await conn.ExecuteAsync(sql);
 
         var serviceProvider = _services.BuildServiceProvider();
-        var controller = new ProductController(serviceProvider.GetService<ISender>() ?? throw new ArgumentNullException());
+        var serviceSender = serviceProvider.GetService<ISender>() ?? throw new ArgumentNullException();
 
-        var actionResultFromController = await controller.GetProducts(CancellationToken.None);
-        Assert.That(actionResultFromController, Is.InstanceOf<HttpResultResponse>());
+        var controller = new ProductController(serviceSender);
 
-        var actionContext = new ActionContext();
-        actionContext.HttpContext = new DefaultHttpContext();
-        actionContext.HttpContext.Response.Body = new MemoryStream();
+        var actionResult = await controller.GetProducts(CancellationToken.None);
+        Assert.That(actionResult, Is.InstanceOf<HttpResultResponse>());
 
-        await actionResultFromController.ExecuteResultAsync(actionContext);
+        var actionContext = IntegrationTestHelpers.CreateWritableActionContext();
+        await actionResult.ExecuteResultAsync(actionContext);
+
         Assert.That(actionContext.HttpContext.Response.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
-
-        // move pointer to start position of the stream and read body
-        actionContext.HttpContext.Response.Body.Seek(0, SeekOrigin.Begin);
-        var responseBodyReader = new StreamReader(actionContext.HttpContext.Response.Body);
-        var responseBodyAsText = responseBodyReader.ReadToEnd();
-        Assert.That(responseBodyAsText, Is.EqualTo("[]"));
+        Assert.That(IntegrationTestHelpers.ReadBodyFromActionContext(actionContext, resetPointer: true), Is.EqualTo("[]"));
     }
 }
