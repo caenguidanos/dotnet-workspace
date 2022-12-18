@@ -19,9 +19,6 @@ webapi-start:
 test-integration:
 	dotnet test --filter Name~IntegrationTest
 
-test-acceptance:
-	dotnet test --filter Name~AcceptanceTest
-
 test-load:
 	k6 run Tests/Contexts/Ecommerce.LoadTest/Performance/GetProduct.js
 	k6 run Tests/Contexts/Ecommerce.LoadTest/Spike/GetProduct.js
