@@ -35,7 +35,7 @@ public sealed class GetProductsIntegrationTest
     }
 
     [Test]
-    public async Task Given_When_Then()
+    public async Task GivenNoProductsOnDatabase_WhenQueryAll_ThenReturnEmptyCollection()
     {
         await IntegrationTestHelpers.ExecuteQueryAsync(_dbContext.GetConnectionString(), "TRUNCATE product");
 
