@@ -10,6 +10,7 @@ public sealed class ProductNotFoundException : ProblemDetailsException
     {
         SetStatusCode(HttpStatusCode.NotFound);
         SetTitle("NotFound");
+        SetDetail("Product not found with criteria");
     }
 }
 
@@ -19,6 +20,7 @@ public sealed class ProductIdInvalidException : ProblemDetailsException
     {
         SetStatusCode(HttpStatusCode.BadRequest);
         SetTitle("BadRequest");
+        SetDetail("Product id is invalid");
     }
 }
 

@@ -89,7 +89,6 @@ public sealed class GetProductsIntegrationTest
         );
 
         Assert.That(products, Is.Not.Null);
-
         if (products is not null)
         {
             Assert.That(products.Count(), Is.EqualTo(2));
