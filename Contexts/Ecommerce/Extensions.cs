@@ -1,6 +1,5 @@
-namespace Ecommerce;
+namespace Ecommerce.Extensions;
 
-using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -10,20 +9,13 @@ using Ecommerce.Domain.Service;
 using Ecommerce.Infrastructure.Persistence;
 using Ecommerce.Infrastructure.Repository;
 
-public static class EcommerceModule
+public static class EcommerceExtensions
 {
     public static IServiceCollection AddEcommerceServices(this IServiceCollection services)
     {
-        DefaultTypeMap.MatchNamesWithUnderscores = true;
-
         services.AddMediator();
 
         services.AddSingleton<IDbContext, DbContext>();
-
-#if DEBUG
-        services.AddSingleton<IDbSeed, DbSeed>();
-#endif
-
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
         services.AddSingleton<IProductRemoverService, ProductRemoverService>();
@@ -32,7 +24,14 @@ public static class EcommerceModule
         return services;
     }
 
-    public static IHost UseEcommerceDataSeed(this IHost host)
+    public static IServiceCollection AddEcommerceSeed(this IServiceCollection services)
+    {
+        services.AddSingleton<IDbSeed, DbSeed>();
+
+        return services;
+    }
+
+    public static IHost UseEcommerceSeed(this IHost host)
     {
         using var scope = host.Services.CreateScope();
 

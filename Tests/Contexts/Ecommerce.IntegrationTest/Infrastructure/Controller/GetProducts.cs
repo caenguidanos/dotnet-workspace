@@ -1,15 +1,15 @@
 namespace Ecommerce.IntegrationTest.Infrastructure.Controller;
 
-using Dapper;
 using Mediator;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using Npgsql;
 using System.Net;
 
+using Common.Extensions;
 using Common.Application;
 using Common.Fixture.Infrastructure.Database;
 
+using Ecommerce.Extensions;
 using Ecommerce.Infrastructure.Controller;
 using Ecommerce.Infrastructure.Persistence;
 
@@ -27,8 +27,9 @@ public sealed class GetProductsIntegrationTest
         Mock
             .Get(_dbContext)
             .Setup(dbContext => dbContext.GetConnectionString())
-            .Returns(connectionString);
+                .Returns(connectionString);
 
+        _services.AddCommonConfig();
         _services.AddEcommerceServices();
         _services.AddSingleton<IDbContext>(_dbContext);
     }
@@ -36,23 +37,23 @@ public sealed class GetProductsIntegrationTest
     [Test]
     public async Task Given_When_Then()
     {
-        await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
-        await conn.OpenAsync();
-        string sql = "TRUNCATE product";
-        await conn.ExecuteAsync(sql);
+        await IntegrationTestHelpers.ExecuteQueryAsync(_dbContext.GetConnectionString(), "TRUNCATE product");
 
-        var serviceProvider = _services.BuildServiceProvider();
-        var serviceSender = serviceProvider.GetService<ISender>() ?? throw new ArgumentNullException();
+        var provider = _services.BuildServiceProvider();
 
-        var controller = new ProductController(serviceSender);
+        var controller = new ProductController(
+            provider.GetService<ISender>() ?? throw new ArgumentNullException()
+        );
+
+        var actionContext = IntegrationTestHelpers.CreateWritableActionContext();
 
         var actionResult = await controller.GetProducts(CancellationToken.None);
         Assert.That(actionResult, Is.InstanceOf<HttpResultResponse>());
 
-        var actionContext = IntegrationTestHelpers.CreateWritableActionContext();
         await actionResult.ExecuteResultAsync(actionContext);
 
         Assert.That(actionContext.HttpContext.Response.StatusCode, Is.EqualTo((int)HttpStatusCode.OK));
-        Assert.That(IntegrationTestHelpers.ReadBodyFromActionContext(actionContext, resetPointer: true), Is.EqualTo("[]"));
+        Assert.That(
+            IntegrationTestHelpers.ReadBodyFromActionContext(actionContext, resetPointer: true), Is.EqualTo("[]"));
     }
 }

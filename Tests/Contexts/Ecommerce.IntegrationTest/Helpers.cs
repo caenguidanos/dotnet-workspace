@@ -1,16 +1,25 @@
 namespace Ecommerce.IntegrationTest;
 
+using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Npgsql;
 
 public static class IntegrationTestHelpers
 {
+    public static async Task ExecuteQueryAsync(string connectionString, string sql)
+    {
+        await using var conn = new NpgsqlConnection(connectionString);
+        await conn.OpenAsync();
+        await conn.ExecuteAsync(sql);
+        await conn.CloseAsync();
+    }
+
     public static ActionContext CreateWritableActionContext()
     {
         var actionContext = new ActionContext();
         actionContext.HttpContext = new DefaultHttpContext();
         actionContext.HttpContext.Response.Body = new MemoryStream();
-
         return actionContext;
     }
 

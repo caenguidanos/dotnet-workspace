@@ -1,15 +1,9 @@
-using Common;
-using Ecommerce;
+using Common.Extensions;
+using Ecommerce.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
-
-builder.Services.Configure<RouteOptions>(options =>
-{
-    options.LowercaseUrls = true;
-    options.LowercaseQueryStrings = true;
-});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -18,8 +12,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 #endif
 
-builder.Services.AddCommonServices();
+builder.Services.AddCommonConfig();
+
 builder.Services.AddEcommerceServices();
+
+#if DEBUG
+builder.Services.AddEcommerceSeed();
+#endif
 
 var app = builder.Build();
 
@@ -29,10 +28,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.UseEcommerceDataSeed();
+    app.UseEcommerceSeed();
 }
 #endif
 
 app.MapControllers();
+
 app.UseCors();
+
 app.Run();
