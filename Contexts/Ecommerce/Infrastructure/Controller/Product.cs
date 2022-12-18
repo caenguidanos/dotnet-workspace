@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Net.Mime;
+
 using Common.Application;
+
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Query;
 using Ecommerce.Infrastructure.DataTransfer;
@@ -49,7 +51,8 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> GetProductById([FromRoute(Name = "id")] Guid id,
+    public async Task<IActionResult> GetProductById(
+        [FromRoute(Name = "id")] Guid id,
         CancellationToken cancellationToken)
     {
         var query = new GetProductQuery { Id = id };
@@ -74,7 +77,8 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body,
+    public async Task<IActionResult> CreateProduct(
+        [FromBody] CreateProductHttpRequestBody body,
         CancellationToken cancellationToken)
     {
         var command = new CreateProductCommand
@@ -105,7 +109,8 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> RemoveProduct([FromRoute(Name = "id")] Guid id,
+    public async Task<IActionResult> RemoveProduct(
+        [FromRoute(Name = "id")] Guid id,
         CancellationToken cancellationToken)
     {
         var command = new RemoveProductCommand { Id = id };
@@ -132,8 +137,10 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id,
-        [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProduct(
+        [FromRoute(Name = "id")] Guid id,
+        [FromBody] UpdateProductHttpRequestBody body,
+        CancellationToken cancellationToken)
     {
         var command = new UpdateProductCommand
         {

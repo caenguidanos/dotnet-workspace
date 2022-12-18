@@ -19,7 +19,10 @@ public static class EcommerceModule
         services.AddMediator();
 
         services.AddSingleton<IDbContext, DbContext>();
+
+#if DEBUG
         services.AddSingleton<IDbSeed, DbSeed>();
+#endif
 
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();

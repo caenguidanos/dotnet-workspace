@@ -13,7 +13,10 @@ builder.Services.Configure<RouteOptions>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+
+#if DEBUG
 builder.Services.AddSwaggerGen();
+#endif
 
 builder.Services.AddCommonServices();
 builder.Services.AddEcommerceServices();
@@ -30,8 +33,6 @@ if (app.Environment.IsDevelopment())
 }
 #endif
 
-app.UseAuthentication();
-app.UseAuthorization();
 app.MapControllers();
 app.UseCors();
 app.Run();
