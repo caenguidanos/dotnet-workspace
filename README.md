@@ -12,7 +12,6 @@
 check:
 	dotnet clean
 	dotnet restore
-	dotnet format
 	dotnet build
 	dotnet test
 
@@ -28,16 +27,13 @@ webapi-watch:
 webapi-start:
 	dotnet run --configuration Release --project ./Apps/MySaaS/Backend/Api/Api.csproj
 
-test-unit:
-	dotnet test --filter Name~UnitTest
-
 test-integration:
 	dotnet test --filter Name~IntegrationTest
 
 test-acceptance:
 	dotnet test --filter Name~AcceptanceTest
 
-test-stress:
-	k6 run Tests/Contexts/Ecommerce.StressTest/Performance/GetProduct.js
-	k6 run Tests/Contexts/Ecommerce.StressTest/Spike/GetProduct.js
+test-load:
+	k6 run Tests/Contexts/Ecommerce.LoadTest/Performance/GetProduct.js
+	k6 run Tests/Contexts/Ecommerce.LoadTest/Spike/GetProduct.js
 ```

@@ -18,9 +18,7 @@ using Ecommerce.Infrastructure.Persistence;
 public sealed class GetProductsIntegrationTest
 {
     private readonly PostgresDatabaseFactory _postgres = new(template: "ecommerce");
-
     private readonly IDbContext _dbContext = Mock.Of<IDbContext>();
-
     private readonly IServiceCollection _services = new ServiceCollection();
 
     [OneTimeSetUp]
@@ -46,7 +44,6 @@ public sealed class GetProductsIntegrationTest
         await conn.ExecuteAsync(sql);
 
         var serviceProvider = _services.BuildServiceProvider();
-
         var controller = new ProductController(serviceProvider.GetService<ISender>() ?? throw new ArgumentNullException());
 
         var actionResultFromController = await controller.GetProducts(CancellationToken.None);
