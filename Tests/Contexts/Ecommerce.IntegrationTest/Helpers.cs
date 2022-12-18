@@ -1,5 +1,6 @@
 namespace Ecommerce.IntegrationTest;
 
+using System.Text.Json;
 using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -32,5 +33,15 @@ public static class IntegrationTestHelpers
 
         var responseBodyReader = new StreamReader(actionContext.HttpContext.Response.Body);
         return responseBodyReader.ReadToEnd();
+    }
+
+    public static T? JsonDeserialize<T>(string json)
+    {
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        return JsonSerializer.Deserialize<T>(json, options);
     }
 }

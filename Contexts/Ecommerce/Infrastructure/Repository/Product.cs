@@ -64,7 +64,7 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<IEnumerable<Product>, ProblemDetailsException>(products);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return new Result<IEnumerable<Product>, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
@@ -111,7 +111,7 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<Product, ProblemDetailsException>(product);
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return new Result<Product, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
@@ -144,7 +144,7 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<byte, ProblemDetailsException>();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             if (ex is PostgresException postgresException)
             {
@@ -192,7 +192,7 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<byte, ProblemDetailsException>();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             return new Result<byte, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
@@ -226,7 +226,7 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<byte, ProblemDetailsException>();
         }
-        catch (Exception ex)
+        catch (System.Exception ex)
         {
             if (ex is PostgresException postgresException)
             {

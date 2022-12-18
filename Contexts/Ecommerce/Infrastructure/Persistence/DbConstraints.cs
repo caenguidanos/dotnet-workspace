@@ -3,8 +3,8 @@ namespace Ecommerce.Infrastructure.Persistence;
 public struct ProductConstraints
 {
     public const string UniqueTitle = "product_title_key";
-    public const string CheckStatus = "product_status_check";
-    public const string CheckPrice = "product_price_check";
-    public const string CheckTitle = "product_title_check";
-    public const string CheckDescription = "product_description_check";
+    public const string CheckStatus = "check_status_value";
+    public const string CheckPrice = "check_price_range";
+    public const string CheckTitle = "check_title_length";
+    public const string CheckDescription = "check_description_length";
 }

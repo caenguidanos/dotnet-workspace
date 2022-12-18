@@ -28,6 +28,7 @@ public sealed class ProductTitleInvalidException : ProblemDetailsException
     {
         SetStatusCode(HttpStatusCode.BadRequest);
         SetTitle("BadRequest");
+        SetDetail("Product title length is invalid");
     }
 }
 
@@ -37,6 +38,7 @@ public sealed class ProductTitleUniqueException : ProblemDetailsException
     {
         SetStatusCode(HttpStatusCode.BadRequest);
         SetTitle("BadRequest");
+        SetDetail("Product title is not unique");
     }
 }
 
@@ -46,6 +48,7 @@ public sealed class ProductDescriptionInvalidException : ProblemDetailsException
     {
         SetStatusCode(HttpStatusCode.BadRequest);
         SetTitle("BadRequest");
+        SetDetail("Product description length is invalid");
     }
 }
 
@@ -55,6 +58,7 @@ public sealed class ProductPriceInvalidException : ProblemDetailsException
     {
         SetStatusCode(HttpStatusCode.BadRequest);
         SetTitle("BadRequest");
+        SetDetail("Product price is out of range");
     }
 }
 
@@ -64,6 +68,7 @@ public sealed class ProductStatusInvalidException : ProblemDetailsException
     {
         SetStatusCode(HttpStatusCode.BadRequest);
         SetTitle("BadRequest");
+        SetDetail("Product status has invalid value");
     }
 }
 
