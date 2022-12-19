@@ -17,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Fixture\Common.Fixture.csproj" />
     <ProjectReference Include="..\..\..\Contexts\Common\Common.csproj" />
   </ItemGroup>
 </Project>

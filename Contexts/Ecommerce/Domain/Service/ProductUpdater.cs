@@ -6,7 +6,7 @@ using Ecommerce.Infrastructure.DataTransfer;
 
 public interface IProductUpdaterService
 {
-    Task<Result<ProductAck, ProblemDetailsException>> UpdateProduct(
+    Task<Result<ResultUnit, ProblemDetailsException>> UpdateProduct(
         Guid id,
         UpdateProductCommand command,
         CancellationToken cancellationToken);

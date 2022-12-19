@@ -1,11 +1,12 @@
 namespace Ecommerce.Application.Command;
 
 using Mediator;
-using Common.Domain;
-using Ecommerce.Domain.Service;
-using Ecommerce.Infrastructure.DataTransfer;
 
-public readonly struct CreateProductCommand : IRequest<Result<ProductAck, ProblemDetailsException>>
+using Common.Domain;
+
+using Ecommerce.Domain.Service;
+
+public readonly struct CreateProductCommand : IRequest<Result<ResultUnit, ProblemDetailsException>>
 {
     public required int Price { get; init; }
     public required string Title { get; init; }
@@ -13,7 +14,7 @@ public readonly struct CreateProductCommand : IRequest<Result<ProductAck, Proble
     public required int Status { get; init; }
 }
 
-public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, Result<ProductAck, ProblemDetailsException>>
+public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, Result<ResultUnit, ProblemDetailsException>>
 {
     private readonly IProductCreatorService _productCreatorService;
 
@@ -22,7 +23,7 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _productCreatorService = productCreatorService;
     }
 
-    public async ValueTask<Result<ProductAck, ProblemDetailsException>> Handle(
+    public async ValueTask<Result<ResultUnit, ProblemDetailsException>> Handle(
         CreateProductCommand request,
         CancellationToken cancellationToken)
     {
@@ -35,9 +36,9 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
 
         if (result.IsFaulted)
         {
-            return new Result<ProductAck, ProblemDetailsException>(result.Error);
+            return new Result<ResultUnit, ProblemDetailsException>(result.Error);
         }
 
-        return new Result<ProductAck, ProblemDetailsException>(new ProductAck { Id = result.Value });
+        return new Result<ResultUnit, ProblemDetailsException>();
     }
 }

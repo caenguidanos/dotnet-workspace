@@ -105,6 +105,22 @@ public sealed class PostgresDatabaseFactory
     }
 }
 
+// CONFIGURATION FOR CONTAINER STRATEGY:
+//
+//
+// public static readonly List<string> PostgresDatabaseInitScripts = new()
+// {
+//    $"{Environment.CurrentDirectory}/SQL/Definitions:/var/lib/sql/denifitions",
+//    $"{Environment.CurrentDirectory}/SQL/Init.sh:/docker-entrypoint-initdb.d/init.sh"
+// };
+
+// <ItemGroup>
+//   <Content Include="..\..\..\Contexts\Ecommerce\Infrastructure\Persistence\SQL\**\*.*">
+//     <Link>SQL\%(RecursiveDir)%(Filename)%(Extension)</Link>
+//     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+//   </Content>
+// </ItemGroup>
+
 public sealed class PostgresDatabase
 {
     private DockerClient _docker { get; init; }

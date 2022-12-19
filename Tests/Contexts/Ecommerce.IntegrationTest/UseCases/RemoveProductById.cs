@@ -3,34 +3,36 @@ namespace Ecommerce.IntegrationTest.UseCases;
 using System.Net;
 using System.Net.Http.Headers;
 
+using Ecommerce.IntegrationTest.App;
 using Ecommerce.IntegrationTest.Util;
 
-public class RemoveProductByIdIntegrationTest : IClassFixture<EcommerceWebApplicationFactory<Program>>
+public class RemoveProductByIdIntegrationTest
 {
-    private readonly HttpClient _client;
-    private readonly string _connectionString;
+    private HttpClient _httpClient;
+    private WebAppFactory _app;
 
-    public RemoveProductByIdIntegrationTest(EcommerceWebApplicationFactory<Program> factory)
+    [OneTimeSetUp]
+    public async Task OneTimeSetUp()
     {
-        _client = factory.CreateClient();
-
-        _connectionString = factory.PostgresDatabaseConnectionString;
+        _app = new WebAppFactory();
+        await _app.StartDatabaseAsync();
+        _httpClient = _app.CreateClient();
     }
 
-    [Fact]
+    [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestById_ThenReturnProblemDetails()
     {
-        await PostgresUtil.ExecuteAsync(_connectionString, """
+        await _app.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _client.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        var response = await _httpClient.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
-        Assert.Equal(response.StatusCode, HttpStatusCode.NotFound);
-        Assert.Equal(response.Content.Headers.ContentType, MediaTypeHeaderValue.Parse("application/problem+json"));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/problem+json")));
 
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var responseBodySnapshot = """
+        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBodySnapshot = """
             {
                 "title": "NotFound",
                 "status": 404,
@@ -39,13 +41,13 @@ public class RemoveProductByIdIntegrationTest : IClassFixture<EcommerceWebApplic
             }
         """;
 
-        Assert.Equal(responseBody, JsonUtil.CleanString(responseBodySnapshot));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
     }
 
-    [Fact]
+    [Test]
     public async Task GivenProductsOnDatabase_WhenRequestById_ThenReturnAck()
     {
-        await PostgresUtil.ExecuteAsync(_connectionString, """
+        await _app.ExecuteSqlAsync("""
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status)
@@ -55,22 +57,20 @@ public class RemoveProductByIdIntegrationTest : IClassFixture<EcommerceWebApplic
             VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
         """);
 
-        var response = await _client.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var response = await _httpClient.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
-        Assert.Equal(response.StatusCode, HttpStatusCode.Accepted);
-        Assert.Equal(response.Content.Headers.ContentType, MediaTypeHeaderValue.Parse("application/json"));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Accepted));
+        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("text/plain")));
 
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var responseBodySnapshot = """
-            {
-                "id": "8a5b3e4a-3e08-492c-869e-317a4d04616a"
-            }
+        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBodySnapshot = """
+            Accepted
         """;
 
-        Assert.Equal(responseBody, JsonUtil.CleanString(responseBodySnapshot));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
 
-        var responsePostRemove = await _client.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var responsePostRemove = await _httpClient.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
-        Assert.Equal(responsePostRemove.StatusCode, HttpStatusCode.NotFound);
+        Assert.That(responsePostRemove.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 }

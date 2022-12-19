@@ -3,34 +3,36 @@ namespace Ecommerce.IntegrationTest.UseCases;
 using System.Net;
 using System.Net.Http.Headers;
 
+using Ecommerce.IntegrationTest.App;
 using Ecommerce.IntegrationTest.Util;
 
-public class GetProductByIdIntegrationTest : IClassFixture<EcommerceWebApplicationFactory<Program>>
+public class GetProductByIdIntegrationTest
 {
-    private readonly HttpClient _client;
-    private readonly string _connectionString;
+    private HttpClient _httpClient;
+    private WebAppFactory _app;
 
-    public GetProductByIdIntegrationTest(EcommerceWebApplicationFactory<Program> factory)
+    [OneTimeSetUp]
+    public async Task OneTimeSetUp()
     {
-        _client = factory.CreateClient();
-
-        _connectionString = factory.PostgresDatabaseConnectionString;
+        _app = new WebAppFactory();
+        await _app.StartDatabaseAsync();
+        _httpClient = _app.CreateClient();
     }
 
-    [Fact]
+    [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestById_ThenReturnProblemDetails()
     {
-        await PostgresUtil.ExecuteAsync(_connectionString, """
+        await _app.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _client.GetAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        var response = await _httpClient.GetAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
-        Assert.Equal(response.StatusCode, HttpStatusCode.NotFound);
-        Assert.Equal(response.Content.Headers.ContentType, MediaTypeHeaderValue.Parse("application/problem+json"));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/problem+json")));
 
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var responseBodySnapshot = """
+        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBodySnapshot = """
             {
                 "title": "NotFound",
                 "status": 404,
@@ -39,13 +41,13 @@ public class GetProductByIdIntegrationTest : IClassFixture<EcommerceWebApplicati
             }
         """;
 
-        Assert.Equal(responseBody, JsonUtil.CleanString(responseBodySnapshot));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
     }
 
-    [Fact]
+    [Test]
     public async Task GivenProductsOnDatabase_WhenRequestById_ThenReturnCoincidence()
     {
-        await PostgresUtil.ExecuteAsync(_connectionString, """
+        await _app.ExecuteSqlAsync("""
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status, created_at, updated_at)
@@ -71,13 +73,13 @@ public class GetProductByIdIntegrationTest : IClassFixture<EcommerceWebApplicati
             );
         """);
 
-        var response = await _client.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var response = await _httpClient.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
-        Assert.Equal(response.StatusCode, HttpStatusCode.OK);
-        Assert.Equal(response.Content.Headers.ContentType, MediaTypeHeaderValue.Parse("application/json"));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
 
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var responseBodySnapshot = """
+        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBodySnapshot = """
             {
                 "id": "8a5b3e4a-3e08-492c-869e-317a4d04616a",
                 "title": "Mustang Shelby GT500",
@@ -89,6 +91,6 @@ public class GetProductByIdIntegrationTest : IClassFixture<EcommerceWebApplicati
             }
         """;
 
-        Assert.Equal(responseBody, JsonUtil.CleanString(responseBodySnapshot));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
     }
 }

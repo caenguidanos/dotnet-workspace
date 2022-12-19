@@ -1,4 +1,4 @@
-namespace Ecommerce.Extensions;
+namespace Ecommerce;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,8 +13,6 @@ public static class EcommerceExtensions
 {
     public static IServiceCollection AddEcommerceServices(this IServiceCollection services)
     {
-        services.AddMediator();
-
         services.AddSingleton<IDbContext, DbContext>();
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
@@ -26,7 +24,7 @@ public static class EcommerceExtensions
 
     public static IServiceCollection AddEcommerceSeed(this IServiceCollection services)
     {
-        services.AddSingleton<IDbSeed, DbSeed>();
+        services.AddScoped<IDbSeed, DbSeed>();
 
         return services;
     }

@@ -1,4 +1,4 @@
-namespace Common.Extensions;
+namespace Common;
 
 using Microsoft.AspNetCore.Routing;
 
@@ -6,8 +6,6 @@ public static class CommonExtensions
 {
     public static IServiceCollection AddCommonConfig(this IServiceCollection services)
     {
-        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-
         services.Configure<RouteOptions>(options =>
         {
             options.LowercaseUrls = true;

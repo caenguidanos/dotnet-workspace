@@ -9,31 +9,14 @@
 
   <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="3.1.2" />
-    <PackageReference Include="dapper" Version="2.0.123" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.1" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
-    <PackageReference Include="Npgsql" Version="7.0.1" />
-    <PackageReference Include="Xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.2">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common.Fixture\Common.Fixture.csproj" />
-    <ProjectReference Include="..\..\..\Contexts\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\Contexts\Ecommerce\Ecommerce.csproj" />
-    <ProjectReference Include="..\..\..\Apps\MySaaS\Backend\Api\Api.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="..\..\..\Contexts\Ecommerce\Infrastructure\Persistence\SQL\**\*.*">
-      <Link>SQL\%(RecursiveDir)%(Filename)%(Extension)</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <ProjectReference Include="..\Ecommerce.IntegrationTest.App\Ecommerce.IntegrationTest.App.csproj" />
   </ItemGroup>
 
 </Project>

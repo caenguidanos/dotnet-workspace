@@ -1,10 +1,11 @@
-using Common.Extensions;
-using Ecommerce.Extensions;
+using Common;
+using Ecommerce;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Services.AddMediator();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 

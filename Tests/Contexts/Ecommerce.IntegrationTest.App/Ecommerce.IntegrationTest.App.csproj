@@ -6,22 +6,20 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
   <ItemGroup>
     <PackageReference Include="Mediator.Abstractions" Version="2.0.*" />
     <PackageReference Include="Mediator.SourceGenerator" Version="2.0.*">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Contexts\Common\Common.csproj" />
-    <ProjectReference Include="..\..\..\..\Contexts\Ecommerce\Ecommerce.csproj" />
+    <ProjectReference Include="..\Common.Fixture\Common.Fixture.csproj" />
+    
+    <ProjectReference Include="..\..\..\Contexts\Common\Common.csproj" />
+    <ProjectReference Include="..\..\..\Contexts\Ecommerce\Ecommerce.csproj" />
   </ItemGroup>
 
 </Project>

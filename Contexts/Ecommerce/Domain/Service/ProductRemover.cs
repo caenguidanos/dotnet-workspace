@@ -6,5 +6,5 @@ using Ecommerce.Infrastructure.DataTransfer;
 
 public interface IProductRemoverService
 {
-    Task<Result<ProductAck, ProblemDetailsException>> RemoveProduct(Guid id, CancellationToken cancellationToken);
+    Task<Result<ResultUnit, ProblemDetailsException>> RemoveProduct(Guid id, CancellationToken cancellationToken);
 }

@@ -28,7 +28,7 @@ public sealed record Product : Schema<Product, ProductPrimitives>
         };
     }
 
-    public Result<byte, ProblemDetailsException> CheckIntegrity()
+    public Result<ResultUnit, ProblemDetailsException> CheckIntegrity()
     {
         try
         {
@@ -38,11 +38,11 @@ public sealed record Product : Schema<Product, ProductPrimitives>
             Status.Validate();
             Price.Validate();
 
-            return new Result<byte, ProblemDetailsException>();
+            return new Result<ResultUnit, ProblemDetailsException>();
         }
         catch (ProblemDetailsException ex)
         {
-            return new Result<byte, ProblemDetailsException>(ex);
+            return new Result<ResultUnit, ProblemDetailsException>(ex);
         }
     }
 }

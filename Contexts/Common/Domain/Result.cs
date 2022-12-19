@@ -6,6 +6,10 @@ public enum ResultState : byte
     Success
 }
 
+public readonly struct ResultUnit
+{
+}
+
 public readonly struct Result<TSuccess, TError>
 {
     internal readonly ResultState State;

@@ -73,7 +73,7 @@ public sealed class ProductController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
@@ -94,8 +94,7 @@ public sealed class ProductController : ControllerBase
         return result.Match(
             body => new HttpResultResponse
             {
-                Body = body,
-                ContentType = MediaTypeNames.Application.Json
+                StatusCode = HttpStatusCode.Accepted,
             },
             exception => new HttpResultResponse
             {
@@ -120,9 +119,7 @@ public sealed class ProductController : ControllerBase
         return result.Match(
             body => new HttpResultResponse
             {
-                Body = body,
                 StatusCode = HttpStatusCode.Accepted,
-                ContentType = MediaTypeNames.Application.Json
             },
             exception => new HttpResultResponse
             {
@@ -156,9 +153,7 @@ public sealed class ProductController : ControllerBase
         return result.Match(
             body => new HttpResultResponse
             {
-                Body = body,
                 StatusCode = HttpStatusCode.Accepted,
-                ContentType = MediaTypeNames.Application.Json
             },
             exception => new HttpResultResponse
             {

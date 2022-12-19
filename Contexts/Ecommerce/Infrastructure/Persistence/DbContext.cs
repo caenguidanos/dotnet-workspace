@@ -13,6 +13,8 @@ public sealed class DbContext : IDbContext
 
     public DbContext(IConfiguration configuration)
     {
+        Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
         _connectionString = configuration.GetConnectionString("Ecommerce") ??
                             throw new InvalidDataException("Trying to get [ConnectionStrings]");
     }

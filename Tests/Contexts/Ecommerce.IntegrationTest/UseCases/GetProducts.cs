@@ -3,44 +3,46 @@ namespace Ecommerce.IntegrationTest.UseCases;
 using System.Net;
 using System.Net.Http.Headers;
 
+using Ecommerce.IntegrationTest.App;
 using Ecommerce.IntegrationTest.Util;
 
-public class GetProductsIntegrationTest : IClassFixture<EcommerceWebApplicationFactory<Program>>
+public class GetProductsIntegrationTest
 {
-    private readonly HttpClient _client;
-    private readonly string _connectionString;
+    private HttpClient _httpClient;
+    private WebAppFactory _app;
 
-    public GetProductsIntegrationTest(EcommerceWebApplicationFactory<Program> factory)
+    [OneTimeSetUp]
+    public async Task OneTimeSetUp()
     {
-        _client = factory.CreateClient();
-
-        _connectionString = factory.PostgresDatabaseConnectionString;
+        _app = new WebAppFactory();
+        await _app.StartDatabaseAsync();
+        _httpClient = _app.CreateClient();
     }
 
-    [Fact]
+    [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestAll_ThenReturnEmptyCollection()
     {
-        await PostgresUtil.ExecuteAsync(_connectionString, """
+        await _app.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _client.GetAsync("/product");
+        var response = await _httpClient.GetAsync("/product");
 
-        Assert.Equal(response.StatusCode, HttpStatusCode.OK);
-        Assert.Equal(response.Content.Headers.ContentType, MediaTypeHeaderValue.Parse("application/json"));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
 
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var responseBodySnapshot = """
+        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBodySnapshot = """
             []
         """;
 
-        Assert.Equal(responseBody, JsonUtil.CleanString(responseBodySnapshot));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
     }
 
-    [Fact]
+    [Test]
     public async Task GivenProductsOnDatabase_WhenRequestAll_ThenReturnCollection()
     {
-        await PostgresUtil.ExecuteAsync(_connectionString, """
+        await _app.ExecuteSqlAsync("""
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status, created_at, updated_at)
@@ -66,13 +68,13 @@ public class GetProductsIntegrationTest : IClassFixture<EcommerceWebApplicationF
             );
         """);
 
-        var response = await _client.GetAsync("/product");
+        var response = await _httpClient.GetAsync("/product");
 
-        Assert.Equal(response.StatusCode, HttpStatusCode.OK);
-        Assert.Equal(response.Content.Headers.ContentType, MediaTypeHeaderValue.Parse("application/json"));
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
 
-        var responseBody = await response.Content.ReadAsStringAsync();
-        var responseBodySnapshot = """
+        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBodySnapshot = """
             [
                 {
                     "id": "092cc0ea-a54f-48a3-87ed-0e7f43c023f1",
@@ -95,6 +97,6 @@ public class GetProductsIntegrationTest : IClassFixture<EcommerceWebApplicationF
             ]
         """;
 
-        Assert.Equal(responseBody, JsonUtil.CleanString(responseBodySnapshot));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
     }
 }

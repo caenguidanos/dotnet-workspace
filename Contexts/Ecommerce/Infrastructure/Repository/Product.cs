@@ -117,7 +117,7 @@ public sealed class ProductRepository : IProductRepository
         }
     }
 
-    public async Task<Result<byte, ProblemDetailsException>> Save(Product product, CancellationToken cancellationToken)
+    public async Task<Result<ResultUnit, ProblemDetailsException>> Save(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -142,7 +142,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<byte, ProblemDetailsException>();
+            return new Result<ResultUnit, ProblemDetailsException>();
         }
         catch (System.Exception ex)
         {
@@ -154,21 +154,21 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result<byte, ProblemDetailsException>(new ProductTitleUniqueException());
+                                return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
                             }
                             break;
                         }
                 }
 
-                return new Result<byte, ProblemDetailsException>(
+                return new Result<ResultUnit, ProblemDetailsException>(
                     new ProductPersistenceException(postgresException.MessageText));
             }
 
-            return new Result<byte, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 
-    public async Task<Result<byte, ProblemDetailsException>> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<Result<ResultUnit, ProblemDetailsException>> Delete(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -187,18 +187,18 @@ public sealed class ProductRepository : IProductRepository
             int result = await conn.ExecuteAsync(command);
             if (result is 0)
             {
-                return new Result<byte, ProblemDetailsException>(new ProductNotFoundException());
+                return new Result<ResultUnit, ProblemDetailsException>(new ProductNotFoundException());
             }
 
-            return new Result<byte, ProblemDetailsException>();
+            return new Result<ResultUnit, ProblemDetailsException>();
         }
         catch (System.Exception ex)
         {
-            return new Result<byte, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 
-    public async Task<Result<byte, ProblemDetailsException>> Update(Product product, CancellationToken cancellationToken)
+    public async Task<Result<ResultUnit, ProblemDetailsException>> Update(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -224,7 +224,7 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<byte, ProblemDetailsException>();
+            return new Result<ResultUnit, ProblemDetailsException>();
         }
         catch (System.Exception ex)
         {
@@ -236,18 +236,18 @@ public sealed class ProductRepository : IProductRepository
                         {
                             if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                             {
-                                return new Result<byte, ProblemDetailsException>(new ProductTitleUniqueException());
+                                return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
                             }
 
                             break;
                         }
                 }
 
-                return new Result<byte, ProblemDetailsException>(
+                return new Result<ResultUnit, ProblemDetailsException>(
                     new ProductPersistenceException(postgresException.MessageText));
             }
 
-            return new Result<byte, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
     }
 }
