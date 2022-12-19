@@ -2,15 +2,16 @@ namespace Ecommerce.Domain.Exception;
 
 using System.Net;
 
+using Common.Application;
 using Common.Domain;
 
 public sealed class ProductNotFoundException : ProblemDetailsException
 {
     public ProductNotFoundException()
     {
-        SetStatusCode(HttpStatusCode.NotFound);
-        SetTitle("NotFound");
+        SetTitle(HttpStatusText.From(HttpStatusCode.NotFound));
         SetDetail("Product not found with criteria");
+        SetStatusCode(HttpStatusCode.NotFound);
     }
 }
 
@@ -18,9 +19,9 @@ public sealed class ProductIdInvalidException : ProblemDetailsException
 {
     public ProductIdInvalidException()
     {
-        SetStatusCode(HttpStatusCode.BadRequest);
-        SetTitle("BadRequest");
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
         SetDetail("Product id is invalid");
+        SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
 
@@ -28,9 +29,9 @@ public sealed class ProductTitleInvalidException : ProblemDetailsException
 {
     public ProductTitleInvalidException()
     {
-        SetStatusCode(HttpStatusCode.BadRequest);
-        SetTitle("BadRequest");
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
         SetDetail("Product title length is invalid");
+        SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
 
@@ -38,9 +39,9 @@ public sealed class ProductTitleUniqueException : ProblemDetailsException
 {
     public ProductTitleUniqueException()
     {
-        SetStatusCode(HttpStatusCode.BadRequest);
-        SetTitle("BadRequest");
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
         SetDetail("Product title is not unique");
+        SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
 
@@ -48,9 +49,9 @@ public sealed class ProductDescriptionInvalidException : ProblemDetailsException
 {
     public ProductDescriptionInvalidException()
     {
-        SetStatusCode(HttpStatusCode.BadRequest);
-        SetTitle("BadRequest");
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
         SetDetail("Product description length is invalid");
+        SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
 
@@ -58,9 +59,9 @@ public sealed class ProductPriceInvalidException : ProblemDetailsException
 {
     public ProductPriceInvalidException()
     {
-        SetStatusCode(HttpStatusCode.BadRequest);
-        SetTitle("BadRequest");
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
         SetDetail("Product price is out of range");
+        SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
 
@@ -68,9 +69,9 @@ public sealed class ProductStatusInvalidException : ProblemDetailsException
 {
     public ProductStatusInvalidException()
     {
-        SetStatusCode(HttpStatusCode.BadRequest);
-        SetTitle("BadRequest");
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
         SetDetail("Product status has invalid value");
+        SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
 
@@ -78,8 +79,8 @@ public sealed class ProductPersistenceException : ProblemDetailsException
 {
     public ProductPersistenceException(string detail)
     {
-        SetStatusCode(HttpStatusCode.ServiceUnavailable);
-        SetTitle("ServiceUnavailable");
+        SetTitle(HttpStatusText.From(HttpStatusCode.ServiceUnavailable));
         SetDetail(detail);
+        SetStatusCode(HttpStatusCode.ServiceUnavailable);
     }
 }
