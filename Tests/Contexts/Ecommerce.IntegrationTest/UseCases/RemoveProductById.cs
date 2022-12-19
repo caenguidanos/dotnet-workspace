@@ -8,7 +8,7 @@ using Ecommerce.IntegrationTest.Util;
 
 public class RemoveProductByIdIntegrationTest
 {
-    private HttpClient _httpClient;
+    private HttpClient _http;
     private WebAppFactory _app;
 
     [OneTimeSetUp]
@@ -16,7 +16,7 @@ public class RemoveProductByIdIntegrationTest
     {
         _app = new WebAppFactory();
         await _app.StartDatabaseAsync();
-        _httpClient = _app.CreateClient();
+        _http = _app.CreateClient();
     }
 
     [Test]
@@ -26,7 +26,7 @@ public class RemoveProductByIdIntegrationTest
             TRUNCATE product;
         """);
 
-        var response = await _httpClient.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        var response = await _http.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/problem+json")));
@@ -57,7 +57,7 @@ public class RemoveProductByIdIntegrationTest
             VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
         """);
 
-        var response = await _httpClient.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var response = await _http.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Accepted));
         Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("text/plain")));
@@ -69,7 +69,7 @@ public class RemoveProductByIdIntegrationTest
 
         Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
 
-        var responsePostRemove = await _httpClient.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var responsePostRemove = await _http.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
         Assert.That(responsePostRemove.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }

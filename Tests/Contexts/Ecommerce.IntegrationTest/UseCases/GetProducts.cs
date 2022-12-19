@@ -8,7 +8,7 @@ using Ecommerce.IntegrationTest.Util;
 
 public class GetProductsIntegrationTest
 {
-    private HttpClient _httpClient;
+    private HttpClient _http;
     private WebAppFactory _app;
 
     [OneTimeSetUp]
@@ -16,7 +16,7 @@ public class GetProductsIntegrationTest
     {
         _app = new WebAppFactory();
         await _app.StartDatabaseAsync();
-        _httpClient = _app.CreateClient();
+        _http = _app.CreateClient();
     }
 
     [Test]
@@ -26,7 +26,7 @@ public class GetProductsIntegrationTest
             TRUNCATE product;
         """);
 
-        var response = await _httpClient.GetAsync("/product");
+        var response = await _http.GetAsync("/product");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
@@ -68,7 +68,7 @@ public class GetProductsIntegrationTest
             );
         """);
 
-        var response = await _httpClient.GetAsync("/product");
+        var response = await _http.GetAsync("/product");
 
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
         Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
