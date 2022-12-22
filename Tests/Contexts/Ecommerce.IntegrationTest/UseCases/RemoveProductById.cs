@@ -6,17 +6,23 @@ using System.Net.Http.Headers;
 using Ecommerce.IntegrationTest.App;
 using Ecommerce.IntegrationTest.Util;
 
-public class RemoveProductByIdIntegrationTest
+public sealed class RemoveProductByIdIntegrationTest
 {
     private HttpClient _http;
     private WebAppFactory _app;
 
     [OneTimeSetUp]
-    public async Task OneTimeSetUp()
+    public void OneTimeSetUp()
     {
         _app = new WebAppFactory();
-        await _app.StartDatabaseAsync();
         _http = _app.CreateClient();
+    }
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _app.Dispose();
+        _http.Dispose();
     }
 
     [Test]

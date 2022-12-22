@@ -4,31 +4,46 @@ using Dapper;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Npgsql;
+using Moq;
 
 using Common.Fixture.Infrastructure.Database;
+using Microsoft.AspNetCore.TestHost;
+using Ecommerce.Infrastructure.Persistence;
 
-public class WebAppFactory : WebApplicationFactory<Program>
+public sealed class WebAppFactory : WebApplicationFactory<Program>
 {
-    private readonly PostgresDatabaseFactory _postgres = new(template: "ecommerce");
-
     private string _connectionString { get; set; } = string.Empty;
+
+    private readonly PostgresDatabaseFactory _postgres = new(template: "ecommerce");
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder.UseEnvironment("Release");
-    }
+        _connectionString = _postgres.StartAsync().Result;
 
-    public async Task StartDatabaseAsync()
-    {
-        _connectionString = await _postgres.StartAsync().ConfigureAwait(false);
+        builder
+            .UseEnvironment("Release")
+            .ConfigureTestServices(servicesConfiguration =>
+            {
+                var dbContext = servicesConfiguration
+                    .SingleOrDefault(serviceDescriptor => serviceDescriptor.ServiceType == typeof(IDbContext));
 
-        Environment.SetEnvironmentVariable("ConnectionStrings:Ecommerce", _connectionString);
+                if (dbContext is not null)
+                {
+                    servicesConfiguration.Remove(dbContext);
+                }
+
+                var customDbContext = Mock.Of<IDbContext>();
+                Mock.Get(customDbContext)
+                    .Setup(c => c.GetConnectionString())
+                        .Returns(_connectionString);
+
+                servicesConfiguration.AddSingleton<IDbContext>(customDbContext);
+            });
     }
 
     public async Task ExecuteSqlAsync(string sql)
     {
         await using var conn = new NpgsqlConnection(_connectionString);
-
         await conn.OpenAsync();
         await conn.ExecuteAsync(sql);
         await conn.CloseAsync();

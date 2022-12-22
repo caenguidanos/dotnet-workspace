@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMediator();
 builder.Services.AddControllers();
+
 builder.Services.AddCommonConfig();
 builder.Services.AddEcommerceServices();
 
