@@ -9,7 +9,7 @@ using Common.Fixture.Infrastructure.Database;
 using Microsoft.AspNetCore.TestHost;
 using Ecommerce.Infrastructure.Persistence;
 
-public sealed class WebAppFactory : WebApplicationFactory<Program>
+public class WebAppFactory : WebApplicationFactory<Program>
 {
     private string _connectionString { get; set; } = string.Empty;
 

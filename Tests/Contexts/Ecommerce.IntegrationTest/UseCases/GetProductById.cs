@@ -1,5 +1,6 @@
 namespace Ecommerce.IntegrationTest.UseCases;
 
+using Moq;
 using System.Net;
 using System.Net.Http.Headers;
 using Ecommerce.IntegrationTest.App;
@@ -7,31 +8,31 @@ using Ecommerce.IntegrationTest.Util;
 
 public sealed class GetProductByIdIntegrationTest
 {
-    private HttpClient? _http;
-    private WebAppFactory? _app;
+    private HttpClient _http = Mock.Of<HttpClient>();
+    private WebAppFactory _server = Mock.Of<WebAppFactory>();
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _app = new WebAppFactory();
-        _http = _app.CreateClient();
+        _server = new WebAppFactory();
+        _http = _server.CreateClient();
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _app!.Dispose();
-        _http!.Dispose();
+        _server.Dispose();
+        _http.Dispose();
     }
 
     [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestById_ThenReturnProblemDetails()
     {
-        await _app!.ExecuteSqlAsync("""
+        await _server.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _http!.GetAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        var response = await _http.GetAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
         Assert.Multiple(() =>
         {
@@ -55,7 +56,7 @@ public sealed class GetProductByIdIntegrationTest
     [Test]
     public async Task GivenProductsOnDatabase_WhenRequestById_ThenReturnCoincidence()
     {
-        await _app!.ExecuteSqlAsync("""
+        await _server.ExecuteSqlAsync("""
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status, __created_at__, __updated_at__)
@@ -81,7 +82,7 @@ public sealed class GetProductByIdIntegrationTest
             );
         """);
 
-        var response = await _http!.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var response = await _http.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
         Assert.Multiple(() =>
         {

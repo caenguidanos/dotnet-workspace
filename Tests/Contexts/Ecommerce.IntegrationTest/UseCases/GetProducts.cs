@@ -1,5 +1,6 @@
 namespace Ecommerce.IntegrationTest.UseCases;
 
+using Moq;
 using System.Net;
 using System.Net.Http.Headers;
 using Ecommerce.IntegrationTest.App;
@@ -7,31 +8,31 @@ using Ecommerce.IntegrationTest.Util;
 
 public sealed class GetProductsIntegrationTest
 {
-    private HttpClient? _http;
-    private WebAppFactory? _app;
+    private HttpClient _http = Mock.Of<HttpClient>();
+    private WebAppFactory _server = Mock.Of<WebAppFactory>();
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _app = new WebAppFactory();
-        _http = _app!.CreateClient();
+        _server = new WebAppFactory();
+        _http = _server.CreateClient();
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _app!.Dispose();
-        _http!.Dispose();
+        _server.Dispose();
+        _http.Dispose();
     }
 
     [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestAll_ThenReturnEmptyCollection()
     {
-        await _app!.ExecuteSqlAsync("""
+        await _server.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _http!.GetAsync("/product");
+        var response = await _http.GetAsync("/product");
 
         Assert.Multiple(() =>
         {
@@ -40,9 +41,7 @@ public sealed class GetProductsIntegrationTest
         });
 
         var responseBody = await response.Content.ReadAsStringAsync();
-        const string responseBodySnapshot = """
-            []
-        """;
+        const string responseBodySnapshot = "[]";
 
         Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
     }
@@ -50,7 +49,7 @@ public sealed class GetProductsIntegrationTest
     [Test]
     public async Task GivenProductsOnDatabase_WhenRequestAll_ThenReturnCollection()
     {
-        await _app!.ExecuteSqlAsync("""
+        await _server.ExecuteSqlAsync("""
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status, __created_at__, __updated_at__)
@@ -76,7 +75,7 @@ public sealed class GetProductsIntegrationTest
             );
         """);
 
-        var response = await _http!.GetAsync("/product");
+        var response = await _http.GetAsync("/product");
 
         Assert.Multiple(() =>
         {

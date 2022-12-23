@@ -1,5 +1,6 @@
 namespace Ecommerce.IntegrationTest.UseCases;
 
+using Moq;
 using System.Net;
 using System.Net.Http.Headers;
 using Ecommerce.IntegrationTest.App;
@@ -7,31 +8,31 @@ using Ecommerce.IntegrationTest.Util;
 
 public sealed class RemoveProductByIdIntegrationTest
 {
-    private HttpClient? _http;
-    private WebAppFactory? _app;
+    private HttpClient _http = Mock.Of<HttpClient>();
+    private WebAppFactory _server = Mock.Of<WebAppFactory>();
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _app = new WebAppFactory();
-        _http = _app!.CreateClient();
+        _server = new WebAppFactory();
+        _http = _server.CreateClient();
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _app!.Dispose();
-        _http!.Dispose();
+        _server.Dispose();
+        _http.Dispose();
     }
 
     [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestById_ThenReturnProblemDetails()
     {
-        await _app!.ExecuteSqlAsync("""
+        await _server.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _http!.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        var response = await _http.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
         Assert.Multiple(() =>
         {
@@ -40,6 +41,7 @@ public sealed class RemoveProductByIdIntegrationTest
         });
 
         var responseBody = await response.Content.ReadAsStringAsync();
+
         const string responseBodySnapshot = """
             {
                 "title": "NotFound",
@@ -55,7 +57,7 @@ public sealed class RemoveProductByIdIntegrationTest
     [Test]
     public async Task GivenProductsOnDatabase_WhenRequestById_ThenReturnAck()
     {
-        await _app!.ExecuteSqlAsync("""
+        await _server.ExecuteSqlAsync("""
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status)
@@ -65,7 +67,7 @@ public sealed class RemoveProductByIdIntegrationTest
             VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
         """);
 
-        var response = await _http!.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var response = await _http.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
         Assert.Multiple(() =>
         {
@@ -80,7 +82,7 @@ public sealed class RemoveProductByIdIntegrationTest
 
         Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
 
-        var responsePostRemove = await _http!.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var responsePostRemove = await _http.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
         Assert.That(responsePostRemove.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
