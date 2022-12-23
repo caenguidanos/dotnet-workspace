@@ -47,7 +47,7 @@ public sealed class RemoveProductByIdIntegrationTest
             }
         """;
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
     }
 
     [Test]
@@ -73,7 +73,7 @@ public sealed class RemoveProductByIdIntegrationTest
             Accepted
         """;
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
 
         var responsePostRemove = await _http.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 

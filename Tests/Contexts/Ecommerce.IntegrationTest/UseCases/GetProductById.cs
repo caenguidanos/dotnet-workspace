@@ -47,7 +47,7 @@ public sealed class GetProductByIdIntegrationTest
             }
         """;
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
     }
 
     [Test]
@@ -97,6 +97,6 @@ public sealed class GetProductByIdIntegrationTest
             }
         """;
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.CleanString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
     }
 }
