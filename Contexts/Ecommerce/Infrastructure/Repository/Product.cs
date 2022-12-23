@@ -12,7 +12,7 @@ using Ecommerce.Infrastructure.Persistence;
 
 public sealed class ProductRepository : IProductRepository
 {
-    private IDbContext _dbContext { get; init; }
+    private IDbContext _dbContext { get; }
 
     public ProductRepository(IDbContext dbContext)
     {
@@ -27,7 +27,8 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                SELECT * FROM product
+                SELECT id, title, description, status, price, __created_at__ CreatedAt, __updated_at__ UpdatedAt
+                FROM product
             ";
 
             var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
@@ -51,7 +52,7 @@ public sealed class ProductRepository : IProductRepository
                     Price = new ProductPrice(result.Price)
                 };
 
-                product.AddTimeStamp(result.updated_at, result.created_at);
+                product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
 
                 var productIntegrityResult = product.CheckIntegrity();
                 if (productIntegrityResult.IsFaulted)
@@ -64,7 +65,7 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<IEnumerable<Product>, ProblemDetailsException>(products);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             return new Result<IEnumerable<Product>, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
@@ -78,7 +79,9 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                SELECT * FROM product WHERE id = @Id
+                SELECT id, title, description, status, price, __created_at__ CreatedAt, __updated_at__ UpdatedAt
+                FROM product
+                WHERE id = @Id
             ";
 
             var parameters = new DynamicParameters();
@@ -101,17 +104,15 @@ public sealed class ProductRepository : IProductRepository
                 Price = new ProductPrice(result.Price)
             };
 
-            product.AddTimeStamp(result.updated_at, result.created_at);
+            product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
 
             var productIntegrityResult = product.CheckIntegrity();
-            if (productIntegrityResult.IsFaulted)
-            {
-                return new Result<Product, ProblemDetailsException>(productIntegrityResult.Error);
-            }
 
-            return new Result<Product, ProblemDetailsException>(product);
+            return productIntegrityResult.IsFaulted
+                ? new Result<Product, ProblemDetailsException>(productIntegrityResult.Error)
+                : new Result<Product, ProblemDetailsException>(product);
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             return new Result<Product, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
@@ -144,27 +145,28 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<ResultUnit, ProblemDetailsException>();
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
-            if (ex is PostgresException postgresException)
+            if (ex is not PostgresException postgresException)
             {
-                switch (postgresException.SqlState)
-                {
-                    case PostgresErrorCodes.UniqueViolation:
-                        {
-                            if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
-                            {
-                                return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
-                            }
-                            break;
-                        }
-                }
-
-                return new Result<ResultUnit, ProblemDetailsException>(
-                    new ProductPersistenceException(postgresException.MessageText));
+                return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
             }
 
-            return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            switch (postgresException.SqlState)
+            {
+                case PostgresErrorCodes.UniqueViolation:
+                {
+                    if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
+                    {
+                        return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
+                    }
+
+                    break;
+                }
+            }
+
+            return new Result<ResultUnit, ProblemDetailsException>(
+                new ProductPersistenceException(postgresException.MessageText));
         }
     }
 
@@ -184,15 +186,13 @@ public sealed class ProductRepository : IProductRepository
 
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
-            int result = await conn.ExecuteAsync(command);
-            if (result is 0)
-            {
-                return new Result<ResultUnit, ProblemDetailsException>(new ProductNotFoundException());
-            }
+            var result = await conn.ExecuteAsync(command);
 
-            return new Result<ResultUnit, ProblemDetailsException>();
+            return result is 0
+                ? new Result<ResultUnit, ProblemDetailsException>(new ProductNotFoundException())
+                : new Result<ResultUnit, ProblemDetailsException>();
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
             return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
         }
@@ -226,28 +226,28 @@ public sealed class ProductRepository : IProductRepository
 
             return new Result<ResultUnit, ProblemDetailsException>();
         }
-        catch (System.Exception ex)
+        catch (Exception ex)
         {
-            if (ex is PostgresException postgresException)
+            if (ex is not PostgresException postgresException)
             {
-                switch (postgresException.SqlState)
-                {
-                    case PostgresErrorCodes.UniqueViolation:
-                        {
-                            if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
-                            {
-                                return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
-                            }
-
-                            break;
-                        }
-                }
-
-                return new Result<ResultUnit, ProblemDetailsException>(
-                    new ProductPersistenceException(postgresException.MessageText));
+                return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
             }
 
-            return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            switch (postgresException.SqlState)
+            {
+                case PostgresErrorCodes.UniqueViolation:
+                {
+                    if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
+                    {
+                        return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
+                    }
+
+                    break;
+                }
+            }
+
+            return new Result<ResultUnit, ProblemDetailsException>(
+                new ProductPersistenceException(postgresException.MessageText));
         }
     }
 }

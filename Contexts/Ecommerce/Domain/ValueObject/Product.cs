@@ -1,7 +1,6 @@
 namespace Ecommerce.Domain.ValueObject;
 
 using Common.Domain;
-
 using Ecommerce.Domain.Exception;
 using Ecommerce.Domain.Model;
 
@@ -32,10 +31,10 @@ public sealed record ProductPrice : Primitive<int>
 
     public override int Validate()
     {
-        int min = 100;
-        int max = 1_000_000 * 100;
+        const int min = 100;
+        const int max = 1_000_000 * 100;
 
-        if (Value < min || Value > max)
+        if (Value is < min or > max)
         {
             throw new ProductPriceInvalidException();
         }
@@ -53,10 +52,10 @@ public sealed record ProductDescription : Primitive<string>
 
     public override string Validate()
     {
-        int minLength = 5;
-        int maxLength = 600;
+        const int minLength = 5;
+        const int maxLength = 600;
 
-        if (Value.Length < minLength || Value.Length > maxLength)
+        if (Value.Length is < minLength or > maxLength)
         {
             throw new ProductDescriptionInvalidException();
         }
@@ -92,10 +91,10 @@ public sealed record ProductTitle : Primitive<string>
 
     public override string Validate()
     {
-        int minLength = 5;
-        int maxLength = 256;
+        const int minLength = 5;
+        const int maxLength = 256;
 
-        if (Value.Length < minLength || Value.Length > maxLength)
+        if (Value.Length is < minLength or > maxLength)
         {
             throw new ProductTitleInvalidException();
         }

@@ -1,11 +1,8 @@
 namespace Ecommerce.Application.Command;
 
 using Mediator;
-
 using Common.Domain;
-
 using Ecommerce.Domain.Service;
-using Ecommerce.Infrastructure.DataTransfer;
 
 public readonly struct UpdateProductCommand : IRequest<Result<ResultUnit, ProblemDetailsException>>
 {
@@ -25,7 +22,8 @@ public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand,
         _productUpdaterService = productUpdaterService;
     }
 
-    public async ValueTask<Result<ResultUnit, ProblemDetailsException>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<ResultUnit, ProblemDetailsException>> Handle(UpdateProductCommand request,
+        CancellationToken cancellationToken)
     {
         return await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
     }

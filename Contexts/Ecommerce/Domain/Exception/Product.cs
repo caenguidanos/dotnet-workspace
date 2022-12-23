@@ -1,7 +1,6 @@
 namespace Ecommerce.Domain.Exception;
 
 using System.Net;
-
 using Common.Application;
 using Common.Domain;
 

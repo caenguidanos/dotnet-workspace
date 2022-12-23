@@ -1,23 +1,16 @@
 namespace Common.Domain;
 
-using System.Globalization;
+using System.Text.Json.Serialization;
 
-public record Schema<TEntity, TPrimitives>
+public record Schema<TPrimitives>
 {
-    protected static readonly CultureInfo locale = new("en-US");
+    public DateTime CreatedAd { get; private set; }
+    public DateTime UpdatedAt { get; private set; }
 
-    public DateTime created_at { get; private set; }
-    public DateTime updated_at { get; private set; }
-
-    public Guid NewID()
+    public void AddTimeStamp(DateTime createdAt, DateTime updatedAt)
     {
-        return Guid.NewGuid();
-    }
-
-    public void AddTimeStamp(DateTime updatedAt, DateTime createdAt)
-    {
-        updated_at = updatedAt;
-        created_at = createdAt;
+        CreatedAd = createdAt;
+        UpdatedAt = updatedAt;
     }
 
     public virtual TPrimitives ToPrimitives()
@@ -28,6 +21,6 @@ public record Schema<TEntity, TPrimitives>
 
 public record SchemaPrimitives
 {
-    public required DateTime created_at { get; set; }
-    public required DateTime updated_at { get; set; }
+    [JsonPropertyName("created_at")] public required DateTime CreatedAt { get; init; }
+    [JsonPropertyName("updated_at")] public required DateTime UpdatedAt { get; init; }
 }

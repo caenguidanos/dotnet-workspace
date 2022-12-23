@@ -9,7 +9,7 @@ public interface IDbContext
 
 public sealed class DbContext : IDbContext
 {
-    private string _connectionString { get; init; }
+    private string _connectionString { get; }
 
     public DbContext(IConfiguration configuration)
     {

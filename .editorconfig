@@ -1,60 +1,26 @@
 root = true
 
-[*]
-indent_style = space
-
-# XML project files
-[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
-indent_size = 2
-
-# XML config files
-[*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
-indent_size = 2
-
-# Code files
-[*.{cs,csx}]
+[*.cs]
 indent_size = 4
-insert_final_newline = true
-charset = utf-8-bom[*.{cs}]
-
-# Categories
-dotnet_analyzer_diagnostic.category-Style.severity = warning
-dotnet_analyzer_diagnostic.category-Design.severity = warning
-dotnet_analyzer_diagnostic.category-Documentation.severity = warning
-dotnet_analyzer_diagnostic.category-Globalization.severity = warning
-dotnet_analyzer_diagnostic.category-Maintainability.severity = warning
-dotnet_analyzer_diagnostic.category-Naming.severity = warning
-dotnet_analyzer_diagnostic.category-Performance.severity = warning
-dotnet_analyzer_diagnostic.category-Reliability.severity = warning
-dotnet_analyzer_diagnostic.category-Security.severity = warning
-dotnet_analyzer_diagnostic.category-Usage.severity = warning
-dotnet_analyzer_diagnostic.category-CodeQuality.severity = warning
-
-# Individual rules
-dotnet_style_prefer_conditional_expression_over_return = false
-csharp_using_directive_placement = inside_namespace
-csharp_style_namespace_declarations = file_scoped
-csharp_style_expression_bodied_properties = false
-csharp_style_expression_bodied_accessors = false
-csharp_style_var_when_type_is_apparent = true
-csharp_style_var_for_built_in_types = false
-csharp_style_var_elsewhere = true
-
-# Exclusions
-dotnet_diagnostic.IDE0058.severity = none
-dotnet_diagnostic.IDE0039.severity = none
-dotnet_diagnostic.CA1707.severity = none
-dotnet_diagnostic.CA1848.severity = none
-dotnet_diagnostic.IDE1006.severity = none
-dotnet_diagnostic.CA1716.severity = none
-dotnet_diagnostic.IDE0010.severity = none
-
-# Exclusions by file/type
-[Usings.cs]
-dotnet_diagnostic.IDE0065.severity = none
-[Program.cs]
-dotnet_diagnostic.CA1852.severity = none
-[Result.cs]
-dotnet_diagnostic.CA1051.severity = none
-[Tests/**/*.cs]
-dotnet_diagnostic.CA1001.severity = none
+max_line_length = 170
+# Blank lines
+resharper_blank_lines_inside_region = 1
+resharper_csharp_blank_lines_inside_region = 1
+resharper_csharp_blank_lines_around_region = 1
+resharper_blank_lines_around_region = 1
+resharper_csharp_keep_blank_lines_in_code = 1
+resharper_keep_blank_lines_in_code = 1
+resharper_csharp_blank_lines_around_multiline_case_section = 1
+resharper_blank_lines_around_multiline_case_section = 1
+resharper_csharp_blank_lines_around_block_case_section = 1
+resharper_blank_lines_around_block_case_section = 1
+resharper_csharp_blank_lines_before_multiline_statements = 0
+resharper_blank_lines_before_multiline_statements = 0
+resharper_csharp_blank_lines_after_multiline_statements = 1
+resharper_blank_lines_after_multiline_statements = 1
+resharper_csharp_blank_lines_after_block_statements = 1
+resharper_blank_lines_after_block_statements = 1
+resharper_csharp_blank_lines_around_single_line_local_method = 1
+resharper_blank_lines_around_single_line_local_method = 1
+resharper_csharp_blank_lines_around_local_method = 1
+resharper_blank_lines_around_local_method = 1

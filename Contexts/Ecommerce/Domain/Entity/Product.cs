@@ -1,12 +1,11 @@
 namespace Ecommerce.Domain.Entity;
 
 using Common.Domain;
-
 using Ecommerce.Domain.Exception;
 using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
 
-public sealed record Product : Schema<Product, ProductPrimitives>
+public sealed record Product : Schema<ProductPrimitives>
 {
     public required ProductId Id { private get; init; }
     public required ProductTitle Title { private get; init; }
@@ -23,8 +22,8 @@ public sealed record Product : Schema<Product, ProductPrimitives>
             Description = Description.GetValue(),
             Status = Status.GetValue(),
             Price = Price.GetValue(),
-            created_at = created_at,
-            updated_at = updated_at,
+            CreatedAt = CreatedAd,
+            UpdatedAt = UpdatedAt,
         };
     }
 

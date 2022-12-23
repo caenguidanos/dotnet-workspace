@@ -12,41 +12,35 @@ public readonly struct ResultUnit
 
 public readonly struct Result<TSuccess, TError>
 {
-    internal readonly ResultState State;
+    private readonly ResultState _state;
 
     public readonly TSuccess Value = default!;
     public readonly TError Error = default!;
 
-    // for responses that not have any returned paylaod
+    // For responses that not have any returned payload.
     public Result()
     {
-        State = ResultState.Success;
+        _state = ResultState.Success;
     }
 
     public Result(TSuccess value)
     {
-        State = ResultState.Success;
+        _state = ResultState.Success;
         Value = value;
     }
 
     public Result(TError value)
     {
-        State = ResultState.Faulted;
+        _state = ResultState.Faulted;
         Error = value;
     }
 
-    public bool IsFaulted
-    {
-        get
-        {
-            return State == ResultState.Faulted;
-        }
-    }
+    public bool IsFaulted => _state == ResultState.Faulted;
 
-    public TResult Match<TResult>(Func<TSuccess, TResult> Succ, Func<TError, TResult> Fail)
+    public TResult Match<TResult>(Func<TSuccess, TResult> success, Func<TError, TResult> fail)
     {
         return IsFaulted
-                ? Fail(Error)
-                : Succ(Value);
+            ? fail(Error)
+            : success(Value);
     }
 }

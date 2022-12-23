@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Npgsql;
 using Moq;
-
 using Common.Fixture.Infrastructure.Database;
 using Microsoft.AspNetCore.TestHost;
 using Ecommerce.Infrastructure.Persistence;
@@ -35,9 +34,9 @@ public sealed class WebAppFactory : WebApplicationFactory<Program>
                 var customDbContext = Mock.Of<IDbContext>();
                 Mock.Get(customDbContext)
                     .Setup(c => c.GetConnectionString())
-                        .Returns(_connectionString);
+                    .Returns(_connectionString);
 
-                servicesConfiguration.AddSingleton<IDbContext>(customDbContext);
+                servicesConfiguration.AddSingleton(customDbContext);
             });
     }
 

@@ -2,43 +2,45 @@ namespace Ecommerce.IntegrationTest.UseCases;
 
 using System.Net;
 using System.Net.Http.Headers;
-
 using Ecommerce.IntegrationTest.App;
 using Ecommerce.IntegrationTest.Util;
 
 public sealed class GetProductsIntegrationTest
 {
-    private HttpClient _http;
-    private WebAppFactory _app;
+    private HttpClient? _http;
+    private WebAppFactory? _app;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
         _app = new WebAppFactory();
-        _http = _app.CreateClient();
+        _http = _app!.CreateClient();
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _app.Dispose();
-        _http.Dispose();
+        _app!.Dispose();
+        _http!.Dispose();
     }
 
     [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestAll_ThenReturnEmptyCollection()
     {
-        await _app.ExecuteSqlAsync("""
+        await _app!.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _http.GetAsync("/product");
+        var response = await _http!.GetAsync("/product");
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
+        });
 
-        string responseBody = await response.Content.ReadAsStringAsync();
-        string responseBodySnapshot = """
+        var responseBody = await response.Content.ReadAsStringAsync();
+        const string responseBodySnapshot = """
             []
         """;
 
@@ -48,10 +50,10 @@ public sealed class GetProductsIntegrationTest
     [Test]
     public async Task GivenProductsOnDatabase_WhenRequestAll_ThenReturnCollection()
     {
-        await _app.ExecuteSqlAsync("""
+        await _app!.ExecuteSqlAsync("""
             TRUNCATE product;
 
-            INSERT INTO product (id, title, description, price, status, created_at, updated_at)
+            INSERT INTO product (id, title, description, price, status, __created_at__, __updated_at__)
             VALUES (
                 '092cc0ea-a54f-48a3-87ed-0e7f43c023f1',
                 'American Professional II Stratocaster',
@@ -62,7 +64,7 @@ public sealed class GetProductsIntegrationTest
                 '2022-12-18T21:25:30.043264Z'
             );
 
-            INSERT INTO product (id, title, description, price, status, created_at, updated_at)
+            INSERT INTO product (id, title, description, price, status, __created_at__, __updated_at__)
             VALUES (
                 '8a5b3e4a-3e08-492c-869e-317a4d04616a',
                 'Mustang Shelby GT500',
@@ -74,13 +76,16 @@ public sealed class GetProductsIntegrationTest
             );
         """);
 
-        var response = await _http.GetAsync("/product");
+        var response = await _http!.GetAsync("/product");
 
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
+        });
 
-        string responseBody = await response.Content.ReadAsStringAsync();
-        string responseBodySnapshot = """
+        var responseBody = await response.Content.ReadAsStringAsync();
+        const string responseBodySnapshot = """
             [
                 {
                     "id": "092cc0ea-a54f-48a3-87ed-0e7f43c023f1",

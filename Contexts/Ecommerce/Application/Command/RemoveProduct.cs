@@ -1,9 +1,7 @@
 namespace Ecommerce.Application.Command;
 
 using Mediator;
-
 using Common.Domain;
-
 using Ecommerce.Domain.Service;
 
 public readonly struct RemoveProductCommand : IRequest<Result<ResultUnit, ProblemDetailsException>>
@@ -20,7 +18,8 @@ public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand,
         _productRemoverService = productRemoverService;
     }
 
-    public async ValueTask<Result<ResultUnit, ProblemDetailsException>> Handle(RemoveProductCommand request, CancellationToken cancellationToken)
+    public async ValueTask<Result<ResultUnit, ProblemDetailsException>> Handle(RemoveProductCommand request,
+        CancellationToken cancellationToken)
     {
         return await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
     }

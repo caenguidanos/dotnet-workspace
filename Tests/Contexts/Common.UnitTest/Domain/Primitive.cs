@@ -37,8 +37,8 @@ public sealed class PrimitiveTestUnitTest
 
         public override string Validate()
         {
-            int maxLength = 10;
-            int minLength = 5;
+            const int maxLength = 10;
+            const int minLength = 5;
 
             if (Value.Length < minLength || Value.Length > maxLength)
             {

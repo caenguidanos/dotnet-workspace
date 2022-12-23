@@ -4,7 +4,6 @@ using Docker.DotNet;
 using Docker.DotNet.Models;
 using Npgsql;
 using Dapper;
-
 using System.Data.Common;
 using System.Globalization;
 using System.Net;
@@ -13,12 +12,12 @@ using System.Runtime.InteropServices;
 
 public sealed class PostgresDatabaseFactory
 {
-    private int _port { get; init; }
-    private string _template { get; init; }
-    private string _database { get; init; }
+    private int _port { get; }
+    private string _template { get; }
+    private string _database { get; }
 
-    private const string _user = "root";
-    private const string _password = "root";
+    private const string User = "root";
+    private const string Password = "root";
 
     private readonly DbConnectionStringBuilder _masterConnectionString;
     private readonly DbConnectionStringBuilder _consumerConnectionString;
@@ -27,13 +26,12 @@ public sealed class PostgresDatabaseFactory
     {
         _port = port;
         _template = template;
-
         _database = GetRandomString(56);
 
         _masterConnectionString = new DbConnectionStringBuilder()
         {
-            { "User ID", _user },
-            { "Password", _password },
+            { "User ID", User },
+            { "Password", Password },
             { "Server", "localhost" },
             { "Port", _port },
             { "Database", "postgres" },
@@ -43,8 +41,8 @@ public sealed class PostgresDatabaseFactory
 
         _consumerConnectionString = new DbConnectionStringBuilder()
         {
-            { "User ID", _user },
-            { "Password", _password },
+            { "User ID", User },
+            { "Password", Password },
             { "Server", "localhost" },
             { "Port", _port },
             { "Database", _database },
@@ -58,7 +56,7 @@ public sealed class PostgresDatabaseFactory
         await using var conn = new NpgsqlConnection(_masterConnectionString.ToString());
         await conn.OpenAsync();
 
-        string sql = $"""
+        var sql = $"""
             SELECT pg_terminate_backend(pid) 
             FROM pg_stat_activity 
             WHERE pid <> pg_backend_pid()
@@ -77,7 +75,7 @@ public sealed class PostgresDatabaseFactory
         await using var conn = new NpgsqlConnection(_masterConnectionString.ToString());
         await conn.OpenAsync();
 
-        string sql = $"""
+        var sql = $"""
             SELECT pg_terminate_backend(pid) 
             FROM pg_stat_activity 
             WHERE pid <> pg_backend_pid()
@@ -91,12 +89,12 @@ public sealed class PostgresDatabaseFactory
 
     private static string GetRandomString(int length)
     {
-        string allowedChars = "abcdefghijkmnopqrstuvwxyz";
+        const string allowedChars = "abcdefghijkmnopqrstuvwxyz";
 
-        char[] chars = new char[length];
+        var chars = new char[length];
         var rd = new Random();
 
-        for (int i = 0; i < length; i++)
+        for (var i = 0; i < length; i++)
         {
             chars[i] = allowedChars[rd.Next(0, allowedChars.Length)];
         }
@@ -123,11 +121,11 @@ public sealed class PostgresDatabaseFactory
 
 public sealed class PostgresDatabase
 {
-    private DockerClient _docker { get; init; }
-    private string _database { get; init; }
-    private List<string> _initScripts { get; init; }
+    private DockerClient _docker { get; }
+    private string _database { get; }
+    private List<string> _initScripts { get; }
 
-    private const string _image = "postgres:15-alpine";
+    private const string Image = "postgres:15-alpine";
     private readonly string _container = $"postgres-{Guid.NewGuid()}";
 
     public PostgresDatabase(string database, List<string> initScripts)
@@ -154,10 +152,12 @@ public sealed class PostgresDatabase
         const string user = "root";
         const string password = "root";
 
-        var environment = new List<string> {
+        var environment = new List<string>
+        {
             $"POSTGRES_USER={user}",
             $"POSTGRES_PASSWORD={password}",
-            $"POSTGRES_DB={_database}" };
+            $"POSTGRES_DB={_database}"
+        };
 
         var connectionString = new DbConnectionStringBuilder()
         {
@@ -172,7 +172,6 @@ public sealed class PostgresDatabase
 
         var hostConfig = new HostConfig
         {
-
             Binds = _initScripts,
             PortBindings = new Dictionary<string, IList<PortBinding>>
             {
@@ -180,7 +179,8 @@ public sealed class PostgresDatabase
                     "5432/tcp",
                     new List<PortBinding>
                     {
-                        new PortBinding{
+                        new PortBinding
+                        {
                             HostPort = port.ToString(locale)
                         }
                     }
@@ -191,7 +191,7 @@ public sealed class PostgresDatabase
         await _docker.Containers.CreateContainerAsync(
             new CreateContainerParameters
             {
-                Image = _image,
+                Image = Image,
                 Name = _container,
                 HostConfig = hostConfig,
                 Env = environment
@@ -201,8 +201,12 @@ public sealed class PostgresDatabase
         await _docker.Containers.StartContainerAsync(_container, new ContainerStartParameters());
 
         await using var conn = new NpgsqlConnection(connectionString.ToString());
+
+        var retries = 0;
         while (true)
         {
+            retries++;
+
             try
             {
                 await conn.OpenAsync();
@@ -210,6 +214,7 @@ public sealed class PostgresDatabase
             }
             catch (Exception)
             {
+                Console.WriteLine($"Retrying...{retries}");
             }
         }
 
@@ -229,7 +234,7 @@ public sealed class PostgresDatabase
         var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
 
-        int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        var port = ((IPEndPoint)listener.LocalEndpoint).Port;
         listener.Stop();
 
         return port;

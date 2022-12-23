@@ -12,8 +12,8 @@ using Ecommerce.Domain.ValueObject;
 
 public sealed class ProductCreatorService : IProductCreatorService
 {
-    private IPublisher _publisher { get; init; }
-    private IProductRepository _productRepository { get; init; }
+    private IPublisher _publisher { get; }
+    private IProductRepository _productRepository { get; }
 
     public ProductCreatorService(IPublisher publisher, IProductRepository productRepository)
     {
@@ -51,6 +51,7 @@ public sealed class ProductCreatorService : IProductCreatorService
 
         var productPrimitives = product.ToPrimitives();
         await _publisher.Publish(new ProductCreatedEvent { Product = productPrimitives.Id }, cancellationToken);
+
         return new Result<Guid, ProblemDetailsException>(productPrimitives.Id);
     }
 }

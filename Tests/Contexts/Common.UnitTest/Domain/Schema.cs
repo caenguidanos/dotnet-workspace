@@ -1,7 +1,6 @@
 namespace Common.UnitTest.Domain;
 
 using System.Globalization;
-
 using Common.Domain;
 
 public sealed class SchemaTestUnitTest
@@ -11,8 +10,11 @@ public sealed class SchemaTestUnitTest
     {
         var entity = new EmptyEntity();
 
-        Assert.That(entity.created_at, Is.EqualTo(default(DateTime)));
-        Assert.That(entity.updated_at, Is.EqualTo(default(DateTime)));
+        Assert.Multiple(() =>
+        {
+            Assert.That(entity.CreatedAd, Is.EqualTo(default(DateTime)));
+            Assert.That(entity.UpdatedAt, Is.EqualTo(default(DateTime)));
+        });
 
         var createdAt = DateTime.Now;
         var updatedAt = DateTime.Now;
@@ -21,11 +23,14 @@ public sealed class SchemaTestUnitTest
 
         var locale = new CultureInfo("en-US");
 
-        Assert.That(entity.created_at.ToString(locale), Is.EqualTo(createdAt.ToString(locale)));
-        Assert.That(entity.updated_at.ToString(locale), Is.EqualTo(updatedAt.ToString(locale)));
+        Assert.Multiple(() =>
+        {
+            Assert.That(entity.CreatedAd.ToString(locale), Is.EqualTo(createdAt.ToString(locale)));
+            Assert.That(entity.UpdatedAt.ToString(locale), Is.EqualTo(updatedAt.ToString(locale)));
+        });
     }
 
-    private sealed record EmptyEntity : Schema<EmptyEntity, EmptyEntity>
+    private sealed record EmptyEntity : Schema<EmptyEntity>
     {
     }
 }

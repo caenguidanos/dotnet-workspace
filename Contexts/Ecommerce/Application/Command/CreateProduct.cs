@@ -1,9 +1,7 @@
 namespace Ecommerce.Application.Command;
 
 using Mediator;
-
 using Common.Domain;
-
 using Ecommerce.Domain.Service;
 
 public readonly struct CreateProductCommand : IRequest<Result<ResultUnit, ProblemDetailsException>>
@@ -28,17 +26,14 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         CancellationToken cancellationToken)
     {
         var result = await _productCreatorService.AddNewProduct(
-              request.Title,
-              request.Description,
-              request.Status,
-              request.Price,
-              cancellationToken);
+            request.Title,
+            request.Description,
+            request.Status,
+            request.Price,
+            cancellationToken);
 
-        if (result.IsFaulted)
-        {
-            return new Result<ResultUnit, ProblemDetailsException>(result.Error);
-        }
-
-        return new Result<ResultUnit, ProblemDetailsException>();
+        return result.IsFaulted
+            ? new Result<ResultUnit, ProblemDetailsException>(result.Error)
+            : new Result<ResultUnit, ProblemDetailsException>();
     }
 }

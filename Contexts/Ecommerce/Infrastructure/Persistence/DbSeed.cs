@@ -10,7 +10,7 @@ public interface IDbSeed
 
 public sealed class DbSeed : IDbSeed
 {
-    private IDbContext _dbContext { get; init; }
+    private IDbContext _dbContext { get; }
 
     public DbSeed(IDbContext dbContext)
     {

@@ -1,7 +1,6 @@
 namespace Ecommerce.Infrastructure.DataTransfer;
 
 using Common.Domain;
-
 using Ecommerce.Domain.Model;
 
 public sealed record ProductAck
@@ -33,4 +32,3 @@ public struct UpdateProductHttpRequestBody
     public int? Price { get; set; }
     public int? Status { get; set; }
 }
-

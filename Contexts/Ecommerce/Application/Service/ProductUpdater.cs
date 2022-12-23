@@ -1,9 +1,7 @@
 namespace Ecommerce.Application.Service;
 
 using Mediator;
-
 using Common.Domain;
-
 using Ecommerce.Application.Command;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
@@ -14,8 +12,8 @@ using Ecommerce.Domain.ValueObject;
 
 public sealed class ProductUpdaterService : IProductUpdaterService
 {
-    private IPublisher _publisher { get; init; }
-    private IProductRepository _productRepository { get; init; }
+    private IPublisher _publisher { get; }
+    private IProductRepository _productRepository { get; }
 
     public ProductUpdaterService(IPublisher publisher, IProductRepository productRepository)
     {
@@ -41,7 +39,6 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         var nextProductDescription = new ProductDescription(command.Description ?? currentProduct.Description);
         var nextProductStatus = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status));
         var nextProductPrice = new ProductPrice(command.Price ?? currentProduct.Price);
-
         var nextProduct = new Product
         {
             Id = nextProductId,
