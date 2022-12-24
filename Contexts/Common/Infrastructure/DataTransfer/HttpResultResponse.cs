@@ -1,13 +1,5 @@
 namespace Common.Infrastructure;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-using System.Net;
-using System.Net.Mime;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
 public sealed class HttpResultResponse : IActionResult
 {
     public object? Body { get; init; }

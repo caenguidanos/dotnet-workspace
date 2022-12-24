@@ -1,7 +1,5 @@
 namespace Common.Domain;
 
-using System.Text.Json.Serialization;
-
 public record Schema<T>
 {
     public DateTime CreatedAd { get; private set; }

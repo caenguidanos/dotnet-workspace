@@ -6,7 +6,7 @@
 
 > Docker and k6 are required for development and testing purposes
 
-![Visualization of the codebase](./diagram.svg)
+![Visualization of the codebase](./Public/diagram.svg)
 
 ```make
 check:

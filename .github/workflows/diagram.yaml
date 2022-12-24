@@ -1,0 +1,16 @@
+name: Codebase Diagram
+on:
+  push:
+    branches:
+      - main
+jobs:
+  get_data:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+      - name: Update diagram
+        uses: githubocto/repo-visualizer@main
+        with:
+          output_file: "./Public/diagram.svg"
+          excluded_paths: "ignore,.github,bin,obj,.vscode,.gitignore,workspace.sln,.editorconfig,.docker-compose.yaml,makefile,README.md,.dockerignore,appsettings.*,properties"

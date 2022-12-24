@@ -1,9 +1,5 @@
 namespace Common.Domain;
 
-using System.Net;
-
-using Infrastructure;
-
 public sealed class TimeStampException : ProblemDetailsException
 {
     public TimeStampException()

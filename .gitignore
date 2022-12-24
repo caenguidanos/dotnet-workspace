@@ -75,7 +75,7 @@ $RECYCLE.BIN/
 
 # User-specific files
 *.suo
-*.user
+# *.user
 *.userosscache
 *.sln.docstates
 
@@ -187,7 +187,7 @@ $tf/
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
-*.DotSettings.user
+#*.DotSettings.user
 
 # JustCode is a .NET coding add-in
 .JustCode
@@ -358,7 +358,7 @@ paket-files/
 .fake/
 
 # JetBrains Rider
-.idea/
+#.idea/
 *.sln.iml
 
 # CodeRush personal settings
