@@ -1,13 +1,5 @@
 namespace Ecommerce.Application;
 
-using Mediator;
-
-using Common.Domain;
-
-using Domain;
-
-using OneOf;
-
 public readonly struct RemoveProductCommand : IRequest<OneOf<byte, ProblemDetailsException>>
 {
     public required Guid Id { get; init; }

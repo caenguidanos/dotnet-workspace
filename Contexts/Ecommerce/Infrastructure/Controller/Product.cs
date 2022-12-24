@@ -1,17 +1,5 @@
 namespace Ecommerce.Infrastructure;
 
-using Mediator;
-
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
-using System.Net;
-using System.Net.Mime;
-
-using Common.Infrastructure;
-
-using Application;
-
 [ApiController]
 [Route("[controller]")]
 public sealed class ProductController : ControllerBase

@@ -1,15 +1,5 @@
 namespace Ecommerce.Application;
 
-using Mediator;
-
-using Common.Domain;
-
-using Domain;
-
-using Infrastructure;
-
-using OneOf;
-
 public readonly struct GetProductQuery : IRequest<OneOf<ProductPrimitives, ProblemDetailsException>>
 {
     public required Guid Id { get; init; }

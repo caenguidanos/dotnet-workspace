@@ -1,13 +1,5 @@
 namespace Ecommerce.Application;
 
-using Mediator;
-
-using Common.Domain;
-
-using Domain;
-
-using OneOf;
-
 public sealed class ProductCreatorService : IProductCreatorService
 {
     private IPublisher _publisher { get; }

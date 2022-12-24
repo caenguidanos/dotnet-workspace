@@ -1,13 +1,5 @@
 namespace Ecommerce.Application;
 
-using Mediator;
-
-using Common.Domain;
-
-using Domain;
-
-using OneOf;
-
 public readonly struct CreateProductCommand : IRequest<OneOf<byte, ProblemDetailsException>>
 {
     public required int Price { get; init; }

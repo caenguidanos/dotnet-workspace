@@ -1,7 +1,5 @@
 namespace Ecommerce.Domain;
 
-using Common.Domain;
-
 public sealed record ProductId : ValueOf<Guid>
 {
     public ProductId(Guid? id = null) : base(id ?? Guid.NewGuid())

@@ -1,15 +1,5 @@
 namespace Ecommerce.Infrastructure;
 
-using Dapper;
-
-using Npgsql;
-
-using Common.Domain;
-
-using Domain;
-
-using OneOf;
-
 public sealed class ProductRepository : IProductRepository
 {
     private IDbContext _dbContext { get; }

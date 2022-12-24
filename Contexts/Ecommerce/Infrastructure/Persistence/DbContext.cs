@@ -1,7 +1,5 @@
 namespace Ecommerce.Infrastructure;
 
-using Microsoft.Extensions.Configuration;
-
 public interface IDbContext
 {
     string GetConnectionString();

@@ -1,9 +1,5 @@
 namespace Ecommerce.Domain;
 
-using Common.Domain;
-
-using OneOf;
-
 public interface IProductRepository
 {
     Task<OneOf<List<Product>, ProblemDetailsException>> Get(CancellationToken cancellationToken);

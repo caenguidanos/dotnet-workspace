@@ -1,7 +1,5 @@
 namespace Ecommerce.Application;
 
-using Mediator;
-
 public readonly struct ProductRemovedEvent : INotification
 {
     public required Guid Product { get; init; }

@@ -1,13 +1,5 @@
 namespace Ecommerce.Application;
 
-using Mediator;
-
-using Common.Domain;
-
-using Domain;
-
-using OneOf;
-
 public sealed class ProductRemoverService : IProductRemoverService
 {
     private IPublisher _publisher { get; }
