@@ -52,7 +52,7 @@ public sealed class ProductRepository : IProductRepository
                         Price = new ProductPrice(result.Price)
                     };
 
-                    product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
+                    product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
                 }
                 catch (ProblemDetailsException ex)
                 {
@@ -103,7 +103,7 @@ public sealed class ProductRepository : IProductRepository
                     Price = new ProductPrice(result.Price)
                 };
 
-                product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
+                product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
             }
             catch (ProblemDetailsException ex)
             {
