@@ -25,9 +25,7 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _productCreatorService = productCreatorService;
     }
 
-    public async ValueTask<OneOf<byte, ProblemDetailsException>> Handle(
-        CreateProductCommand request,
-        CancellationToken cancellationToken)
+    public async ValueTask<OneOf<byte, ProblemDetailsException>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var result = await _productCreatorService.AddNewProduct(
             request.Title,

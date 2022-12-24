@@ -6,10 +6,5 @@ using OneOf;
 
 public interface IProductCreatorService
 {
-    Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(
-        string title,
-        string description,
-        int status,
-        int price,
-        CancellationToken cancellationToken);
+    Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken);
 }

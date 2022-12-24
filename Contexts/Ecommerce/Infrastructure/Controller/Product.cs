@@ -75,8 +75,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateProduct([FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var command = new CreateProductCommand
         {
@@ -129,10 +128,7 @@ public sealed class ProductController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(StatusCodes.Status503ServiceUnavailable)]
-    public async Task<IActionResult> UpdateProduct(
-        [FromRoute(Name = "id")] Guid id,
-        [FromBody] UpdateProductHttpRequestBody body,
-        CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProduct([FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var command = new UpdateProductCommand
         {

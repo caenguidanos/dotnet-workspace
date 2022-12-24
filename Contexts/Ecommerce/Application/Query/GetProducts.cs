@@ -24,8 +24,7 @@ public sealed class
         _productRepository = productRepository;
     }
 
-    public async ValueTask<OneOf<List<ProductPrimitives>, ProblemDetailsException>> Handle(GetProductsQuery request,
-        CancellationToken cancellationToken)
+    public async ValueTask<OneOf<List<ProductPrimitives>, ProblemDetailsException>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {
         var result = await _productRepository.Get(cancellationToken);
 

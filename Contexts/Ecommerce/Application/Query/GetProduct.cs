@@ -24,8 +24,7 @@ public sealed class GetProductHandler : IRequestHandler<GetProductQuery, OneOf<P
         _productRepository = productRepository;
     }
 
-    public async ValueTask<OneOf<ProductPrimitives, ProblemDetailsException>> Handle(GetProductQuery request,
-        CancellationToken cancellationToken)
+    public async ValueTask<OneOf<ProductPrimitives, ProblemDetailsException>> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {
         var result = await _productRepository.GetById(request.Id, cancellationToken);
 

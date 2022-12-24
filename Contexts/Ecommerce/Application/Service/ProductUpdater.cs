@@ -19,10 +19,7 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         _productRepository = productRepository;
     }
 
-    public async Task<OneOf<byte, ProblemDetailsException>> UpdateProduct(
-        Guid id,
-        UpdateProductCommand command,
-        CancellationToken cancellationToken)
+    public async Task<OneOf<byte, ProblemDetailsException>> UpdateProduct(Guid id, UpdateProductCommand command, CancellationToken cancellationToken)
     {
         var getProductByIdResult = await _productRepository.GetById(id, cancellationToken);
 

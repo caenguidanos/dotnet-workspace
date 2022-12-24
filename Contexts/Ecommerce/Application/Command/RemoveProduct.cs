@@ -22,7 +22,6 @@ public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand,
         _productRemoverService = productRemoverService;
     }
 
-    public async ValueTask<OneOf<byte, ProblemDetailsException>> Handle(RemoveProductCommand request,
-        CancellationToken cancellationToken) =>
+    public async ValueTask<OneOf<byte, ProblemDetailsException>> Handle(RemoveProductCommand request, CancellationToken cancellationToken) =>
         await _productRemoverService.RemoveProduct(request.Id, cancellationToken);
 }
