@@ -38,7 +38,7 @@ public sealed class HttpResultResponse : IActionResult
 
             case ProblemDetails details:
             {
-                var s0 = JsonSerializer.Serialize(Body, SerializerOptions);
+                var s0 = JsonSerializer.Serialize(Body, options: SerializerOptions);
 
                 context.HttpContext.Response.StatusCode = details.Status ?? 418;
                 context.HttpContext.Response.ContentType = "application/problem+json";
@@ -49,7 +49,7 @@ public sealed class HttpResultResponse : IActionResult
             }
         }
 
-        var s1 = JsonSerializer.Serialize(Body, SerializerOptions);
+        var s1 = JsonSerializer.Serialize(Body, options: SerializerOptions);
 
         context.HttpContext.Response.StatusCode = (int)StatusCode;
         context.HttpContext.Response.ContentType = ContentType;
