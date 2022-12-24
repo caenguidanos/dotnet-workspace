@@ -1,4 +1,4 @@
-namespace Ecommerce.Domain.Aggregate;
+namespace Ecommerce.Domain;
 
 using Common.Domain;
 

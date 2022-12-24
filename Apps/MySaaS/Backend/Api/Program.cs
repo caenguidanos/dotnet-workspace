@@ -1,5 +1,6 @@
-using Common;
-using Ecommerce;
+using Common.Infrastructure;
+
+using Ecommerce.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +39,3 @@ app.MapControllers();
 app.UseCors();
 
 app.Run();
-
-public partial class Program
-{
-}

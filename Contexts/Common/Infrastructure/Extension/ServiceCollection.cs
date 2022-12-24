@@ -1,17 +1,16 @@
-namespace Common;
+namespace Common.Infrastructure;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Routing;
 
-public static class CommonExtensions
+public static class ServiceCollectionExtension
 {
-    public static IServiceCollection AddCommonConfig(this IServiceCollection services)
+    public static void AddCommonConfig(this IServiceCollection services)
     {
         services.Configure<RouteOptions>(options =>
         {
             options.LowercaseUrls = true;
             options.LowercaseQueryStrings = true;
         });
-
-        return services;
     }
 }

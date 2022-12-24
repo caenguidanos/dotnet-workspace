@@ -1,4 +1,4 @@
-namespace Ecommerce.Infrastructure.Persistence;
+namespace Ecommerce.Infrastructure;
 
 public struct ProductConstraints
 {

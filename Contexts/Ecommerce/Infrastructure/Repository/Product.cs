@@ -1,14 +1,13 @@
-namespace Ecommerce.Infrastructure.Repository;
+namespace Ecommerce.Infrastructure;
 
 using Dapper;
+
 using Npgsql;
+
 using Common.Domain;
-using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Exception;
-using Ecommerce.Domain.Repository;
-using Ecommerce.Domain.ValueObject;
-using Ecommerce.Infrastructure.DataTransfer;
-using Ecommerce.Infrastructure.Persistence;
+
+using Domain;
+
 using OneOf;
 
 public sealed class ProductRepository : IProductRepository

@@ -24,6 +24,10 @@ resharper_csharp_blank_lines_around_single_line_local_method = 1
 resharper_blank_lines_around_single_line_local_method = 1
 resharper_csharp_blank_lines_around_local_method = 1
 resharper_blank_lines_around_local_method = 1
+resharper_csharp_blank_lines_between_using_groups = 1
+resharper_blank_lines_between_using_groups = 1
+resharper_csharp_blank_lines_after_using_list = 1
+resharper_blank_lines_after_using_list = 1
 # Define the 'private_fields' symbol group:
 dotnet_naming_symbols.private_fields.applicable_kinds = field
 dotnet_naming_symbols.private_fields.applicable_accessibilities = private

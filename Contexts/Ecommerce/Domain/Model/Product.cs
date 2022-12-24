@@ -1,4 +1,4 @@
-namespace Ecommerce.Domain.Model;
+namespace Ecommerce.Domain;
 
 public enum ProductStatusValue
 {

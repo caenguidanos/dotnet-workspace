@@ -1,6 +1,7 @@
-namespace Ecommerce.Infrastructure.Persistence;
+namespace Ecommerce.Infrastructure;
 
 using Dapper;
+
 using Npgsql;
 
 public interface IDbSeed

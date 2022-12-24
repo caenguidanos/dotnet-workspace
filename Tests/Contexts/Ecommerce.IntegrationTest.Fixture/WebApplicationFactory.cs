@@ -1,13 +1,19 @@
-namespace Ecommerce.IntegrationTest.App;
+namespace Ecommerce.IntegrationTest.Fixture;
 
 using Dapper;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+
 using Npgsql;
+
 using Moq;
+
 using Common.Fixture.Infrastructure.Database;
+
 using Microsoft.AspNetCore.TestHost;
-using Ecommerce.Infrastructure.Persistence;
+
+using Infrastructure;
 
 public class WebAppFactory : WebApplicationFactory<Program>
 {
@@ -32,6 +38,7 @@ public class WebAppFactory : WebApplicationFactory<Program>
                 }
 
                 var customDbContext = Mock.Of<IDbContext>();
+
                 Mock.Get(customDbContext)
                     .Setup(c => c.GetConnectionString())
                     .Returns(_connectionString);

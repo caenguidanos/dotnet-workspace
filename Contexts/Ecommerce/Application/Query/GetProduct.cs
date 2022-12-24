@@ -1,9 +1,13 @@
-namespace Ecommerce.Application.Query;
+namespace Ecommerce.Application;
 
 using Mediator;
+
 using Common.Domain;
-using Ecommerce.Domain.Repository;
-using Ecommerce.Infrastructure.DataTransfer;
+
+using Domain;
+
+using Infrastructure;
+
 using OneOf;
 
 public readonly struct GetProductQuery : IRequest<OneOf<ProductPrimitives, ProblemDetailsException>>

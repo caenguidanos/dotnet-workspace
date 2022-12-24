@@ -1,14 +1,16 @@
-namespace Ecommerce.Infrastructure.Controller;
+namespace Ecommerce.Infrastructure;
 
 using Mediator;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Net;
 using System.Net.Mime;
-using Common.Application;
-using Ecommerce.Application.Command;
-using Ecommerce.Application.Query;
-using Ecommerce.Infrastructure.DataTransfer;
+
+using Common.Infrastructure;
+
+using Application;
 
 [ApiController]
 [Route("[controller]")]

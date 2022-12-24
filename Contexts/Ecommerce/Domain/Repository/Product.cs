@@ -1,7 +1,7 @@
-namespace Ecommerce.Domain.Repository;
+namespace Ecommerce.Domain;
 
 using Common.Domain;
-using Ecommerce.Domain.Entity;
+
 using OneOf;
 
 public interface IProductRepository

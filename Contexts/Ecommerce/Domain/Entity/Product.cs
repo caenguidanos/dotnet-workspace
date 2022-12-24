@@ -1,8 +1,8 @@
-namespace Ecommerce.Domain.Entity;
+namespace Ecommerce.Domain;
 
 using Common.Domain;
-using Ecommerce.Domain.ValueObject;
-using Ecommerce.Infrastructure.DataTransfer;
+
+using Infrastructure;
 
 public sealed record Product : Schema<ProductPrimitives>
 {

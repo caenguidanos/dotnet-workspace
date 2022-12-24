@@ -1,6 +1,7 @@
 namespace Common.UnitTest.Domain;
 
 using System.Globalization;
+
 using Common.Domain;
 
 public sealed class SchemaTestUnitTest

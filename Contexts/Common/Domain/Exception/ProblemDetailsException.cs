@@ -1,6 +1,7 @@
 namespace Common.Domain;
 
 using System.Net;
+
 using Microsoft.AspNetCore.Mvc;
 
 public class ProblemDetailsException : Exception

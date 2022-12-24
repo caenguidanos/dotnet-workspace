@@ -1,7 +1,8 @@
-namespace Ecommerce.Domain.Exception;
+namespace Ecommerce.Domain;
 
 using System.Net;
-using Common.Application;
+
+using Common.Infrastructure;
 using Common.Domain;
 
 public sealed class ProductNotFoundException : ProblemDetailsException

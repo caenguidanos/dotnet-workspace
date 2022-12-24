@@ -1,7 +1,8 @@
-namespace Common.Application;
+namespace Common.Infrastructure;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using System.Net;
 using System.Net.Mime;
 using System.Text.Json;

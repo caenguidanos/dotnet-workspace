@@ -1,7 +1,8 @@
-namespace Common.UnitTest.Application.HttpUtil;
+namespace Common.UnitTest.Infrastructure;
 
 using System.Net;
-using Common.Application;
+
+using Common.Infrastructure;
 
 public sealed class HttpStatusTextUnitTest
 {

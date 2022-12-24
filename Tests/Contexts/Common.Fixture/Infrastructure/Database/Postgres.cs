@@ -2,8 +2,11 @@ namespace Common.Fixture.Infrastructure.Database;
 
 using Docker.DotNet;
 using Docker.DotNet.Models;
+
 using Npgsql;
+
 using Dapper;
+
 using System.Data.Common;
 using System.Globalization;
 using System.Net;

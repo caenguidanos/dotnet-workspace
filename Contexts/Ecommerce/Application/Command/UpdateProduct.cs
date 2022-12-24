@@ -1,8 +1,11 @@
-namespace Ecommerce.Application.Command;
+namespace Ecommerce.Application;
 
 using Mediator;
+
 using Common.Domain;
-using Ecommerce.Domain.Service;
+
+using Domain;
+
 using OneOf;
 
 public readonly struct UpdateProductCommand : IRequest<OneOf<byte, ProblemDetailsException>>

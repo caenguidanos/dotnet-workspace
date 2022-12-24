@@ -1,4 +1,4 @@
-namespace Ecommerce.Application.Event;
+namespace Ecommerce.Application;
 
 using Mediator;
 

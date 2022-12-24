@@ -1,10 +1,13 @@
 namespace Ecommerce.IntegrationTest.UseCases;
 
 using Moq;
+
 using System.Net;
 using System.Net.Http.Headers;
-using Ecommerce.IntegrationTest.App;
-using Ecommerce.IntegrationTest.Util;
+
+using Fixture;
+
+using Util;
 
 public sealed class RemoveProductByIdIntegrationTest
 {

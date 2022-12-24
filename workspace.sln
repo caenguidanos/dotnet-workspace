@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.IntegrationTest",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Fixture", "Tests\Contexts\Common.Fixture\Common.Fixture.csproj", "{8B3A4855-C24D-4471-83B4-591BC3C7F43C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.IntegrationTest.App", "Tests\Contexts\Ecommerce.IntegrationTest.App\Ecommerce.IntegrationTest.App.csproj", "{C9782672-72FC-4C39-93A4-FEA8A73F9A6C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ecommerce.IntegrationTest.Fixture", "Tests\Contexts\Ecommerce.IntegrationTest.Fixture\Ecommerce.IntegrationTest.Fixture.csproj", "{C9782672-72FC-4C39-93A4-FEA8A73F9A6C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

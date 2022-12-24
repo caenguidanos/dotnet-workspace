@@ -1,8 +1,6 @@
-namespace Ecommerce.Domain.ValueObject;
+namespace Ecommerce.Domain;
 
 using Common.Domain;
-using Ecommerce.Domain.Exception;
-using Ecommerce.Domain.Model;
 
 public sealed record ProductId : Primitive<Guid>
 {

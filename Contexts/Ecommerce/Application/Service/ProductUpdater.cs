@@ -1,14 +1,11 @@
-namespace Ecommerce.Application.Service;
+namespace Ecommerce.Application;
 
 using Mediator;
+
 using Common.Domain;
-using Ecommerce.Application.Command;
-using Ecommerce.Application.Event;
-using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Model;
-using Ecommerce.Domain.Repository;
-using Ecommerce.Domain.Service;
-using Ecommerce.Domain.ValueObject;
+
+using Domain;
+
 using OneOf;
 
 public sealed class ProductUpdaterService : IProductUpdaterService

@@ -1,7 +1,8 @@
-namespace Ecommerce.Infrastructure.DataTransfer;
+namespace Ecommerce.Infrastructure;
 
 using Common.Domain;
-using Ecommerce.Domain.Model;
+
+using Domain;
 
 public sealed record ProductPrimitives : SchemaPrimitives
 {

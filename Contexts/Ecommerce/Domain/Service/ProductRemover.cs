@@ -1,6 +1,7 @@
-namespace Ecommerce.Domain.Service;
+namespace Ecommerce.Domain;
 
 using Common.Domain;
+
 using OneOf;
 
 public interface IProductRemoverService
