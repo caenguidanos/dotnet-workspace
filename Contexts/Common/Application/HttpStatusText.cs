@@ -1,4 +1,4 @@
-namespace Common.Infrastructure;
+namespace Common.Application;
 
 public static class HttpStatusText
 {

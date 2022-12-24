@@ -1,6 +1,6 @@
 namespace Common_UnitTesting.Domain;
 
-public sealed class SchemaTestUnitTest
+public sealed class SchemaUnitTest
 {
     [Test]
     public void GivenEmptyEntity_WhenEditTimeStampAttributes_ThenReflectChanges()

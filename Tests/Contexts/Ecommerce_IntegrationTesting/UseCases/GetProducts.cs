@@ -3,30 +3,29 @@ namespace Ecommerce_IntegrationTesting;
 public sealed class GetProductsIntegrationTest
 {
     private EcommerceWebApplicationFactory _server = Mock.Of<EcommerceWebApplicationFactory>();
-    private HttpClient _http = Mock.Of<HttpClient>();
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
         _server = new EcommerceWebApplicationFactory();
-        _http = _server.CreateClient();
     }
 
     [OneTimeTearDown]
-    public void OneTimeTearDown()
+    public async Task OneTimeTearDown()
     {
-        _server.Dispose();
-        _http.Dispose();
+        await _server.DropDatabaseAsync();
     }
 
     [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestAll_ThenReturnEmptyCollection()
     {
+        using var httpClient = _server.CreateClient();
+
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _http.GetAsync("/product");
+        var response = await httpClient.GetAsync("/product");
 
         Assert.Multiple(() =>
         {
@@ -37,12 +36,14 @@ public sealed class GetProductsIntegrationTest
         var responseBody = await response.Content.ReadAsStringAsync();
         const string responseBodySnapshot = "[]";
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
     }
 
     [Test]
     public async Task GivenProductsOnDatabase_WhenRequestAll_ThenReturnCollection()
     {
+        using var httpClient = _server.CreateClient();
+
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
 
@@ -69,7 +70,7 @@ public sealed class GetProductsIntegrationTest
             );
         """);
 
-        var response = await _http.GetAsync("/product");
+        var response = await httpClient.GetAsync("/product");
 
         Assert.Multiple(() =>
         {
@@ -101,6 +102,6 @@ public sealed class GetProductsIntegrationTest
             ]
         """;
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
     }
 }

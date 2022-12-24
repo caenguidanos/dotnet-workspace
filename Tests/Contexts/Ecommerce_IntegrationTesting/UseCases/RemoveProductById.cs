@@ -3,30 +3,29 @@ namespace Ecommerce_IntegrationTesting;
 public sealed class RemoveProductByIdIntegrationTest
 {
     private EcommerceWebApplicationFactory _server = Mock.Of<EcommerceWebApplicationFactory>();
-    private HttpClient _http = Mock.Of<HttpClient>();
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
         _server = new EcommerceWebApplicationFactory();
-        _http = _server.CreateClient();
     }
 
     [OneTimeTearDown]
-    public void OneTimeTearDown()
+    public async Task OneTimeTearDown()
     {
-        _server.Dispose();
-        _http.Dispose();
+        await _server.DropDatabaseAsync();
     }
 
     [Test]
     public async Task GivenNoProductsOnDatabase_WhenRequestById_ThenReturnProblemDetails()
     {
+        using var httpClient = _server.CreateClient();
+
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await _http.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        var response = await httpClient.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
 
         Assert.Multiple(() =>
         {
@@ -45,12 +44,14 @@ public sealed class RemoveProductByIdIntegrationTest
             }
         """;
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
     }
 
     [Test]
     public async Task GivenProductsOnDatabase_WhenRequestById_ThenReturnAccepted()
     {
+        using var httpClient = _server.CreateClient();
+
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
 
@@ -61,7 +62,7 @@ public sealed class RemoveProductByIdIntegrationTest
             VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
         """);
 
-        var response = await _http.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var response = await httpClient.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
         Assert.Multiple(() =>
         {
@@ -74,9 +75,9 @@ public sealed class RemoveProductByIdIntegrationTest
             Accepted
         """;
 
-        Assert.That(responseBody, Is.EqualTo(JsonUtil.MinifyString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
 
-        var responsePostRemove = await _http.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var responsePostRemove = await httpClient.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
 
         Assert.That(responsePostRemove.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }

@@ -1,4 +1,4 @@
-namespace Common_UnitTesting.Infrastructure;
+namespace Common_UnitTesting.Application;
 
 public sealed class HttpStatusTextUnitTest
 {

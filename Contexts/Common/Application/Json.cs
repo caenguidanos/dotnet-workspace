@@ -1,6 +1,6 @@
-namespace Ecommerce_IntegrationTesting;
+namespace Common.Application;
 
-public static partial class JsonUtil
+public static partial class Json
 {
     public static string MinifyString(string src)
     {

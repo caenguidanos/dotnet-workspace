@@ -1,4 +1,4 @@
-namespace Ecommerce_IntegrationTesting_Program;
+namespace Ecommerce_IntegrationTesting_Program.Fixture;
 
 public class EcommerceWebApplicationFactory : WebApplicationFactory<Program>
 {
@@ -34,5 +34,10 @@ public class EcommerceWebApplicationFactory : WebApplicationFactory<Program>
         await using var conn = new NpgsqlConnection(_connectionString);
         await conn.OpenAsync();
         await conn.ExecuteAsync(sql);
+    }
+
+    public async Task DropDatabaseAsync()
+    {
+        await _postgres.DisposeAsync();
     }
 }

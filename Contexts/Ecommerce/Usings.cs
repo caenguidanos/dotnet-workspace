@@ -15,6 +15,7 @@ global using Npgsql;
 
 global using OneOf;
 
+global using Common.Application;
 global using Common.Domain;
 global using Common.Infrastructure;
 

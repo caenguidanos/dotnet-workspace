@@ -1,13 +1,13 @@
 namespace Common_UnitTesting.Domain;
 
-public sealed class PrimitiveTestUnitTest
+public sealed class ValueOfUnitTest
 {
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowsArgumentOutOfRangeException()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
-            var _ = new StringValueOfWithValidation("1234");
+            var _ = new StringWithValidation("1234");
         });
     }
 
@@ -16,21 +16,21 @@ public sealed class PrimitiveTestUnitTest
     {
         Assert.DoesNotThrow(() =>
         {
-            var _ = new StringValueOfWithValidation("123456");
+            var _ = new StringWithValidation("123456");
         });
     }
 
     [Test]
     public void GivenStringPrimitiveWithValidation_WhenGetValue_ThenReturnsSameValue()
     {
-        var valueObject = new StringValueOfWithValidation("123499");
+        var valueObject = new StringWithValidation("123499");
 
         Assert.That(valueObject.GetValue(), Is.EqualTo("123499"));
     }
 
-    private sealed record StringValueOfWithValidation : ValueOf<string>
+    private sealed record StringWithValidation : ValueOf<string>
     {
-        public StringValueOfWithValidation(string value) : base(value)
+        public StringWithValidation(string value) : base(value)
         {
         }
 

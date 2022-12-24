@@ -1,4 +1,4 @@
-namespace Ecommerce_IntegrationTesting_Program;
+namespace Ecommerce_IntegrationTesting_Program.Fixture;
 
 public sealed class PostgresFactory
 {
