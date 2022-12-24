@@ -13,7 +13,7 @@ public sealed record Product : Schema<ProductPrimitives>
     public required ProductPrice Price { private get; init; }
 
     public override ProductPrimitives ToPrimitives() =>
-        new ProductPrimitives
+        new()
         {
             Id = Id.GetValue(),
             Title = Title.GetValue(),
@@ -23,13 +23,4 @@ public sealed record Product : Schema<ProductPrimitives>
             CreatedAt = CreatedAd,
             UpdatedAt = UpdatedAt
         };
-
-    public void CheckIntegrity()
-    {
-        Id.Validate();
-        Title.Validate();
-        Description.Validate();
-        Status.Validate();
-        Price.Validate();
-    }
 }

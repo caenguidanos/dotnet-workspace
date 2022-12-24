@@ -24,6 +24,8 @@ builder.Services.AddEcommerceSeed();
 
 var app = builder.Build();
 
+app.UseW3CLogging();
+
 #if DEBUG
 if (app.Environment.IsDevelopment())
 {

@@ -40,20 +40,19 @@ public sealed class ProductRepository : IProductRepository
 
             foreach (var result in results)
             {
-                var product = new Product
-                {
-                    Id = new ProductId(result.Id),
-                    Title = new ProductTitle(result.Title),
-                    Description = new ProductDescription(result.Description),
-                    Status = new ProductStatus(result.Status),
-                    Price = new ProductPrice(result.Price)
-                };
-
-                product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
-
+                Product product;
                 try
                 {
-                    product.CheckIntegrity();
+                    product = new Product
+                    {
+                        Id = new ProductId(result.Id),
+                        Title = new ProductTitle(result.Title),
+                        Description = new ProductDescription(result.Description),
+                        Status = new ProductStatus(result.Status),
+                        Price = new ProductPrice(result.Price)
+                    };
+
+                    product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
                 }
                 catch (ProblemDetailsException ex)
                 {
@@ -92,20 +91,19 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command);
             if (result is null) return new ProductNotFoundException();
 
-            var product = new Product
-            {
-                Id = new ProductId(result.Id),
-                Title = new ProductTitle(result.Title),
-                Description = new ProductDescription(result.Description),
-                Status = new ProductStatus(result.Status),
-                Price = new ProductPrice(result.Price)
-            };
-
-            product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
-
+            Product product;
             try
             {
-                product.CheckIntegrity();
+                product = new Product
+                {
+                    Id = new ProductId(result.Id),
+                    Title = new ProductTitle(result.Title),
+                    Description = new ProductDescription(result.Description),
+                    Status = new ProductStatus(result.Status),
+                    Price = new ProductPrice(result.Price)
+                };
+
+                product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
             }
             catch (ProblemDetailsException ex)
             {

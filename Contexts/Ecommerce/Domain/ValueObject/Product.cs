@@ -2,32 +2,28 @@ namespace Ecommerce.Domain;
 
 using Common.Domain;
 
-public sealed record ProductId : Primitive<Guid>
+public sealed record ProductId : ValueOf<Guid>
 {
-    public ProductId(Guid? id = null)
-        : base(id ?? Guid.NewGuid())
+    public ProductId(Guid? id = null) : base(id ?? Guid.NewGuid())
     {
     }
 
-    public override Guid Validate()
+    protected override void TryValidation()
     {
         if (Value == Guid.Empty)
         {
             throw new ProductIdInvalidException();
         }
-
-        return Value;
     }
 }
 
-public sealed record ProductPrice : Primitive<int>
+public sealed record ProductPrice : ValueOf<int>
 {
-    public ProductPrice(int value)
-        : base(value)
+    public ProductPrice(int value) : base(value)
     {
     }
 
-    public override int Validate()
+    protected override void TryValidation()
     {
         const int min = 100;
         const int max = 1_000_000 * 100;
@@ -36,19 +32,16 @@ public sealed record ProductPrice : Primitive<int>
         {
             throw new ProductPriceInvalidException();
         }
-
-        return Value;
     }
 }
 
-public sealed record ProductDescription : Primitive<string>
+public sealed record ProductDescription : ValueOf<string>
 {
-    public ProductDescription(string value)
-        : base(value)
+    public ProductDescription(string value) : base(value)
     {
     }
 
-    public override string Validate()
+    protected override void TryValidation()
     {
         const int minLength = 5;
         const int maxLength = 600;
@@ -57,37 +50,31 @@ public sealed record ProductDescription : Primitive<string>
         {
             throw new ProductDescriptionInvalidException();
         }
-
-        return Value;
     }
 }
 
-public sealed record ProductStatus : Primitive<ProductStatusValue>
+public sealed record ProductStatus : ValueOf<ProductStatusValue>
 {
-    public ProductStatus(ProductStatusValue value)
-        : base(value)
+    public ProductStatus(ProductStatusValue value) : base(value)
     {
     }
 
-    public override ProductStatusValue Validate()
+    protected override void TryValidation()
     {
         if (!Enum.IsDefined(Value))
         {
             throw new ProductStatusInvalidException();
         }
-
-        return Value;
     }
 }
 
-public sealed record ProductTitle : Primitive<string>
+public sealed record ProductTitle : ValueOf<string>
 {
-    public ProductTitle(string value)
-        : base(value)
+    public ProductTitle(string value) : base(value)
     {
     }
 
-    public override string Validate()
+    protected override void TryValidation()
     {
         const int minLength = 5;
         const int maxLength = 256;
@@ -96,7 +83,5 @@ public sealed record ProductTitle : Primitive<string>
         {
             throw new ProductTitleInvalidException();
         }
-
-        return Value;
     }
 }

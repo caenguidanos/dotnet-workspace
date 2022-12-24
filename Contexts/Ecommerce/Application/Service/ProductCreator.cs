@@ -26,18 +26,17 @@ public sealed class ProductCreatorService : IProductCreatorService
         int price,
         CancellationToken cancellationToken)
     {
-        var product = new Product
-        {
-            Id = new ProductId(),
-            Title = new ProductTitle(title),
-            Description = new ProductDescription(description),
-            Status = new ProductStatus((ProductStatusValue)status),
-            Price = new ProductPrice(price)
-        };
-
+        Product product;
         try
         {
-            product.CheckIntegrity();
+            product = new Product
+            {
+                Id = new ProductId(),
+                Title = new ProductTitle(title),
+                Description = new ProductDescription(description),
+                Status = new ProductStatus((ProductStatusValue)status),
+                Price = new ProductPrice(price)
+            };
         }
         catch (ProblemDetailsException ex)
         {

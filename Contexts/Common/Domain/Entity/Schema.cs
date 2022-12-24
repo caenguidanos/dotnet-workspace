@@ -2,18 +2,28 @@ namespace Common.Domain;
 
 using System.Text.Json.Serialization;
 
-public record Schema<TPrimitives>
+public record Schema<T>
 {
     public DateTime CreatedAd { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
     public void AddTimeStamp(DateTime createdAt, DateTime updatedAt)
     {
-        CreatedAd = createdAt;
-        UpdatedAt = updatedAt;
+        CreatedAd = ValidateTimeStamp(createdAt);
+        UpdatedAt = ValidateTimeStamp(updatedAt);
     }
 
-    public virtual TPrimitives ToPrimitives() => throw new NotImplementedException();
+    public virtual T ToPrimitives() => throw new NotImplementedException();
+
+    private static DateTime ValidateTimeStamp(DateTime candidate)
+    {
+        if (candidate == default)
+        {
+            throw new TimeStampException();
+        }
+
+        return candidate;
+    }
 }
 
 public record SchemaPrimitives

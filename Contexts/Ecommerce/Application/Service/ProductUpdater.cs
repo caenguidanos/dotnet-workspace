@@ -31,18 +31,17 @@ public sealed class ProductUpdaterService : IProductUpdaterService
             {
                 var currentProduct = product.ToPrimitives();
 
-                var nextProduct = new Product
-                {
-                    Id = new ProductId(id),
-                    Title = new ProductTitle(command.Title ?? currentProduct.Title),
-                    Description = new ProductDescription(command.Description ?? currentProduct.Description),
-                    Status = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status)),
-                    Price = new ProductPrice(command.Price ?? currentProduct.Price)
-                };
-
+                Product nextProduct;
                 try
                 {
-                    product.CheckIntegrity();
+                    nextProduct = new Product
+                    {
+                        Id = new ProductId(id),
+                        Title = new ProductTitle(command.Title ?? currentProduct.Title),
+                        Description = new ProductDescription(command.Description ?? currentProduct.Description),
+                        Status = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status)),
+                        Price = new ProductPrice(command.Price ?? currentProduct.Price)
+                    };
                 }
                 catch (ProblemDetailsException ex)
                 {
