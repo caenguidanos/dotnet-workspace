@@ -2,10 +2,13 @@ namespace Ecommerce.IntegrationTest.Util;
 
 using System.Text.RegularExpressions;
 
-public static class JsonUtil
+public static partial class JsonUtil
 {
     public static string MinifyString(string src)
     {
-        return Regex.Replace(src, "(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+", "$1");
+        return SearchSpacesRegExp().Replace(src, "$1");
     }
+
+    [GeneratedRegex("(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+")]
+    private static partial Regex SearchSpacesRegExp();
 }

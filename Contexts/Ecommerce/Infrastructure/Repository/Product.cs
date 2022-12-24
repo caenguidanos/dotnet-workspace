@@ -9,6 +9,7 @@ using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
 using Ecommerce.Infrastructure.Persistence;
+using OneOf;
 
 public sealed class ProductRepository : IProductRepository
 {
@@ -19,7 +20,7 @@ public sealed class ProductRepository : IProductRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Result<IEnumerable<Product>, ProblemDetailsException>> Get(CancellationToken cancellationToken)
+    public async Task<OneOf<List<Product>, ProblemDetailsException>> Get(CancellationToken cancellationToken)
     {
         try
         {
@@ -33,13 +34,13 @@ public sealed class ProductRepository : IProductRepository
 
             var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
 
+            var products = new List<Product>();
+
             var results = await conn.QueryAsync<ProductPrimitives>(command);
             if (results is null)
             {
-                return new Result<IEnumerable<Product>, ProblemDetailsException>(Enumerable.Empty<Product>());
+                return products;
             }
-
-            var products = new List<Product>();
 
             foreach (var result in results)
             {
@@ -54,24 +55,27 @@ public sealed class ProductRepository : IProductRepository
 
                 product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
 
-                var productIntegrityResult = product.CheckIntegrity();
-                if (productIntegrityResult.IsFaulted)
+                try
                 {
-                    return new Result<IEnumerable<Product>, ProblemDetailsException>(productIntegrityResult.Error);
+                    product.CheckIntegrity();
+                }
+                catch (ProblemDetailsException ex)
+                {
+                    return ex;
                 }
 
                 products.Add(product);
             }
 
-            return new Result<IEnumerable<Product>, ProblemDetailsException>(products);
+            return products;
         }
         catch (Exception ex)
         {
-            return new Result<IEnumerable<Product>, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            return new ProductPersistenceException(ex.Message);
         }
     }
 
-    public async Task<Result<Product, ProblemDetailsException>> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<OneOf<Product, ProblemDetailsException>> GetById(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -92,7 +96,7 @@ public sealed class ProductRepository : IProductRepository
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command);
             if (result is null)
             {
-                return new Result<Product, ProblemDetailsException>(new ProductNotFoundException());
+                return new ProductNotFoundException();
             }
 
             var product = new Product
@@ -106,19 +110,24 @@ public sealed class ProductRepository : IProductRepository
 
             product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
 
-            var productIntegrityResult = product.CheckIntegrity();
+            try
+            {
+                product.CheckIntegrity();
+            }
+            catch (ProblemDetailsException ex)
+            {
+                return ex;
+            }
 
-            return productIntegrityResult.IsFaulted
-                ? new Result<Product, ProblemDetailsException>(productIntegrityResult.Error)
-                : new Result<Product, ProblemDetailsException>(product);
+            return product;
         }
         catch (Exception ex)
         {
-            return new Result<Product, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            return new ProductPersistenceException(ex.Message);
         }
     }
 
-    public async Task<Result<ResultUnit, ProblemDetailsException>> Save(Product product, CancellationToken cancellationToken)
+    public async Task<OneOf<byte, ProblemDetailsException>> Save(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -143,13 +152,13 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<ResultUnit, ProblemDetailsException>();
+            return default;
         }
         catch (Exception ex)
         {
             if (ex is not PostgresException postgresException)
             {
-                return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+                return new ProductPersistenceException(ex.Message);
             }
 
             switch (postgresException.SqlState)
@@ -158,19 +167,18 @@ public sealed class ProductRepository : IProductRepository
                 {
                     if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                     {
-                        return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
+                        return new ProductTitleUniqueException();
                     }
 
                     break;
                 }
             }
 
-            return new Result<ResultUnit, ProblemDetailsException>(
-                new ProductPersistenceException(postgresException.MessageText));
+            return new ProductPersistenceException(postgresException.MessageText);
         }
     }
 
-    public async Task<Result<ResultUnit, ProblemDetailsException>> Delete(Guid id, CancellationToken cancellationToken)
+    public async Task<OneOf<byte, ProblemDetailsException>> Delete(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -188,17 +196,15 @@ public sealed class ProductRepository : IProductRepository
 
             var result = await conn.ExecuteAsync(command);
 
-            return result is 0
-                ? new Result<ResultUnit, ProblemDetailsException>(new ProductNotFoundException())
-                : new Result<ResultUnit, ProblemDetailsException>();
+            return result is 0 ? new ProductNotFoundException() : default(byte);
         }
         catch (Exception ex)
         {
-            return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+            return new ProductPersistenceException(ex.Message);
         }
     }
 
-    public async Task<Result<ResultUnit, ProblemDetailsException>> Update(Product product, CancellationToken cancellationToken)
+    public async Task<OneOf<byte, ProblemDetailsException>> Update(Product product, CancellationToken cancellationToken)
     {
         try
         {
@@ -224,13 +230,13 @@ public sealed class ProductRepository : IProductRepository
 
             await conn.ExecuteAsync(command);
 
-            return new Result<ResultUnit, ProblemDetailsException>();
+            return default;
         }
         catch (Exception ex)
         {
             if (ex is not PostgresException postgresException)
             {
-                return new Result<ResultUnit, ProblemDetailsException>(new ProductPersistenceException(ex.Message));
+                return new ProductPersistenceException(ex.Message);
             }
 
             switch (postgresException.SqlState)
@@ -239,15 +245,14 @@ public sealed class ProductRepository : IProductRepository
                 {
                     if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
                     {
-                        return new Result<ResultUnit, ProblemDetailsException>(new ProductTitleUniqueException());
+                        return new ProductTitleUniqueException();
                     }
 
                     break;
                 }
             }
 
-            return new Result<ResultUnit, ProblemDetailsException>(
-                new ProductPersistenceException(postgresException.MessageText));
+            return new ProductPersistenceException(postgresException.MessageText);
         }
     }
 }

@@ -81,7 +81,7 @@ public sealed class ProductController : ControllerBase
             Title = body.Title,
             Description = body.Description,
             Price = body.Price,
-            Status = body.Status,
+            Status = body.Status
         };
 
         var result = await _sender.Send(command, cancellationToken);
@@ -89,7 +89,7 @@ public sealed class ProductController : ControllerBase
         return result.Match(
             _ => new HttpResultResponse
             {
-                StatusCode = HttpStatusCode.Accepted,
+                StatusCode = HttpStatusCode.Accepted
             },
             exception => new HttpResultResponse
             {
@@ -112,7 +112,7 @@ public sealed class ProductController : ControllerBase
         return result.Match(
             _ => new HttpResultResponse
             {
-                StatusCode = HttpStatusCode.Accepted,
+                StatusCode = HttpStatusCode.Accepted
             },
             exception => new HttpResultResponse
             {
@@ -146,7 +146,7 @@ public sealed class ProductController : ControllerBase
         return result.Match(
             _ => new HttpResultResponse
             {
-                StatusCode = HttpStatusCode.Accepted,
+                StatusCode = HttpStatusCode.Accepted
             },
             exception => new HttpResultResponse
             {

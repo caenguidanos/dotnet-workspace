@@ -28,7 +28,7 @@ public sealed class PostgresDatabaseFactory
         _template = template;
         _database = GetRandomString(56);
 
-        _masterConnectionString = new DbConnectionStringBuilder()
+        _masterConnectionString = new DbConnectionStringBuilder
         {
             { "User ID", User },
             { "Password", Password },
@@ -39,7 +39,7 @@ public sealed class PostgresDatabaseFactory
             { "Pooling", true }
         };
 
-        _consumerConnectionString = new DbConnectionStringBuilder()
+        _consumerConnectionString = new DbConnectionStringBuilder
         {
             { "User ID", User },
             { "Password", Password },
@@ -145,7 +145,7 @@ public sealed class PostgresDatabase
 
     public async Task<string> StartAsync()
     {
-        int port = GetRandomUnusedPort();
+        var port = GetRandomUnusedPort();
 
         var locale = new CultureInfo("en-US");
 
@@ -159,7 +159,7 @@ public sealed class PostgresDatabase
             $"POSTGRES_DB={_database}"
         };
 
-        var connectionString = new DbConnectionStringBuilder()
+        var connectionString = new DbConnectionStringBuilder
         {
             { "User ID", user },
             { "Password", password },
@@ -179,7 +179,7 @@ public sealed class PostgresDatabase
                     "5432/tcp",
                     new List<PortBinding>
                     {
-                        new PortBinding
+                        new()
                         {
                             HostPort = port.ToString(locale)
                         }

@@ -3,8 +3,9 @@ namespace Ecommerce.Application.Command;
 using Mediator;
 using Common.Domain;
 using Ecommerce.Domain.Service;
+using OneOf;
 
-public readonly struct CreateProductCommand : IRequest<Result<ResultUnit, ProblemDetailsException>>
+public readonly struct CreateProductCommand : IRequest<OneOf<byte, ProblemDetailsException>>
 {
     public required int Price { get; init; }
     public required string Title { get; init; }
@@ -12,7 +13,7 @@ public readonly struct CreateProductCommand : IRequest<Result<ResultUnit, Proble
     public required int Status { get; init; }
 }
 
-public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, Result<ResultUnit, ProblemDetailsException>>
+public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, OneOf<byte, ProblemDetailsException>>
 {
     private readonly IProductCreatorService _productCreatorService;
 
@@ -21,7 +22,7 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
         _productCreatorService = productCreatorService;
     }
 
-    public async ValueTask<Result<ResultUnit, ProblemDetailsException>> Handle(
+    public async ValueTask<OneOf<byte, ProblemDetailsException>> Handle(
         CreateProductCommand request,
         CancellationToken cancellationToken)
     {
@@ -32,8 +33,9 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
             request.Price,
             cancellationToken);
 
-        return result.IsFaulted
-            ? new Result<ResultUnit, ProblemDetailsException>(result.Error)
-            : new Result<ResultUnit, ProblemDetailsException>();
+        return result.Match<OneOf<byte, ProblemDetailsException>>(
+            _ => default,
+            exception => exception
+        );
     }
 }

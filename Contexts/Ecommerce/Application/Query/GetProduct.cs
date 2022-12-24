@@ -4,13 +4,14 @@ using Mediator;
 using Common.Domain;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Infrastructure.DataTransfer;
+using OneOf;
 
-public readonly struct GetProductQuery : IRequest<Result<ProductPrimitives, ProblemDetailsException>>
+public readonly struct GetProductQuery : IRequest<OneOf<ProductPrimitives, ProblemDetailsException>>
 {
     public required Guid Id { get; init; }
 }
 
-public sealed class GetProductHandler : IRequestHandler<GetProductQuery, Result<ProductPrimitives, ProblemDetailsException>>
+public sealed class GetProductHandler : IRequestHandler<GetProductQuery, OneOf<ProductPrimitives, ProblemDetailsException>>
 {
     private readonly IProductRepository _productRepository;
 
@@ -19,13 +20,14 @@ public sealed class GetProductHandler : IRequestHandler<GetProductQuery, Result<
         _productRepository = productRepository;
     }
 
-    public async ValueTask<Result<ProductPrimitives, ProblemDetailsException>> Handle(GetProductQuery request,
+    public async ValueTask<OneOf<ProductPrimitives, ProblemDetailsException>> Handle(GetProductQuery request,
         CancellationToken cancellationToken)
     {
         var result = await _productRepository.GetById(request.Id, cancellationToken);
 
-        return result.IsFaulted
-            ? new Result<ProductPrimitives, ProblemDetailsException>(result.Error)
-            : new Result<ProductPrimitives, ProblemDetailsException>(result.Value.ToPrimitives());
+        return result.Match<OneOf<ProductPrimitives, ProblemDetailsException>>(
+            product => product.ToPrimitives(),
+            exception => exception
+        );
     }
 }

@@ -2,11 +2,11 @@ namespace Common.Domain;
 
 public record Primitive<TValue>
 {
-    protected TValue Value { get; init; }
+    protected TValue Value { get; }
 
     protected Primitive(TValue value)
     {
-        this.Value = value;
+        Value = value;
     }
 
     public virtual TValue Validate()

@@ -1,10 +1,11 @@
 namespace Ecommerce.Domain.Service;
 
 using Common.Domain;
+using OneOf;
 
 public interface IProductCreatorService
 {
-    Task<Result<Guid, ProblemDetailsException>> AddNewProduct(
+    Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(
         string title,
         string description,
         int status,

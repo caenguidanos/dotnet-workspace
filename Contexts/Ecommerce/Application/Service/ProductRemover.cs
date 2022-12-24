@@ -5,6 +5,7 @@ using Common.Domain;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
+using OneOf;
 
 public sealed class ProductRemoverService : IProductRemoverService
 {
@@ -17,16 +18,17 @@ public sealed class ProductRemoverService : IProductRemoverService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<ResultUnit, ProblemDetailsException>> RemoveProduct(Guid id, CancellationToken cancellationToken)
+    public async Task<OneOf<byte, ProblemDetailsException>> RemoveProduct(Guid id, CancellationToken cancellationToken)
     {
         var deleteProductResult = await _productRepository.Delete(id, cancellationToken);
-        if (deleteProductResult.IsFaulted)
-        {
-            return new Result<ResultUnit, ProblemDetailsException>(deleteProductResult.Error);
-        }
 
-        await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
-
-        return new Result<ResultUnit, ProblemDetailsException>();
+        return await deleteProductResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
+            async _ =>
+            {
+                await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
+                return default;
+            },
+            async exception => await Task.FromResult(exception)
+        );
     }
 }

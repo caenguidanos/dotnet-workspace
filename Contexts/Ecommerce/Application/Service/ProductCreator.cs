@@ -4,11 +4,11 @@ using Mediator;
 using Common.Domain;
 using Ecommerce.Application.Event;
 using Ecommerce.Domain.Entity;
-using Ecommerce.Domain.Exception;
 using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
 using Ecommerce.Domain.ValueObject;
+using OneOf;
 
 public sealed class ProductCreatorService : IProductCreatorService
 {
@@ -21,7 +21,7 @@ public sealed class ProductCreatorService : IProductCreatorService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<Guid, ProblemDetailsException>> AddNewProduct(
+    public async Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(
         string title,
         string description,
         int status,
@@ -37,21 +37,28 @@ public sealed class ProductCreatorService : IProductCreatorService
             Price = new ProductPrice(price)
         };
 
-        var productIntegrityResult = product.CheckIntegrity();
-        if (productIntegrityResult.IsFaulted)
+        try
         {
-            return new Result<Guid, ProblemDetailsException>(productIntegrityResult.Error);
+            product.CheckIntegrity();
+        }
+        catch (ProblemDetailsException ex)
+        {
+            return ex;
         }
 
         var saveProductResult = await _productRepository.Save(product, cancellationToken);
-        if (saveProductResult.IsFaulted)
-        {
-            return new Result<Guid, ProblemDetailsException>(saveProductResult.Error);
-        }
 
-        var productPrimitives = product.ToPrimitives();
-        await _publisher.Publish(new ProductCreatedEvent { Product = productPrimitives.Id }, cancellationToken);
+        return await saveProductResult.Match<Task<OneOf<Guid, ProblemDetailsException>>>(
+            async _ =>
+            {
+                var productPrimitives = product.ToPrimitives();
 
-        return new Result<Guid, ProblemDetailsException>(productPrimitives.Id);
+                var productCreatedEvent = new ProductCreatedEvent { Product = productPrimitives.Id };
+                await _publisher.Publish(productCreatedEvent, cancellationToken);
+
+                return productPrimitives.Id;
+            },
+            async exception => await Task.FromResult(exception)
+        );
     }
 }

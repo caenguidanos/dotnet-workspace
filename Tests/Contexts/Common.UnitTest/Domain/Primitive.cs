@@ -40,7 +40,7 @@ public sealed class PrimitiveTestUnitTest
             const int maxLength = 10;
             const int minLength = 5;
 
-            if (Value.Length < minLength || Value.Length > maxLength)
+            if (Value.Length is < minLength or > maxLength)
             {
                 throw new ArgumentOutOfRangeException(Value);
             }

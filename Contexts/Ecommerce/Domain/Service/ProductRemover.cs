@@ -1,9 +1,9 @@
 namespace Ecommerce.Domain.Service;
 
 using Common.Domain;
-using Ecommerce.Infrastructure.DataTransfer;
+using OneOf;
 
 public interface IProductRemoverService
 {
-    Task<Result<ResultUnit, ProblemDetailsException>> RemoveProduct(Guid id, CancellationToken cancellationToken);
+    Task<OneOf<byte, ProblemDetailsException>> RemoveProduct(Guid id, CancellationToken cancellationToken);
 }

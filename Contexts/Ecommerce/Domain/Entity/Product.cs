@@ -1,7 +1,6 @@
 namespace Ecommerce.Domain.Entity;
 
 using Common.Domain;
-using Ecommerce.Domain.Exception;
 using Ecommerce.Domain.ValueObject;
 using Ecommerce.Infrastructure.DataTransfer;
 
@@ -23,25 +22,16 @@ public sealed record Product : Schema<ProductPrimitives>
             Status = Status.GetValue(),
             Price = Price.GetValue(),
             CreatedAt = CreatedAd,
-            UpdatedAt = UpdatedAt,
+            UpdatedAt = UpdatedAt
         };
     }
 
-    public Result<ResultUnit, ProblemDetailsException> CheckIntegrity()
+    public void CheckIntegrity()
     {
-        try
-        {
-            Id.Validate();
-            Title.Validate();
-            Description.Validate();
-            Status.Validate();
-            Price.Validate();
-
-            return new Result<ResultUnit, ProblemDetailsException>();
-        }
-        catch (ProblemDetailsException ex)
-        {
-            return new Result<ResultUnit, ProblemDetailsException>(ex);
-        }
+        Id.Validate();
+        Title.Validate();
+        Description.Validate();
+        Status.Validate();
+        Price.Validate();
     }
 }

@@ -30,7 +30,5 @@ public sealed class SchemaTestUnitTest
         });
     }
 
-    private sealed record EmptyEntity : Schema<EmptyEntity>
-    {
-    }
+    private sealed record EmptyEntity : Schema<EmptyEntity>;
 }

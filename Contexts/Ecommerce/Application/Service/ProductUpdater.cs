@@ -9,6 +9,7 @@ using Ecommerce.Domain.Model;
 using Ecommerce.Domain.Repository;
 using Ecommerce.Domain.Service;
 using Ecommerce.Domain.ValueObject;
+using OneOf;
 
 public sealed class ProductUpdaterService : IProductUpdaterService
 {
@@ -21,47 +22,48 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         _productRepository = productRepository;
     }
 
-    public async Task<Result<ResultUnit, ProblemDetailsException>> UpdateProduct(
+    public async Task<OneOf<byte, ProblemDetailsException>> UpdateProduct(
         Guid id,
         UpdateProductCommand command,
         CancellationToken cancellationToken)
     {
         var getProductByIdResult = await _productRepository.GetById(id, cancellationToken);
-        if (getProductByIdResult.IsFaulted)
-        {
-            return new Result<ResultUnit, ProblemDetailsException>(getProductByIdResult.Error);
-        }
 
-        var currentProduct = getProductByIdResult.Value.ToPrimitives();
+        return await getProductByIdResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
+            async product =>
+            {
+                var currentProduct = product.ToPrimitives();
 
-        var nextProductId = new ProductId(id);
-        var nextProductTitle = new ProductTitle(command.Title ?? currentProduct.Title);
-        var nextProductDescription = new ProductDescription(command.Description ?? currentProduct.Description);
-        var nextProductStatus = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status));
-        var nextProductPrice = new ProductPrice(command.Price ?? currentProduct.Price);
-        var nextProduct = new Product
-        {
-            Id = nextProductId,
-            Title = nextProductTitle,
-            Description = nextProductDescription,
-            Status = nextProductStatus,
-            Price = nextProductPrice
-        };
+                var nextProduct = new Product
+                {
+                    Id = new ProductId(id),
+                    Title = new ProductTitle(command.Title ?? currentProduct.Title),
+                    Description = new ProductDescription(command.Description ?? currentProduct.Description),
+                    Status = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status)),
+                    Price = new ProductPrice(command.Price ?? currentProduct.Price)
+                };
 
-        var productIntegrityResult = nextProduct.CheckIntegrity();
-        if (productIntegrityResult.IsFaulted)
-        {
-            return new Result<ResultUnit, ProblemDetailsException>(productIntegrityResult.Error);
-        }
+                try
+                {
+                    product.CheckIntegrity();
+                }
+                catch (ProblemDetailsException ex)
+                {
+                    return ex;
+                }
 
-        var updateProductResult = await _productRepository.Update(nextProduct, cancellationToken);
-        if (updateProductResult.IsFaulted)
-        {
-            return new Result<ResultUnit, ProblemDetailsException>(updateProductResult.Error);
-        }
+                var updateProductResult = await _productRepository.Update(nextProduct, cancellationToken);
 
-        await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
-
-        return new Result<ResultUnit, ProblemDetailsException>();
+                return await updateProductResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
+                    async _ =>
+                    {
+                        await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
+                        return default;
+                    },
+                    async exception => await Task.FromResult(exception)
+                );
+            },
+            async exception => await Task.FromResult(exception)
+        );
     }
 }

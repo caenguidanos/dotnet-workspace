@@ -2,11 +2,11 @@ namespace Ecommerce.Domain.Service;
 
 using Common.Domain;
 using Ecommerce.Application.Command;
-using Ecommerce.Infrastructure.DataTransfer;
+using OneOf;
 
 public interface IProductUpdaterService
 {
-    Task<Result<ResultUnit, ProblemDetailsException>> UpdateProduct(
+    Task<OneOf<byte, ProblemDetailsException>> UpdateProduct(
         Guid id,
         UpdateProductCommand command,
         CancellationToken cancellationToken);
