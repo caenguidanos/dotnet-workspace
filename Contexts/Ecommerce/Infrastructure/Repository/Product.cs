@@ -36,10 +36,7 @@ public sealed class ProductRepository : IProductRepository
             var products = new List<Product>();
 
             var results = await conn.QueryAsync<ProductPrimitives>(command);
-            if (results is null)
-            {
-                return products;
-            }
+            if (results is null) return products;
 
             foreach (var result in results)
             {
@@ -52,7 +49,7 @@ public sealed class ProductRepository : IProductRepository
                     Price = new ProductPrice(result.Price)
                 };
 
-                product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
+                product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
 
                 try
                 {
@@ -93,10 +90,7 @@ public sealed class ProductRepository : IProductRepository
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command);
-            if (result is null)
-            {
-                return new ProductNotFoundException();
-            }
+            if (result is null) return new ProductNotFoundException();
 
             var product = new Product
             {
@@ -107,7 +101,7 @@ public sealed class ProductRepository : IProductRepository
                 Price = new ProductPrice(result.Price)
             };
 
-            product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
+            product.AddTimeStamp(result.CreatedAt, result.UpdatedAt);
 
             try
             {

@@ -19,7 +19,7 @@ public class WebAppFactory : WebApplicationFactory<Program>
 {
     private string _connectionString { get; set; } = string.Empty;
 
-    private readonly PostgresDatabaseFactory _postgres = new(template: "ecommerce");
+    private readonly PostgresDatabaseFactory _postgres = new("ecommerce");
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -32,10 +32,7 @@ public class WebAppFactory : WebApplicationFactory<Program>
                 var dbContext = servicesConfiguration
                     .SingleOrDefault(serviceDescriptor => serviceDescriptor.ServiceType == typeof(IDbContext));
 
-                if (dbContext is not null)
-                {
-                    servicesConfiguration.Remove(dbContext);
-                }
+                if (dbContext is not null) servicesConfiguration.Remove(dbContext);
 
                 var customDbContext = Mock.Of<IDbContext>();
 

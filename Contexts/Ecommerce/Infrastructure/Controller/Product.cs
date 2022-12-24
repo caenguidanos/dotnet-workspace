@@ -41,7 +41,7 @@ public sealed class ProductController : ControllerBase
             },
             exception => new HttpResultResponse
             {
-                Body = exception.GetProblemDetails(instance: Request.Path)
+                Body = exception.GetProblemDetails(Request.Path)
             }
         );
     }
@@ -65,7 +65,7 @@ public sealed class ProductController : ControllerBase
             },
             exception => new HttpResultResponse
             {
-                Body = exception.GetProblemDetails(instance: Request.Path)
+                Body = exception.GetProblemDetails(Request.Path)
             }
         );
     }
@@ -95,7 +95,7 @@ public sealed class ProductController : ControllerBase
             },
             exception => new HttpResultResponse
             {
-                Body = exception.GetProblemDetails(instance: Request.Path)
+                Body = exception.GetProblemDetails(Request.Path)
             }
         );
     }
@@ -118,7 +118,7 @@ public sealed class ProductController : ControllerBase
             },
             exception => new HttpResultResponse
             {
-                Body = exception.GetProblemDetails(instance: Request.Path)
+                Body = exception.GetProblemDetails(Request.Path)
             }
         );
     }
@@ -152,7 +152,7 @@ public sealed class ProductController : ControllerBase
             },
             exception => new HttpResultResponse
             {
-                Body = exception.GetProblemDetails(instance: Request.Path)
+                Body = exception.GetProblemDetails(Request.Path)
             }
         );
     }

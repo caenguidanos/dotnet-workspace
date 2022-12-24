@@ -9,13 +9,7 @@ public record Primitive<TValue>
         Value = value;
     }
 
-    public virtual TValue Validate()
-    {
-        throw new NotImplementedException();
-    }
+    public virtual TValue Validate() => throw new NotImplementedException();
 
-    public TValue GetValue()
-    {
-        return Value;
-    }
+    public TValue GetValue() => Value;
 }

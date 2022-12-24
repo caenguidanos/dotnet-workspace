@@ -27,8 +27,6 @@ public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand,
     }
 
     public async ValueTask<OneOf<byte, ProblemDetailsException>> Handle(UpdateProductCommand request,
-        CancellationToken cancellationToken)
-    {
-        return await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
-    }
+        CancellationToken cancellationToken) =>
+        await _productUpdaterService.UpdateProduct(request.Id, request, cancellationToken);
 }

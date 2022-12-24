@@ -12,9 +12,8 @@ public sealed record Product : Schema<ProductPrimitives>
     public required ProductStatus Status { private get; init; }
     public required ProductPrice Price { private get; init; }
 
-    public override ProductPrimitives ToPrimitives()
-    {
-        return new ProductPrimitives
+    public override ProductPrimitives ToPrimitives() =>
+        new ProductPrimitives
         {
             Id = Id.GetValue(),
             Title = Title.GetValue(),
@@ -24,7 +23,6 @@ public sealed record Product : Schema<ProductPrimitives>
             CreatedAt = CreatedAd,
             UpdatedAt = UpdatedAt
         };
-    }
 
     public void CheckIntegrity()
     {

@@ -19,8 +19,5 @@ public sealed class DbContext : IDbContext
                             throw new InvalidDataException("Trying to get [ConnectionStrings]");
     }
 
-    public string GetConnectionString()
-    {
-        return _connectionString;
-    }
+    public string GetConnectionString() => _connectionString;
 }

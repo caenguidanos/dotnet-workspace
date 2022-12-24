@@ -13,10 +13,7 @@ public record Schema<TPrimitives>
         UpdatedAt = updatedAt;
     }
 
-    public virtual TPrimitives ToPrimitives()
-    {
-        throw new NotImplementedException();
-    }
+    public virtual TPrimitives ToPrimitives() => throw new NotImplementedException();
 }
 
 public record SchemaPrimitives
