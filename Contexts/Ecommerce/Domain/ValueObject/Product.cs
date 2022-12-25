@@ -51,15 +51,15 @@ public sealed record ProductDescription : ValueOf<string>
     }
 }
 
-public sealed record ProductStatus : ValueOf<ProductStatusValue>
+public sealed record ProductStatus : ValueOf<int>
 {
-    public ProductStatus(ProductStatusValue value) : base(value)
+    public ProductStatus(int value) : base(value)
     {
     }
 
     protected override void TryValidation()
     {
-        if (!Enum.IsDefined(Value))
+        if (Value is not 0 or 1)
         {
             throw new ProductStatusInvalidException();
         }

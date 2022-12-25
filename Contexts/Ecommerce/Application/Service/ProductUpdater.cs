@@ -26,7 +26,7 @@ public sealed class ProductUpdaterService : IProductUpdaterService
                         Id = new ProductId(id),
                         Title = new ProductTitle(command.Title ?? currentProductPrimitives.Title),
                         Description = new ProductDescription(command.Description ?? currentProductPrimitives.Description),
-                        Status = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProductPrimitives.Status)),
+                        Status = new ProductStatus(command.Status ?? currentProductPrimitives.Status),
                         Price = new ProductPrice(command.Price ?? currentProductPrimitives.Price)
                     };
                 }

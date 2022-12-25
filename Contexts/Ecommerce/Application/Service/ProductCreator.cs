@@ -21,7 +21,7 @@ public sealed class ProductCreatorService : IProductCreatorService
                 Id = new ProductId(),
                 Title = new ProductTitle(title),
                 Description = new ProductDescription(description),
-                Status = new ProductStatus((ProductStatusValue)status),
+                Status = new ProductStatus(status),
                 Price = new ProductPrice(price)
             };
         }
