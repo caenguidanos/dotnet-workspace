@@ -4,7 +4,7 @@ public class ProblemDetailsException : Exception
 {
     private readonly ProblemDetails _problemDetails = new();
 
-    public void TryProblemDetailsPayload(out ProblemDetails problemDetails)
+    public void TryProblemDetails(out ProblemDetails problemDetails)
     {
         problemDetails = _problemDetails;
     }

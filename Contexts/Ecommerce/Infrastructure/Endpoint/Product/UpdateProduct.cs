@@ -28,7 +28,7 @@ public sealed class UpdateProductEndpoint : IUpdateProductEndpoint
             exception =>
             {
                 exception.SetInstance(context.Request.Path);
-                exception.TryProblemDetailsPayload(out var payload);
+                exception.TryProblemDetails(out var payload);
                 return Results.Problem(payload);
             }
         );
