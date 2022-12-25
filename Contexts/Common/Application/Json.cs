@@ -7,6 +7,12 @@ public static partial class Json
         return SearchSpacesRegExp().Replace(src, "$1");
     }
 
+    public static readonly JsonSerializerOptions HttpSerializerOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
+
     [GeneratedRegex("(\"(?:[^\"\\\\]|\\\\.)*\")|\\s+")]
     private static partial Regex SearchSpacesRegExp();
 }

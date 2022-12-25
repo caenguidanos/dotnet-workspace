@@ -1,8 +1,8 @@
-namespace Common.Infrastructure;
+namespace Common;
 
-public static class ServiceCollectionExtension
+public static class CommonModule
 {
-    public static void AddCommonConfig(this IServiceCollection services)
+    public static void RegisterCommonModule(this IServiceCollection services)
     {
         services.Configure<RouteOptions>(options =>
         {

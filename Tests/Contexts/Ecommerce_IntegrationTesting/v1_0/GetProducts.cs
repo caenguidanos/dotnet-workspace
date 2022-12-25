@@ -1,7 +1,10 @@
-namespace Ecommerce_IntegrationTesting;
+namespace Ecommerce_IntegrationTesting.v1_0;
 
+[Category("v1.0")]
 public sealed class GetProductsIntegrationTest
 {
+    private const string Version = "1.0";
+
     private EcommerceWebApplicationFactory _server = Mock.Of<EcommerceWebApplicationFactory>();
 
     [OneTimeSetUp]
@@ -20,18 +23,14 @@ public sealed class GetProductsIntegrationTest
     public async Task GivenNoProductsOnDatabase_WhenRequestAll_ThenReturnEmptyCollection()
     {
         using var httpClient = _server.CreateClient();
+        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
 
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
         var response = await httpClient.GetAsync("/product");
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
-        });
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
         var responseBody = await response.Content.ReadAsStringAsync();
         const string responseBodySnapshot = "[]";
@@ -43,6 +42,7 @@ public sealed class GetProductsIntegrationTest
     public async Task GivenProductsOnDatabase_WhenRequestAll_ThenReturnCollection()
     {
         using var httpClient = _server.CreateClient();
+        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
 
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
@@ -55,14 +55,10 @@ public sealed class GetProductsIntegrationTest
         """);
 
         var response = await httpClient.GetAsync("/product");
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
-        });
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
 
         var responseBody = await response.Content.ReadAsStringAsync();
+
         const string responseBodySnapshot = """
             [
                 {

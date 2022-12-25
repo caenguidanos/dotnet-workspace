@@ -2,7 +2,7 @@ namespace Ecommerce.Infrastructure;
 
 public interface IDbSeed
 {
-    Task RunAsync();
+    public Task PopulateAsync();
 }
 
 public sealed class DbSeed : IDbSeed
@@ -14,7 +14,7 @@ public sealed class DbSeed : IDbSeed
         _dbContext = dbContext;
     }
 
-    public async Task RunAsync()
+    public async Task PopulateAsync()
     {
         await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
 

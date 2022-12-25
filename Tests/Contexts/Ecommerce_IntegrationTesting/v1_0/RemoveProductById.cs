@@ -1,7 +1,10 @@
-namespace Ecommerce_IntegrationTesting;
+namespace Ecommerce_IntegrationTesting.v1_0;
 
-public sealed class GetProductByIdIntegrationTest
+[Category("v1.0")]
+public sealed class RemoveProductByIdIntegrationTest
 {
+    private const string Version = "1.0";
+
     private EcommerceWebApplicationFactory _server = Mock.Of<EcommerceWebApplicationFactory>();
 
     [OneTimeSetUp]
@@ -20,22 +23,20 @@ public sealed class GetProductByIdIntegrationTest
     public async Task GivenNoProductsOnDatabase_WhenRequestById_ThenReturnProblemDetails()
     {
         using var httpClient = _server.CreateClient();
+        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
 
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
         """);
 
-        var response = await httpClient.GetAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/problem+json")));
-        });
+        var response = await httpClient.DeleteAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
 
         var responseBody = await response.Content.ReadAsStringAsync();
+
         const string responseBodySnapshot = """
             {
+                "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                 "title": "NotFound",
                 "status": 404,
                 "detail": "Product not found with criteria",
@@ -47,9 +48,10 @@ public sealed class GetProductByIdIntegrationTest
     }
 
     [Test]
-    public async Task GivenProductsOnDatabase_WhenRequestById_ThenReturnCoincidence()
+    public async Task GivenProductsOnDatabase_WhenRequestById_ThenReturnAccepted()
     {
         using var httpClient = _server.CreateClient();
+        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
 
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
@@ -61,25 +63,10 @@ public sealed class GetProductByIdIntegrationTest
             VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
         """);
 
-        var response = await httpClient.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        var response = await httpClient.DeleteAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.Accepted));
 
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(MediaTypeHeaderValue.Parse("application/json")));
-        });
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        const string responseBodySnapshot = """
-            {
-                "id": "8a5b3e4a-3e08-492c-869e-317a4d04616a",
-                "title": "Mustang Shelby GT500",
-                "description": "Great car",
-                "price": 7900000,
-                "status": 1
-            }
-        """;
-
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
+        var responsePostRemove = await httpClient.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
+        Assert.That(responsePostRemove.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
     }
 }

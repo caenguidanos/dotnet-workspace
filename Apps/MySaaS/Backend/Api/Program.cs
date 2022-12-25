@@ -1,42 +1,30 @@
-using Common.Infrastructure;
+using Asp.Versioning;
 
-using Ecommerce.Infrastructure;
+using Common;
+
+using Ecommerce;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
+builder.Services.AddCors();
+
 builder.Services.AddMediator();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
 
-#if DEBUG
-builder.Services.AddSwaggerGen();
-#endif
+builder.Services.AddApiVersioning(options => { options.ApiVersionReader = new HeaderApiVersionReader("x-api-version"); });
 
-builder.Services.AddCommonConfig();
-
-builder.Services.AddEcommerceServices();
-
-#if DEBUG
-builder.Services.AddEcommerceSeed();
-#endif
+builder.Services.RegisterCommonModule();
+builder.Services.RegisterEcommerceModule();
 
 var app = builder.Build();
 
-app.UseW3CLogging();
-
-#if DEBUG
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
     app.UseEcommerceSeed();
 }
-#endif
 
-app.MapControllers();
+app.MapEcommerceEndpoints();
 
 app.UseCors();
 
