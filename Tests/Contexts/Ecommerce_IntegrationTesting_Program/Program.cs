@@ -1,13 +1,15 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddProblemDetails();
 builder.Services.AddMediator();
-
-builder.Services.AddApiVersioning(options => { options.ApiVersionReader = new HeaderApiVersionReader("x-api-version"); });
 
 builder.Services.RegisterCommonModule();
 builder.Services.RegisterEcommerceModule();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
 app.MapEcommerceEndpoints();
 

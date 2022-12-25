@@ -1,4 +1,4 @@
-namespace Ecommerce_IntegrationTesting.v1_0;
+namespace Ecommerce_IntegrationTesting;
 
 [Category("v1.0")]
 public sealed class GetProductsIntegrationTest
@@ -30,12 +30,14 @@ public sealed class GetProductsIntegrationTest
         """);
 
         var response = await httpClient.GetAsync("/product");
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/json", "utf-8")));
+        });
 
         var responseBody = await response.Content.ReadAsStringAsync();
-        const string responseBodySnapshot = "[]";
-
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("[]")));
     }
 
     [Test]
@@ -55,11 +57,14 @@ public sealed class GetProductsIntegrationTest
         """);
 
         var response = await httpClient.GetAsync("/product");
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/json", "utf-8")));
+        });
 
         var responseBody = await response.Content.ReadAsStringAsync();
-
-        const string responseBodySnapshot = """
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
             [
                 {
                     "id": "092cc0ea-a54f-48a3-87ed-0e7f43c023f1",
@@ -76,8 +81,6 @@ public sealed class GetProductsIntegrationTest
                     "status": 1
                 }
             ]
-        """;
-
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
+        """)));
     }
 }

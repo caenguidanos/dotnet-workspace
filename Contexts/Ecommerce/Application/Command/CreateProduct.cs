@@ -2,6 +2,7 @@ namespace Ecommerce.Application;
 
 public readonly struct CreateProductCommand : IRequest<OneOf<byte, ProblemDetailsException>>
 {
+    public required Guid Id { get; init; }
     public required int Price { get; init; }
     public required string Title { get; init; }
     public required string Description { get; init; }
@@ -20,6 +21,7 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
     public async ValueTask<OneOf<byte, ProblemDetailsException>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
     {
         var result = await _productCreatorService.AddNewProduct(
+            request.Id,
             request.Title,
             request.Description,
             request.Status,

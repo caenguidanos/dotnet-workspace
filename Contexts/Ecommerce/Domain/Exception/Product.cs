@@ -10,6 +10,26 @@ public sealed class ProductNotFoundException : ProblemDetailsException
     }
 }
 
+public sealed class ProductIdUniqueException : ProblemDetailsException
+{
+    public ProductIdUniqueException()
+    {
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
+        SetDetail("Product id is not unique");
+        SetStatusCode(HttpStatusCode.BadRequest);
+    }
+}
+
+public sealed class ProductTitleUniqueException : ProblemDetailsException
+{
+    public ProductTitleUniqueException()
+    {
+        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
+        SetDetail("Product title is not unique");
+        SetStatusCode(HttpStatusCode.BadRequest);
+    }
+}
+
 public sealed class ProductIdInvalidException : ProblemDetailsException
 {
     public ProductIdInvalidException()
@@ -25,17 +45,7 @@ public sealed class ProductTitleInvalidException : ProblemDetailsException
     public ProductTitleInvalidException()
     {
         SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
-        SetDetail("Product title length is invalid");
-        SetStatusCode(HttpStatusCode.BadRequest);
-    }
-}
-
-public sealed class ProductTitleUniqueException : ProblemDetailsException
-{
-    public ProductTitleUniqueException()
-    {
-        SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
-        SetDetail("Product title is not unique");
+        SetDetail("Product title is invalid");
         SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
@@ -45,7 +55,7 @@ public sealed class ProductDescriptionInvalidException : ProblemDetailsException
     public ProductDescriptionInvalidException()
     {
         SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
-        SetDetail("Product description length is invalid");
+        SetDetail("Product description is invalid");
         SetStatusCode(HttpStatusCode.BadRequest);
     }
 }
@@ -65,7 +75,7 @@ public sealed class ProductStatusInvalidException : ProblemDetailsException
     public ProductStatusInvalidException()
     {
         SetTitle(HttpStatusText.From(HttpStatusCode.BadRequest));
-        SetDetail("Product status has invalid value");
+        SetDetail("Product status is invalid");
         SetStatusCode(HttpStatusCode.BadRequest);
     }
 }

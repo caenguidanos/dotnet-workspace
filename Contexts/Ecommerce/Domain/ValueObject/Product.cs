@@ -2,7 +2,11 @@ namespace Ecommerce.Domain;
 
 public sealed record ProductId : ValueOf<Guid>
 {
-    public ProductId(Guid? id = null) : base(id ?? Guid.NewGuid())
+    public ProductId() : base(Guid.NewGuid())
+    {
+    }
+
+    public ProductId(Guid id) : base(id)
     {
     }
 

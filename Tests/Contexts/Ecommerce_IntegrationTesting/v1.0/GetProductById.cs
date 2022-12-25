@@ -1,4 +1,4 @@
-namespace Ecommerce_IntegrationTesting.v1_0;
+namespace Ecommerce_IntegrationTesting;
 
 [Category("v1.0")]
 public sealed class GetProductByIdIntegrationTest
@@ -30,11 +30,14 @@ public sealed class GetProductByIdIntegrationTest
         """);
 
         var response = await httpClient.GetAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1");
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
+            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
+        });
 
         var responseBody = await response.Content.ReadAsStringAsync();
-
-        const string responseBodySnapshot = """
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
             {
                 "type": "https://tools.ietf.org/html/rfc7231#section-6.5.4",
                 "title": "NotFound",
@@ -42,9 +45,7 @@ public sealed class GetProductByIdIntegrationTest
                 "detail": "Product not found with criteria",
                 "instance": "/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1"
             }
-        """;
-
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
+        """)));
     }
 
     [Test]
@@ -64,11 +65,14 @@ public sealed class GetProductByIdIntegrationTest
         """);
 
         var response = await httpClient.GetAsync("/product/8a5b3e4a-3e08-492c-869e-317a4d04616a");
-        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        Assert.Multiple(() =>
+        {
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/json", "utf-8")));
+        });
 
         var responseBody = await response.Content.ReadAsStringAsync();
-
-        const string responseBodySnapshot = """
+        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
             {
                 "id": "8a5b3e4a-3e08-492c-869e-317a4d04616a",
                 "title": "Mustang Shelby GT500",
@@ -76,8 +80,6 @@ public sealed class GetProductByIdIntegrationTest
                 "price": 7900000,
                 "status": 1
             }
-        """;
-
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString(responseBodySnapshot)));
+        """)));
     }
 }

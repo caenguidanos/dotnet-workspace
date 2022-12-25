@@ -8,14 +8,16 @@ public static class EcommerceModule
 
         services.AddTransient<IDbSeed, DbSeed>();
 
+        services.AddSingleton<IProductRepository, ProductRepository>();
+
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
         services.AddSingleton<IProductRemoverService, ProductRemoverService>();
-        services.AddSingleton<IProductRepository, ProductRepository>();
+
         services.AddSingleton<IGetProductsEndpoint, GetProductsEndpoint>();
         services.AddSingleton<IGetProductByIdEndpoint, GetProductByIdEndpoint>();
         services.AddSingleton<ICreateProductEndpoint, CreateProductEndpoint>();
-        services.AddSingleton<IDeleteProductEndpoint, DeleteProductEndpoint>();
+        services.AddSingleton<IRemoveProductByIdEndpoint, RemoveProductByIdEndpoint>();
         services.AddSingleton<IUpdateProductEndpoint, UpdateProductEndpoint>();
     }
 
@@ -28,7 +30,7 @@ public static class EcommerceModule
         router.MapGet("/product", router.ServiceProvider.GetRequiredService<IGetProductsEndpoint>().HandleAsync);
         router.MapGet("/product/{id:guid}", router.ServiceProvider.GetRequiredService<IGetProductByIdEndpoint>().HandleAsync);
         router.MapPost("/product", router.ServiceProvider.GetRequiredService<ICreateProductEndpoint>().HandleAsync);
-        router.MapDelete("/product/{id:guid}", router.ServiceProvider.GetRequiredService<IDeleteProductEndpoint>().HandleAsync);
+        router.MapDelete("/product/{id:guid}", router.ServiceProvider.GetRequiredService<IRemoveProductByIdEndpoint>().HandleAsync);
         router.MapPut("/product/{id:guid}", router.ServiceProvider.GetRequiredService<IUpdateProductEndpoint>().HandleAsync);
     }
 

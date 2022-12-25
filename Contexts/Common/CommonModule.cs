@@ -9,5 +9,11 @@ public static class CommonModule
             options.LowercaseUrls = true;
             options.LowercaseQueryStrings = true;
         });
+
+        services.AddApiVersioning(options =>
+        {
+            options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            options.UnsupportedApiVersionStatusCode = (int)HttpStatusCode.NotImplemented;
+        });
     }
 }

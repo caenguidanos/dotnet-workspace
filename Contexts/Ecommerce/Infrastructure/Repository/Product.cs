@@ -105,9 +105,13 @@ public sealed class ProductRepository : IProductRepository
             {
                 case PostgresErrorCodes.UniqueViolation:
                 {
-                    if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
+                    switch (postgresException.ConstraintName)
                     {
-                        return new ProductTitleUniqueException();
+                        case ProductConstraints.UniqueId:
+                            return new ProductIdUniqueException();
+
+                        case ProductConstraints.UniqueTitle:
+                            return new ProductTitleUniqueException();
                     }
 
                     break;

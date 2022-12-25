@@ -13,6 +13,7 @@ public sealed class CreateProductEndpoint : ICreateProductEndpoint
     {
         var command = new CreateProductCommand
         {
+            Id = body.Id,
             Title = body.Title,
             Description = body.Description,
             Price = body.Price,
@@ -26,8 +27,9 @@ public sealed class CreateProductEndpoint : ICreateProductEndpoint
             exception =>
             {
                 exception.SetInstance(context.Request.Path);
-                exception.TryProblemDetails(out var payload);
-                return Results.Problem(payload);
+                exception.AsProblemDetails(out var problemDetails);
+
+                return Results.Problem(problemDetails);
             }
         );
     }

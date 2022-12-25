@@ -11,4 +11,5 @@
             x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=usecases_005Cv1_005F0/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean
             x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=util/@EntryIndexedValue">True</s:Boolean>
+    <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=v1_002E0/@EntryIndexedValue">True</s:Boolean>
     <s:Boolean x:Key="/Default/CodeInspection/NamespaceProvider/NamespaceFoldersToSkip/=v1_005F0/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

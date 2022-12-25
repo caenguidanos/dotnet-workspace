@@ -1,10 +1,10 @@
 namespace Ecommerce.Infrastructure;
 
-public sealed class DeleteProductEndpoint : IDeleteProductEndpoint
+public sealed class RemoveProductByIdEndpoint : IRemoveProductByIdEndpoint
 {
     private ISender _sender { get; }
 
-    public DeleteProductEndpoint(ISender sender)
+    public RemoveProductByIdEndpoint(ISender sender)
     {
         _sender = sender;
     }
@@ -20,8 +20,9 @@ public sealed class DeleteProductEndpoint : IDeleteProductEndpoint
             exception =>
             {
                 exception.SetInstance(context.Request.Path);
-                exception.TryProblemDetails(out var payload);
-                return Results.Problem(payload);
+                exception.AsProblemDetails(out var problemDetails);
+
+                return Results.Problem(problemDetails);
             }
         );
     }
