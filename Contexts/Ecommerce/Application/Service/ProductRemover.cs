@@ -19,9 +19,10 @@ public sealed class ProductRemoverService : IProductRemoverService
             async _ =>
             {
                 await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
+
                 return default;
             },
-            async exception => await Task.FromResult(exception)
+            async problemDetailsException => await Task.FromResult(problemDetailsException)
         );
     }
 }

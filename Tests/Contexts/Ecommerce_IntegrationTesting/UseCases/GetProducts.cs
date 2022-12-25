@@ -47,27 +47,11 @@ public sealed class GetProductsIntegrationTest
         await _server.ExecuteSqlAsync("""
             TRUNCATE product;
 
-            INSERT INTO product (id, title, description, price, status, __created_at__, __updated_at__)
-            VALUES (
-                '092cc0ea-a54f-48a3-87ed-0e7f43c023f1',
-                'American Professional II Stratocaster',
-                'Great guitar',
-                219900,
-                1,
-                '2022-12-18T21:25:30.043264Z',
-                '2022-12-18T21:25:30.043264Z'
-            );
+            INSERT INTO product (id, title, description, price, status)
+            VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
 
-            INSERT INTO product (id, title, description, price, status, __created_at__, __updated_at__)
-            VALUES (
-                '8a5b3e4a-3e08-492c-869e-317a4d04616a',
-                'Mustang Shelby GT500',
-                'Great car',
-                7900000,
-                1,
-                '2022-12-18T21:25:30.043264Z',
-                '2022-12-18T21:25:30.043264Z'
-            );
+            INSERT INTO product (id, title, description, price, status)
+            VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
         """);
 
         var response = await httpClient.GetAsync("/product");
@@ -86,18 +70,14 @@ public sealed class GetProductsIntegrationTest
                     "title": "American Professional II Stratocaster",
                     "description": "Great guitar",
                     "price": 219900,
-                    "status": 1,
-                    "created_at": "2022-12-18T21:25:30.043264Z",
-                    "updated_at": "2022-12-18T21:25:30.043264Z"
+                    "status": 1
                 },
                 {
                     "id": "8a5b3e4a-3e08-492c-869e-317a4d04616a",
                     "title": "Mustang Shelby GT500",
                     "description": "Great car",
                     "price": 7900000,
-                    "status": 1,
-                    "created_at": "2022-12-18T21:25:30.043264Z",
-                    "updated_at": "2022-12-18T21:25:30.043264Z"
+                    "status": 1
                 }
             ]
         """;

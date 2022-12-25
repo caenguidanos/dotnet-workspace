@@ -13,10 +13,10 @@ public sealed class ProductCreatorService : IProductCreatorService
 
     public async Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(string title, string description, int status, int price, CancellationToken cancellationToken)
     {
-        Product product;
+        Product newProduct;
         try
         {
-            product = new Product
+            newProduct = new Product
             {
                 Id = new ProductId(),
                 Title = new ProductTitle(title),
@@ -25,24 +25,24 @@ public sealed class ProductCreatorService : IProductCreatorService
                 Price = new ProductPrice(price)
             };
         }
-        catch (ProblemDetailsException ex)
+        catch (ProblemDetailsException problemDetailsException)
         {
-            return ex;
+            return problemDetailsException;
         }
 
-        var saveProductResult = await _productRepository.Save(product, cancellationToken);
+        var saveProductResult = await _productRepository.Save(newProduct, cancellationToken);
 
         return await saveProductResult.Match<Task<OneOf<Guid, ProblemDetailsException>>>(
             async _ =>
             {
-                var productPrimitives = product.ToPrimitives();
+                var productPrimitives = newProduct.ToPrimitives();
 
                 var productCreatedEvent = new ProductCreatedEvent { Product = productPrimitives.Id };
                 await _publisher.Publish(productCreatedEvent, cancellationToken);
 
                 return productPrimitives.Id;
             },
-            async exception => await Task.FromResult(exception)
+            async problemDetailsException => await Task.FromResult(problemDetailsException)
         );
     }
 }

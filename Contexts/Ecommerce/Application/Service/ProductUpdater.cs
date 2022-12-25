@@ -16,39 +16,38 @@ public sealed class ProductUpdaterService : IProductUpdaterService
         var getProductByIdResult = await _productRepository.GetById(id, cancellationToken);
 
         return await getProductByIdResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
-            async product =>
+            async currentProductPrimitives =>
             {
-                var currentProduct = product.ToPrimitives();
-
-                Product nextProduct;
+                Product updatedProduct;
                 try
                 {
-                    nextProduct = new Product
+                    updatedProduct = new Product
                     {
                         Id = new ProductId(id),
-                        Title = new ProductTitle(command.Title ?? currentProduct.Title),
-                        Description = new ProductDescription(command.Description ?? currentProduct.Description),
-                        Status = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProduct.Status)),
-                        Price = new ProductPrice(command.Price ?? currentProduct.Price)
+                        Title = new ProductTitle(command.Title ?? currentProductPrimitives.Title),
+                        Description = new ProductDescription(command.Description ?? currentProductPrimitives.Description),
+                        Status = new ProductStatus((ProductStatusValue)(command.Status ?? (int)currentProductPrimitives.Status)),
+                        Price = new ProductPrice(command.Price ?? currentProductPrimitives.Price)
                     };
                 }
-                catch (ProblemDetailsException ex)
+                catch (ProblemDetailsException problemDetailsException)
                 {
-                    return ex;
+                    return problemDetailsException;
                 }
 
-                var updateProductResult = await _productRepository.Update(nextProduct, cancellationToken);
+                var updateProductResult = await _productRepository.Update(updatedProduct, cancellationToken);
 
                 return await updateProductResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
                     async _ =>
                     {
                         await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
+
                         return default;
                     },
-                    async exception => await Task.FromResult(exception)
+                    async problemDetailsException => await Task.FromResult(problemDetailsException)
                 );
             },
-            async exception => await Task.FromResult(exception)
+            async problemDetailsException => await Task.FromResult(problemDetailsException)
         );
     }
 }

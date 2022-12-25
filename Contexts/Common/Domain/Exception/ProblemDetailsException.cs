@@ -10,9 +10,9 @@ public class ProblemDetailsException : Exception
         return _problemDetails;
     }
 
-    protected void SetStatusCode(HttpStatusCode status) => _problemDetails.Status = (int)status;
-
     protected void SetTitle(string title) => _problemDetails.Title = title;
 
     protected void SetDetail(string detail) => _problemDetails.Detail = detail;
+
+    protected void SetStatusCode(HttpStatusCode status) => _problemDetails.Status = (int)status;
 }

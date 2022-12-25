@@ -1,6 +1,6 @@
 namespace Ecommerce.Infrastructure;
 
-public struct ProductConstraints
+public readonly struct ProductConstraints
 {
     public const string UniqueTitle = "product_title_key";
     public const string CheckStatus = "check_status_value";

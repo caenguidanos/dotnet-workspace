@@ -1,5 +1,7 @@
 namespace Common.Domain;
 
-public class AggregateRoot
+public interface IAggregateRoot<out TBase, TBasePrimitives>
 {
+    public TBasePrimitives ToPrimitives();
+    public static virtual TBase FromPrimitives(TBasePrimitives primitives) => throw new NotImplementedException();
 }

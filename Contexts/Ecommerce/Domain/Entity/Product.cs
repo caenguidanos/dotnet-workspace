@@ -1,6 +1,6 @@
 namespace Ecommerce.Domain;
 
-public sealed record Product : Schema<ProductPrimitives>
+public sealed record Product : IAggregateRoot<Product, ProductPrimitives>
 {
     public required ProductId Id { private get; init; }
     public required ProductTitle Title { private get; init; }
@@ -8,7 +8,7 @@ public sealed record Product : Schema<ProductPrimitives>
     public required ProductStatus Status { private get; init; }
     public required ProductPrice Price { private get; init; }
 
-    public override ProductPrimitives ToPrimitives() =>
+    public ProductPrimitives ToPrimitives() =>
         new()
         {
             Id = Id.GetValue(),
@@ -16,16 +16,24 @@ public sealed record Product : Schema<ProductPrimitives>
             Description = Description.GetValue(),
             Status = Status.GetValue(),
             Price = Price.GetValue(),
-            CreatedAt = CreatedAd,
-            UpdatedAt = UpdatedAt
+        };
+
+    public static Product FromPrimitives(ProductPrimitives productPrimitives) =>
+        new()
+        {
+            Id = new ProductId(productPrimitives.Id),
+            Title = new ProductTitle(productPrimitives.Title),
+            Description = new ProductDescription(productPrimitives.Description),
+            Status = new ProductStatus(productPrimitives.Status),
+            Price = new ProductPrice(productPrimitives.Price),
         };
 }
 
-public sealed record ProductPrimitives : SchemaPrimitives
+public readonly struct ProductPrimitives
 {
-    public required Guid Id { get; set; }
-    public required string Title { get; set; }
-    public required string Description { get; set; }
-    public required int Price { get; set; }
-    public required ProductStatusValue Status { get; set; }
+    public required Guid Id { get; init; }
+    public required string Title { get; init; }
+    public required string Description { get; init; }
+    public required int Price { get; init; }
+    public required ProductStatusValue Status { get; init; }
 }

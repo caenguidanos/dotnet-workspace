@@ -9,7 +9,7 @@ public sealed class ProductRepository : IProductRepository
         _dbContext = dbContext;
     }
 
-    public async Task<OneOf<List<Product>, ProblemDetailsException>> Get(CancellationToken cancellationToken)
+    public async Task<OneOf<IEnumerable<ProductPrimitives>, ProblemDetailsException>> Get(CancellationToken cancellationToken)
     {
         try
         {
@@ -17,42 +17,17 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                SELECT id, title, description, status, price, __created_at__ CreatedAt, __updated_at__ UpdatedAt
+                SELECT id, title, description, status, price
                 FROM product
             ";
 
             var command = new CommandDefinition(sql, cancellationToken: cancellationToken);
 
-            var products = new List<Product>();
-
             var results = await conn.QueryAsync<ProductPrimitives>(command);
-            if (results is null) return products;
 
-            foreach (var result in results)
-            {
-                Product product;
-                try
-                {
-                    product = new Product
-                    {
-                        Id = new ProductId(result.Id),
-                        Title = new ProductTitle(result.Title),
-                        Description = new ProductDescription(result.Description),
-                        Status = new ProductStatus(result.Status),
-                        Price = new ProductPrice(result.Price)
-                    };
-
-                    product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
-                }
-                catch (ProblemDetailsException ex)
-                {
-                    return ex;
-                }
-
-                products.Add(product);
-            }
-
-            return products;
+            return results is null
+                ? OneOf<IEnumerable<ProductPrimitives>, ProblemDetailsException>.FromT0(Enumerable.Empty<ProductPrimitives>())
+                : OneOf<IEnumerable<ProductPrimitives>, ProblemDetailsException>.FromT0(results);
         }
         catch (Exception ex)
         {
@@ -60,7 +35,7 @@ public sealed class ProductRepository : IProductRepository
         }
     }
 
-    public async Task<OneOf<Product, ProblemDetailsException>> GetById(Guid id, CancellationToken cancellationToken)
+    public async Task<OneOf<ProductPrimitives, ProblemDetailsException>> GetById(Guid id, CancellationToken cancellationToken)
     {
         try
         {
@@ -68,7 +43,7 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                SELECT id, title, description, status, price, __created_at__ CreatedAt, __updated_at__ UpdatedAt
+                SELECT id, title, description, status, price
                 FROM product
                 WHERE id = @Id
             ";
@@ -79,28 +54,12 @@ public sealed class ProductRepository : IProductRepository
             var command = new CommandDefinition(sql, parameters, cancellationToken: cancellationToken);
 
             var result = await conn.QueryFirstOrDefaultAsync<ProductPrimitives>(command);
-            if (result is null) return new ProductNotFoundException();
-
-            Product product;
-            try
+            if (result.Id == default)
             {
-                product = new Product
-                {
-                    Id = new ProductId(result.Id),
-                    Title = new ProductTitle(result.Title),
-                    Description = new ProductDescription(result.Description),
-                    Status = new ProductStatus(result.Status),
-                    Price = new ProductPrice(result.Price)
-                };
-
-                product.AddTimeStamp(createdAt: result.CreatedAt, updatedAt: result.UpdatedAt);
-            }
-            catch (ProblemDetailsException ex)
-            {
-                return ex;
+                return new ProductNotFoundException();
             }
 
-            return product;
+            return result;
         }
         catch (Exception ex)
         {
@@ -177,7 +136,7 @@ public sealed class ProductRepository : IProductRepository
 
             var result = await conn.ExecuteAsync(command);
 
-            return result is 0 ? new ProductNotFoundException() : default(byte);
+            return result is DbConstants.NotAffectedRows ? new ProductNotFoundException() : default(byte);
         }
         catch (Exception ex)
         {
