@@ -17,7 +17,12 @@ public sealed class GetProductByIdEndpoint : IGetProductByIdEndpoint
 
         return result.Match(
             product => Results.Json(product, options: Json.HttpSerializerOptions),
-            exception => Results.Problem(exception.GetProblemDetails(instance: context.Request.Path))
+            exception =>
+            {
+                exception.SetInstance(context.Request.Path);
+                exception.TryProblemDetailsPayload(out var payload);
+                return Results.Problem(payload);
+            }
         );
     }
 }

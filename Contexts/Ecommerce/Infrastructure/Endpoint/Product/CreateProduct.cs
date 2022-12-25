@@ -23,7 +23,12 @@ public sealed class CreateProductEndpoint : ICreateProductEndpoint
 
         return result.Match(
             _ => Results.Accepted(),
-            exception => Results.Problem(exception.GetProblemDetails(instance: context.Request.Path))
+            exception =>
+            {
+                exception.SetInstance(context.Request.Path);
+                exception.TryProblemDetailsPayload(out var payload);
+                return Results.Problem(payload);
+            }
         );
     }
 }
