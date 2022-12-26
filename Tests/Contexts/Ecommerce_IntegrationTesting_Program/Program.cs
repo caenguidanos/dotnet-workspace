@@ -12,7 +12,7 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
     serverOptions.Limits.MinResponseDataRate = new MinDataRate(
         bytesPerSecond: 100, gracePeriod: TimeSpan.FromSeconds(10));
-    
+
     serverOptions.Limits.RequestHeadersTimeout = TimeSpan.FromSeconds(1);
 });
 

@@ -36,6 +36,11 @@ public class EcommerceWebApplicationFactory : WebApplicationFactory<Program>
         await conn.ExecuteAsync(sql);
     }
 
+    public async Task TruncateTableAsync(string table)
+    {
+        await ExecuteSqlAsync($"TRUNCATE {table};");
+    }
+
     public async Task DropDatabaseAsync()
     {
         await _postgres.DisposeAsync();

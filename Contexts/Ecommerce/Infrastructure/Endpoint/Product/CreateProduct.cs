@@ -8,7 +8,7 @@ public sealed class CreateProductEndpoint : ICreateProductEndpoint
     {
         _sender = sender;
     }
-    
+
     public async Task<IResult> HandleAsync(HttpContext context, [FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var command = new CreateProductCommand
