@@ -2,10 +2,6 @@ namespace Ecommerce.Domain;
 
 public sealed record ProductId : ValueOf<Guid>
 {
-    public ProductId() : base(Guid.NewGuid())
-    {
-    }
-
     public ProductId(Guid id) : base(id)
     {
     }
@@ -55,15 +51,17 @@ public sealed record ProductDescription : ValueOf<string>
     }
 }
 
-public sealed record ProductStatus : ValueOf<int>
+public sealed record ProductStatus : ValueOf<string>
 {
-    public ProductStatus(int value) : base(value)
+    private readonly string[] _values = { "closed", "published" };
+
+    public ProductStatus(string value) : base(value)
     {
     }
 
     protected override void TryValidation()
     {
-        if (Value is not 0 or 1)
+        if (!_values.Contains(Value))
         {
             throw new ProductStatusInvalidException();
         }

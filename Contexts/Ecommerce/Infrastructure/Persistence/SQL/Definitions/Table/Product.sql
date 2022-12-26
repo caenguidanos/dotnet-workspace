@@ -1,9 +1,11 @@
+CREATE TYPE product_status AS ENUM ('closed', 'published');
+
 CREATE TABLE product
 (
-    title       text UNIQUE NOT NULL,
-    description text        NOT NULL,
-    price       integer     NOT NULL,
-    status      integer     NOT NULL,
+    title       text UNIQUE    NOT NULL,
+    description text           NOT NULL,
+    price       integer        NOT NULL,
+    status      product_status NOT NULL,
     PRIMARY KEY (id)
 ) INHERITS (base);
 
@@ -27,13 +29,6 @@ ALTER TABLE product
         CHECK (
                     price >= 100 AND
                     price <= 100000000
-            );
-
-ALTER TABLE product
-    ADD CONSTRAINT check_status_value
-        CHECK (
-                    status = 0 OR -- CLOSED
-                    status = 1 -- PUBLISHED
             );
 
 -- INDEX

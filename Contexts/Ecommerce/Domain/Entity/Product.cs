@@ -35,5 +35,5 @@ public readonly struct ProductPrimitives
     public required string Title { get; init; }
     public required string Description { get; init; }
     public required int Price { get; init; }
-    public required int Status { get; init; }
+    public required string Status { get; init; }
 }

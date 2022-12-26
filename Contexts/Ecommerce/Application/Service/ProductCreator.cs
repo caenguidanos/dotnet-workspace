@@ -11,7 +11,7 @@ public sealed class ProductCreatorService : IProductCreatorService
         _productRepository = productRepository;
     }
 
-    public async Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(Guid id, string title, string description, int status, int price,
+    public async Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(Guid id, string title, string description, string status, int price,
         CancellationToken cancellationToken)
     {
         Product newProduct;

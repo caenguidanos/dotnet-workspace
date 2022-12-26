@@ -1,4 +1,4 @@
-namespace Ecommerce_IntegrationTesting;
+namespace Ecommerce_IntegrationTesting.Product;
 
 [Category("v1.0")]
 public sealed class GetProductsIntegrationTest
@@ -50,10 +50,10 @@ public sealed class GetProductsIntegrationTest
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status)
-            VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
+            VALUES ('092cc0ea-a54f-48a3-87ed-0e7f43c023f1', 'American Professional II Stratocaster', 'Great guitar', 219900, 'published');
 
             INSERT INTO product (id, title, description, price, status)
-            VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 1);
+            VALUES ('8a5b3e4a-3e08-492c-869e-317a4d04616a', 'Mustang Shelby GT500', 'Great car', 7900000, 'published');
         """);
 
         var response = await httpClient.GetAsync("/product");
@@ -71,14 +71,14 @@ public sealed class GetProductsIntegrationTest
                     "title": "American Professional II Stratocaster",
                     "description": "Great guitar",
                     "price": 219900,
-                    "status": 1
+                    "status": "published"
                 },
                 {
                     "id": "8a5b3e4a-3e08-492c-869e-317a4d04616a",
                     "title": "Mustang Shelby GT500",
                     "description": "Great car",
                     "price": 7900000,
-                    "status": 1
+                    "status": "published"
                 }
             ]
         """)));

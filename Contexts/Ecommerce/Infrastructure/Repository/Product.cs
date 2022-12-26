@@ -76,7 +76,7 @@ public sealed class ProductRepository : IProductRepository
 
             const string sql = @"
                 INSERT INTO product (id, title, description, price, status)
-                VALUES (@Id, @Title, @Description, @Price, @Status)
+                VALUES (@Id, @Title, @Description, @Price, @Status::product_status)
             ";
 
             var primitives = product.ToPrimitives();
@@ -157,7 +157,7 @@ public sealed class ProductRepository : IProductRepository
 
             const string sql = @"
                 UPDATE product
-                SET title = @Title, description = @Description, price = @Price, status = @Status
+                SET title = @Title, description = @Description, price = @Price, status = @Status::product_status
                 WHERE id = @Id
             ";
 

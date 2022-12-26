@@ -6,7 +6,7 @@ public readonly struct UpdateProductCommand : IRequest<OneOf<byte, ProblemDetail
     public int? Price { get; init; }
     public string? Title { get; init; }
     public string? Description { get; init; }
-    public int? Status { get; init; }
+    public string? Status { get; init; }
 }
 
 public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, OneOf<byte, ProblemDetailsException>>

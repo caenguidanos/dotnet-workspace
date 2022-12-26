@@ -1,4 +1,4 @@
-namespace Ecommerce_IntegrationTesting;
+namespace Ecommerce_IntegrationTesting.Product;
 
 [Category("v1.0")]
 public sealed class CreateProductIntegrationTest
@@ -35,7 +35,7 @@ public sealed class CreateProductIntegrationTest
                 "title": "Samsung TV 55",
                 "description": "Perfect for movies",
                 "price": 70000,
-                "status": 0
+                "status": "closed"
             }
         """, new MediaTypeHeaderValue("application/json", "utf-8"));
 
@@ -56,7 +56,7 @@ public sealed class CreateProductIntegrationTest
             TRUNCATE product;
 
             INSERT INTO product (id, title, description, price, status)
-            VALUES ('256a4889-bd23-436c-93ac-5ec4100abceb', 'American Professional II Stratocaster', 'Great guitar', 219900, 1);
+            VALUES ('256a4889-bd23-436c-93ac-5ec4100abceb', 'American Professional II Stratocaster', 'Great guitar', 219900, 'published');
         """);
 
         var requestPayload = new StringContent("""
@@ -65,7 +65,7 @@ public sealed class CreateProductIntegrationTest
                 "title": "Samsung TV 55",
                 "description": "Perfect for movies",
                 "price": 70000,
-                "status": 0
+                "status": "published"
             }
         """, new MediaTypeHeaderValue("application/json", "utf-8"));
 
@@ -104,7 +104,7 @@ public sealed class CreateProductIntegrationTest
                 "title": "Samsung TV 55",
                 "description": "Perfect for movies",
                 "price": 70000,
-                "status": 0
+                "status": "closed"
             }
         """, new MediaTypeHeaderValue("application/json", "utf-8"));
 
@@ -141,7 +141,7 @@ public sealed class CreateProductIntegrationTest
                 "title": "a",
                 "description": "Perfect for movies",
                 "price": 70000,
-                "status": 0
+                "status": "closed"
             }
         """, new MediaTypeHeaderValue("application/json", "utf-8"));
 
@@ -180,7 +180,7 @@ public sealed class CreateProductIntegrationTest
                 "title": "Samsung TV 55",
                 "description": "e",
                 "price": 70000,
-                "status": 0
+                "status": "closed"
             }
         """, new MediaTypeHeaderValue("application/json", "utf-8"));
 
@@ -219,7 +219,7 @@ public sealed class CreateProductIntegrationTest
                 "title": "Samsung TV 55",
                 "description": "Perfect for movies",
                 "price": 1,
-                "status": 0
+                "status": "closed"
             }
         """, new MediaTypeHeaderValue("application/json", "utf-8"));
 
@@ -258,7 +258,7 @@ public sealed class CreateProductIntegrationTest
                 "title": "Samsung TV 55",
                 "description": "Perfect for movies",
                 "price": 2000,
-                "status": 8
+                "status": "hello"
             }
         """, new MediaTypeHeaderValue("application/json", "utf-8"));
 

@@ -5,7 +5,7 @@ public sealed class ProductNotFoundException : ProblemDetailsException
     public ProductNotFoundException()
     {
         SetTitle(HttpStatusText.From(HttpStatusCode.NotFound));
-        SetDetail("Product not found with criteria");
+        SetDetail("Product not found");
         SetStatusCode(HttpStatusCode.NotFound);
     }
 }

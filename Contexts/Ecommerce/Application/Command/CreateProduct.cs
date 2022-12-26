@@ -6,7 +6,7 @@ public readonly struct CreateProductCommand : IRequest<OneOf<byte, ProblemDetail
     public required int Price { get; init; }
     public required string Title { get; init; }
     public required string Description { get; init; }
-    public required int Status { get; init; }
+    public required string Status { get; init; }
 }
 
 public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand, OneOf<byte, ProblemDetailsException>>

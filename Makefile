@@ -15,10 +15,3 @@ webapi-watch:
 
 webapi-start:
 	dotnet run --configuration Release --project ./Apps/MySaaS/Backend/Api/Api.csproj
-
-test-integration:
-	dotnet test --filter Name~IntegrationTest
-
-test-load:
-	k6 run Tests/Contexts/Ecommerce.LoadTest/Performance/GetProduct.js
-	k6 run Tests/Contexts/Ecommerce.LoadTest/Spike/GetProduct.js
