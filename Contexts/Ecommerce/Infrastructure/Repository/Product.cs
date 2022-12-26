@@ -31,7 +31,7 @@ public sealed class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            return new ProductPersistenceException(ex.Message);
+            return HandleRepositoryOperationException(ex);
         }
     }
 
@@ -63,7 +63,7 @@ public sealed class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            return new ProductPersistenceException(ex.Message);
+            return HandleRepositoryOperationException(ex);
         }
     }
 
@@ -96,29 +96,7 @@ public sealed class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            if (ex is not PostgresException postgresException)
-            {
-                return new ProductPersistenceException(ex.Message);
-            }
-
-            switch (postgresException.SqlState)
-            {
-                case PostgresErrorCodes.UniqueViolation:
-                {
-                    switch (postgresException.ConstraintName)
-                    {
-                        case ProductConstraints.UniqueId:
-                            return new ProductIdUniqueException();
-
-                        case ProductConstraints.UniqueTitle:
-                            return new ProductTitleUniqueException();
-                    }
-
-                    break;
-                }
-            }
-
-            return new ProductPersistenceException(postgresException.MessageText);
+            return HandleRepositoryOperationException(ex);
         }
     }
 
@@ -144,7 +122,7 @@ public sealed class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            return new ProductPersistenceException(ex.Message);
+            return HandleRepositoryOperationException(ex);
         }
     }
 
@@ -178,25 +156,35 @@ public sealed class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            if (ex is not PostgresException postgresException)
-            {
-                return new ProductPersistenceException(ex.Message);
-            }
-
-            switch (postgresException.SqlState)
-            {
-                case PostgresErrorCodes.UniqueViolation:
-                {
-                    if (postgresException.ConstraintName == ProductConstraints.UniqueTitle)
-                    {
-                        return new ProductTitleUniqueException();
-                    }
-
-                    break;
-                }
-            }
-
-            return new ProductPersistenceException(postgresException.MessageText);
+            return HandleRepositoryOperationException(ex);
         }
     }
+
+    private static ProblemDetailsException HandleRepositoryOperationException(Exception ex)
+    {
+        if (ex is not PostgresException postgresException)
+        {
+            return new ProductPersistenceException(ex.Message);
+        }
+
+        switch (postgresException.SqlState)
+        {
+            case PostgresErrorCodes.UniqueViolation:
+            {
+                switch (postgresException.ConstraintName)
+                {
+                    case ProductConstraints.UniqueId:
+                        return new ProductIdUniqueException();
+
+                    case ProductConstraints.UniqueTitle:
+                        return new ProductTitleUniqueException();
+                }
+
+                break;
+            }
+        }
+
+        return new ProductPersistenceException(postgresException.MessageText);
+    }
+    
 }

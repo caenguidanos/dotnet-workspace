@@ -2,6 +2,7 @@ global using System.Data.Common;
 
 global using Microsoft.AspNetCore.Mvc.Testing;
 global using Microsoft.AspNetCore.TestHost;
+global using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 global using Dapper;
 

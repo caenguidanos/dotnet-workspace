@@ -4,9 +4,9 @@ X-Api-Version: 1.0
 Content-Type: application/json
 
 {
-  "id": "8a5b3e4a-3e08-492c-869e-317a4d04616a",
+  "id": "7871bc38-4ca1-4fea-bdd5-49d8a3d93afd",
   "title": "Samsung TV 55",
   "description": "Perfect for movies",
   "price": 70000,
-  "status": 0
+  "status": "closed"
 }
