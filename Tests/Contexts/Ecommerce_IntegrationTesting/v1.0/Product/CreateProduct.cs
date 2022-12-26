@@ -47,7 +47,7 @@ public sealed class CreateProductIntegrationTest
     }
 
     [Test]
-    public async Task GivenProductsOnDatabase_WhenCreateProductWithSameId_ThenReturnBadRequest()
+    public async Task GivenProductsOnDatabase_WhenCreateInvalidProduct_ThenReturnBadRequest()
     {
         using var httpClient = _server.CreateClient();
         httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
@@ -59,225 +59,153 @@ public sealed class CreateProductIntegrationTest
             VALUES ('256a4889-bd23-436c-93ac-5ec4100abceb', 'American Professional II Stratocaster', 'Great guitar', 219900, 'published');
         """);
 
-        var requestPayload = new StringContent("""
-            {
-                "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
-                "title": "Samsung TV 55",
-                "description": "Perfect for movies",
-                "price": 70000,
-                "status": "published"
-            }
-        """, new MediaTypeHeaderValue("application/json", "utf-8"));
-
-        var response = await httpClient.PostAsync("/product", requestPayload);
-        Assert.Multiple(() =>
+        var testCases = new List<TestCaseBadRequestWithSnapshot>
         {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
-        });
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
+            new()
             {
-                "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                "title": "BadRequest",
-                "status": 400,
-                "detail": "Product id is not unique",
-                "instance": "/product"
-            }
-        """)));
-    }
-
-    [Test]
-    public async Task GivenNoProductsOnDatabase_WhenCreateProductWithInvalidId_ThenReturnBadRequest()
-    {
-        using var httpClient = _server.CreateClient();
-        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
-
-        await _server.ExecuteSqlAsync("""
-            TRUNCATE product;
-        """);
-
-        var requestPayload = new StringContent("""
+                In = """
+                    {
+                        "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
+                        "title": "Samsung TV 55",
+                        "description": "Perfect for movies",
+                        "price": 70000,
+                        "status": "published"
+                    }
+                """,
+                Out = """
+                    {
+                        "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                        "title": "BadRequest",
+                        "status": 400,
+                        "detail": "Product id is not unique",
+                        "instance": "/product"
+                    }
+                """
+            },
+            new()
             {
-                "id": "8a5b3e4a-3e08-492c-869e-317a4d04616",
-                "title": "Samsung TV 55",
-                "description": "Perfect for movies",
-                "price": 70000,
-                "status": "closed"
+                In = """
+                    {
+                        "id": "8a5b3e4a-3e08",
+                        "title": "Samsung TV 55",
+                        "description": "Perfect for movies",
+                        "price": 70000,
+                        "status": "closed"
+                    }
+                """,
+                Out = """
+                    {
+                      "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                      "title": "Bad Request",
+                      "status": 400
+                    }
+                """
+            },
+            new()
+            {
+                In = """
+                    {
+                        "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
+                        "title": "a",
+                        "description": "Perfect for movies",
+                        "price": 70000,
+                        "status": "closed"
+                    }
+                """,
+                Out = """
+                    {
+                        "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                        "title": "BadRequest",
+                        "status": 400,
+                        "detail": "Product title is invalid",
+                        "instance": "/product"
+                    }
+                """
+            },
+            new()
+            {
+                In = """
+                    {
+                        "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
+                        "title": "Samsung TV 55",
+                        "description": "e",
+                        "price": 70000,
+                        "status": "closed"
+                    }
+                """,
+                Out = """
+                    {
+                        "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                        "title": "BadRequest",
+                        "status": 400,
+                        "detail": "Product description is invalid",
+                        "instance": "/product"
+                    }
+                """
+            },
+            new()
+            {
+                In = """
+                    {
+                        "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
+                        "title": "Samsung TV 55",
+                        "description": "Perfect for movies",
+                        "price": 1,
+                        "status": "closed"
+                    }
+                """,
+                Out = """
+                    {
+                        "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                        "title": "BadRequest",
+                        "status": 400,
+                        "detail": "Product price is out of range",
+                        "instance": "/product"
+                    }
+                """
+            },
+            new()
+            {
+                In = """
+                    {
+                        "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
+                        "title": "Samsung TV 55",
+                        "description": "Perfect for movies",
+                        "price": 2000,
+                        "status": "hello"
+                    }
+                """,
+                Out = """
+                    {
+                        "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                        "title": "BadRequest",
+                        "status": 400,
+                        "detail": "Product status is invalid",
+                        "instance": "/product"
+                    }
+                """
             }
-        """, new MediaTypeHeaderValue("application/json", "utf-8"));
+        };
 
-        var response = await httpClient.PostAsync("/product", requestPayload);
-        Assert.Multiple(() =>
+        foreach (var testCase in testCases)
         {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
-        });
+            var response = await httpClient.PostAsync("/product",
+                new StringContent(testCase.In, new MediaTypeHeaderValue("application/json", "utf-8")));
 
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
+            Assert.Multiple(() =>
             {
-              "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-              "title": "Bad Request",
-              "status": 400
-            }
-        """)));
+                Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+                Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
+            });
+
+            var responseBody = await response.Content.ReadAsStringAsync();
+            Assert.That(responseBody, Is.EqualTo(Json.MinifyString(testCase.Out)));
+        }
     }
+}
 
-    [Test]
-    public async Task GivenNoProductsOnDatabase_WhenCreateProductWithInvalidTitle_ThenReturnBadRequest()
-    {
-        using var httpClient = _server.CreateClient();
-        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
-
-        await _server.ExecuteSqlAsync("""
-            TRUNCATE product;
-        """);
-
-        var requestPayload = new StringContent("""
-            {
-                "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
-                "title": "a",
-                "description": "Perfect for movies",
-                "price": 70000,
-                "status": "closed"
-            }
-        """, new MediaTypeHeaderValue("application/json", "utf-8"));
-
-        var response = await httpClient.PostAsync("/product", requestPayload);
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
-        });
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
-            {
-                "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                "title": "BadRequest",
-                "status": 400,
-                "detail": "Product title is invalid",
-                "instance": "/product"
-            }
-        """)));
-    }
-
-    [Test]
-    public async Task GivenNoProductsOnDatabase_WhenCreateProductWithInvalidDescription_ThenReturnBadRequest()
-    {
-        using var httpClient = _server.CreateClient();
-        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
-
-        await _server.ExecuteSqlAsync("""
-            TRUNCATE product;
-        """);
-
-        var requestPayload = new StringContent("""
-            {
-                "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
-                "title": "Samsung TV 55",
-                "description": "e",
-                "price": 70000,
-                "status": "closed"
-            }
-        """, new MediaTypeHeaderValue("application/json", "utf-8"));
-
-        var response = await httpClient.PostAsync("/product", requestPayload);
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
-        });
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
-            {
-                "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                "title": "BadRequest",
-                "status": 400,
-                "detail": "Product description is invalid",
-                "instance": "/product"
-            }
-        """)));
-    }
-
-    [Test]
-    public async Task GivenNoProductsOnDatabase_WhenCreateProductWithInvalidPrice_ThenReturnBadRequest()
-    {
-        using var httpClient = _server.CreateClient();
-        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
-
-        await _server.ExecuteSqlAsync("""
-            TRUNCATE product;
-        """);
-
-        var requestPayload = new StringContent("""
-            {
-                "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
-                "title": "Samsung TV 55",
-                "description": "Perfect for movies",
-                "price": 1,
-                "status": "closed"
-            }
-        """, new MediaTypeHeaderValue("application/json", "utf-8"));
-
-        var response = await httpClient.PostAsync("/product", requestPayload);
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
-        });
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
-            {
-                "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                "title": "BadRequest",
-                "status": 400,
-                "detail": "Product price is out of range",
-                "instance": "/product"
-            }
-        """)));
-    }
-
-    [Test]
-    public async Task GivenNoProductsOnDatabase_WhenCreateProductWithInvalidStatus_ThenReturnBadRequest()
-    {
-        using var httpClient = _server.CreateClient();
-        httpClient.DefaultRequestHeaders.Add("X-Api-Version", Version);
-
-        await _server.ExecuteSqlAsync("""
-            TRUNCATE product;
-        """);
-
-        var requestPayload = new StringContent("""
-            {
-                "id": "256a4889-bd23-436c-93ac-5ec4100abceb",
-                "title": "Samsung TV 55",
-                "description": "Perfect for movies",
-                "price": 2000,
-                "status": "hello"
-            }
-        """, new MediaTypeHeaderValue("application/json", "utf-8"));
-
-        var response = await httpClient.PostAsync("/product", requestPayload);
-        Assert.Multiple(() =>
-        {
-            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
-            Assert.That(response.Content.Headers.ContentType, Is.EqualTo(new MediaTypeHeaderValue("application/problem+json")));
-        });
-
-        var responseBody = await response.Content.ReadAsStringAsync();
-        Assert.That(responseBody, Is.EqualTo(Json.MinifyString("""
-            {
-                "type": "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-                "title": "BadRequest",
-                "status": 400,
-                "detail": "Product status is invalid",
-                "instance": "/product"
-            }
-        """)));
-    }
+file sealed class TestCaseBadRequestWithSnapshot
+{
+    public required string In { get; init; }
+    public required string Out { get; init; }
 }

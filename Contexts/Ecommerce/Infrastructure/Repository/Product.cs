@@ -43,8 +43,7 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                SELECT id, title, description, status, price
-                FROM product
+                SELECT id, title, description, status, price FROM product
                 WHERE id = @Id
             ";
 
@@ -108,7 +107,8 @@ public sealed class ProductRepository : IProductRepository
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
-                DELETE FROM product WHERE id = @Id
+                DELETE FROM product
+                WHERE id = @Id
             ";
 
             var parameters = new DynamicParameters();
@@ -135,7 +135,10 @@ public sealed class ProductRepository : IProductRepository
 
             const string sql = @"
                 UPDATE product
-                SET title = @Title, description = @Description, price = @Price, status = @Status::product_status
+                    SET title = @Title,
+                        description = @Description,
+                        price = @Price,
+                        status = @Status::product_status
                 WHERE id = @Id
             ";
 
@@ -186,5 +189,4 @@ public sealed class ProductRepository : IProductRepository
 
         return new ProductPersistenceException(postgresException.MessageText);
     }
-    
 }
