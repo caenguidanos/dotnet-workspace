@@ -5,8 +5,10 @@ public sealed class ValueOfUnitTest
 {
     /// <summary>
     ///     Given a string value object,
-    ///         when create instance,
-    ///             then throws `ArgumentNotFoundException`.
+    /// 
+    ///     when create instance,
+    /// 
+    ///     then throws `ArgumentNotFoundException`.
     /// </summary>
     [Test]
     public void ValueObject_I()
@@ -19,8 +21,10 @@ public sealed class ValueOfUnitTest
 
     /// <summary>
     ///     Given a string value object,
-    ///         when create instance,
-    ///             then throws `ArgumentOutOfRangeException`.
+    /// 
+    ///     when create instance,
+    /// 
+    ///     then throws `ArgumentOutOfRangeException`.
     /// </summary>
     [Test]
     public void ValueObject_II()
@@ -33,8 +37,10 @@ public sealed class ValueOfUnitTest
 
     /// <summary>
     ///     Given a string value object,
-    ///         when create instance and return value,
-    ///             then is the same value.
+    /// 
+    ///     when create instance and return value,
+    /// 
+    ///     then is the same value.
     /// </summary>
     [Test]
     public void ValueObject_III()

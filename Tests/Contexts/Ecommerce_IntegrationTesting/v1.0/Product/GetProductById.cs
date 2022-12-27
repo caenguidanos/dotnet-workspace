@@ -30,8 +30,10 @@ public sealed class GetProductByIdIntegrationTest
 
     /// <summary>
     ///     Given no products on the database table,
-    ///         when request endpoint with a Product.Id as url-parameter,
-    ///             then return http-status 404 and custom problem details payload.
+    ///
+    ///     when request endpoint with a Product.Id as url-parameter,
+    ///
+    ///     then return http-status 404 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task SearchById_I()
@@ -59,8 +61,10 @@ public sealed class GetProductByIdIntegrationTest
 
     /// <summary>
     ///     Given products on the database table,
-    ///         when request endpoint with a Product.Id as url-parameter,
-    ///             then return http-status 200 and the coincidence as json.
+    /// 
+    ///     when request endpoint with a Product.Id as url-parameter,
+    /// 
+    ///     then return http-status 200 and the coincidence as json.
     /// </summary>
     [Test]
     public async Task SearchById_II()

@@ -30,8 +30,10 @@ public sealed class RemoveProductByIdIntegrationTest
 
     /// <summary>
     ///     Given no products on the database table,
-    ///         when request endpoint with a Product.Id as url-parameter,
-    ///             then return http-status 404 and custom problem details payload.
+    /// 
+    ///     when request endpoint with a Product.Id as url-parameter,
+    /// 
+    ///     then return http-status 404 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task RemoveById_I()
@@ -59,8 +61,10 @@ public sealed class RemoveProductByIdIntegrationTest
 
     /// <summary>
     ///     Given products on the database table,
-    ///         when request endpoint with a Product.Id as url-parameter,
-    ///             then return http-status 202 and validate operation with other request the returns http-status 404.
+    /// 
+    ///     when request endpoint with a Product.Id as url-parameter,
+    /// 
+    ///     then return http-status 202 and validate operation with other request the returns http-status 404.
     /// </summary>
     [Test]
     public async Task RemoveById_II()

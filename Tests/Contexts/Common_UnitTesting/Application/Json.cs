@@ -5,8 +5,10 @@ public sealed class JsonUnitTest
 {
     /// <summary>
     ///     Given a json string minified as default,
-    ///         when create indented json string and minify on runtime,
-    ///             then return the same value.
+    ///
+    ///     when create indented json string and minify on runtime,
+    ///
+    ///     then return the same value.
     /// </summary>
     [Test]
     public void Minify_I()

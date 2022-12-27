@@ -30,8 +30,10 @@ public sealed class GetProductsIntegrationTest
 
     ///  <summary>
     ///     Given no products on the database table,
-    ///         when request endpoint,
-    ///             then return http-status 200 and empty json array.
+    /// 
+    ///     when request endpoint,
+    /// 
+    ///     then return http-status 200 and empty json array.
     /// </summary>
     [Test]
     public async Task All_I()
@@ -51,8 +53,10 @@ public sealed class GetProductsIntegrationTest
 
     ///  <summary>
     ///     Given multiple products on the database table,
-    ///         when request endpoint,
-    ///             then return http-status 200 and json array.
+    /// 
+    ///     when request endpoint,
+    /// 
+    ///     then return http-status 200 and json array.
     /// </summary>
     [Test]
     public async Task All_II()

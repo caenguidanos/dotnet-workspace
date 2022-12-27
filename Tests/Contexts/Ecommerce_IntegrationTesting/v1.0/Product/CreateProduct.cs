@@ -30,8 +30,10 @@ public sealed class CreateProductIntegrationTest
 
     ///  <summary>
     ///     Given a valid Product payload as json string,
-    ///         when request endpoint and pass all validations,
-    ///             then return http-status 202 and check saved entity after new request.
+    /// 
+    ///     when request endpoint and pass all validations,
+    /// 
+    ///     then return http-status 202 and check saved entity after new request.
     /// </summary>
     [Test]
     public async Task Product_Validation()
@@ -55,8 +57,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Id,
-    ///         when request endpoint and validate type on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate type on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task ProductId_Validation_I()
@@ -92,8 +96,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with not unique Product.Id,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task ProductId_Validation_II()
@@ -137,8 +143,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Title,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task ProductTitle_Validation_I()
@@ -176,8 +184,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Title,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task ProductTitle_Validation_II()
@@ -213,8 +223,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Description,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task ProductDescription_Validation_I()
@@ -252,8 +264,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Description,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task ProductDescription_Validation_II()
@@ -289,8 +303,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Price,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task ProductPrice_Validation_I()
@@ -328,8 +344,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Price,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task ProductPrice_Validation_II()
@@ -365,8 +383,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Status,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task ProductStatus_Validation_I()
@@ -404,8 +424,10 @@ public sealed class CreateProductIntegrationTest
 
     /// <summary>
     ///     Given a Product payload as json string with invalid Product.Status,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task ProductStatus_Validation_II()

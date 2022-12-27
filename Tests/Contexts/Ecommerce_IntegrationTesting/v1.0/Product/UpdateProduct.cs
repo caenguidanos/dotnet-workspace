@@ -30,8 +30,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given an empty database table but a valid Product.Title payload as json string,
-    ///         when request endpoint and pass all validations,
-    ///             then return http-status 404 with custom problem details payload.
+    /// 
+    ///     when request endpoint and pass all validations,
+    /// 
+    ///     then return http-status 404 with custom problem details payload.
     /// </summary>
     [Test]
     public async Task UpdateTitle_I()
@@ -64,8 +66,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a valid Product.Title payload as json string,
-    ///         when request endpoint and pass all validations,
-    ///             then return http-status 202 and validate operation with extra request.
+    /// 
+    ///     when request endpoint and pass all validations,
+    /// 
+    ///     then return http-status 202 and validate operation with extra request.
     /// </summary>
     [Test]
     public async Task UpdateTitle_II()
@@ -99,8 +103,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given an invalid Product.Title payload as json string,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task UpdateTitle_III()
@@ -136,8 +142,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given an invalid Product.Title payload as json string,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task UpdateTitle_IV()
@@ -167,8 +175,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a valid Product.Description payload as json string,
-    ///         when request endpoint and pass all validations,
-    ///             then return http-status 202 and validate operation with extra request.
+    /// 
+    ///     when request endpoint and pass all validations,
+    /// 
+    ///     then return http-status 202 and validate operation with extra request.
     /// </summary>
     [Test]
     public async Task UpdateDescription_I()
@@ -202,8 +212,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given an invalid Product.Description payload as json string,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task UpdateDescription_II()
@@ -239,8 +251,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given an invalid Product.Description payload as json string,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task UpdateDescription_III()
@@ -274,8 +288,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a valid Product.Price payload as json string,
-    ///         when request endpoint and pass all validations,
-    ///             then return http-status 202 and validate operation with extra request.
+    /// 
+    ///     when request endpoint and pass all validations,
+    /// 
+    ///     then return http-status 202 and validate operation with extra request.
     /// </summary>
     [Test]
     public async Task UpdatePrice_I()
@@ -309,8 +325,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a invalid Product.Price payload as json string,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task UpdatePrice_II()
@@ -346,8 +364,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a invalid Product.Price payload as json string,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task UpdatePrice_III()
@@ -381,8 +401,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a valid Product.Status payload as json string,
-    ///         when request endpoint and pass all validations,
-    ///             then return http-status 202 and validate operation with extra request.
+    /// 
+    ///     when request endpoint and pass all validations,
+    /// 
+    ///     then return http-status 202 and validate operation with extra request.
     /// </summary>
     [Test]
     public async Task UpdateStatus_I()
@@ -416,8 +438,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a invalid Product.Status payload as json string,
-    ///         when request endpoint and validate on domain service,
-    ///             then return http-status 400 and custom problem details payload.
+    /// 
+    ///     when request endpoint and validate on domain service,
+    /// 
+    ///     then return http-status 400 and custom problem details payload.
     /// </summary>
     [Test]
     public async Task UpdateStatus_II()
@@ -453,8 +477,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a invalid Product.Status payload as json string,
-    ///         when request endpoint and validate on endpoint,
-    ///             then return http-status 400 and generic problem details payload.
+    /// 
+    ///     when request endpoint and validate on endpoint,
+    /// 
+    ///     then return http-status 400 and generic problem details payload.
     /// </summary>
     [Test]
     public async Task UpdateStatus_III()
@@ -488,8 +514,10 @@ public sealed class UpdateProductIntegrationTest
 
     ///  <summary>
     ///     Given products on database table with a valid Product:Partial payload as json string,
-    ///         when request endpoint and pass all validations,
-    ///             then return http-status 202 and validate operation with extra request.
+    /// 
+    ///     when request endpoint and pass all validations,
+    /// 
+    ///     then return http-status 202 and validate operation with extra request.
     /// </summary>
     [Test]
     public async Task UpdateMultiple_I()
