@@ -28,6 +28,6 @@ public sealed class CreateProductHandler : IRequestHandler<CreateProductCommand,
             request.Price,
             cancellationToken);
 
-        return result.Match<OneOf<byte, ProblemDetailsException>>(_ => default, problemDetailsException => problemDetailsException);
+        return result.Match<OneOf<byte, ProblemDetailsException>>(_ => default, p => p);
     }
 }

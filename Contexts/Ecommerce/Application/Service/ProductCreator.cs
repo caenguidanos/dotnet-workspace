@@ -11,7 +11,7 @@ public sealed class ProductCreatorService : IProductCreatorService
         _productRepository = productRepository;
     }
 
-    public async Task<OneOf<Guid, ProblemDetailsException>> AddNewProduct(Guid id, string title, string description, string status, int price,
+    public async ValueTask<OneOf<Guid, ProblemDetailsException>> AddNewProduct(Guid id, string title, string description, string status, int price,
         CancellationToken cancellationToken)
     {
         Product newProduct;
@@ -26,24 +26,24 @@ public sealed class ProductCreatorService : IProductCreatorService
                 Price = new ProductPrice(price)
             };
         }
-        catch (ProblemDetailsException problemDetailsException)
+        catch (ProblemDetailsException p)
         {
-            return problemDetailsException;
+            return p;
         }
 
         var saveProductResult = await _productRepository.Save(newProduct, cancellationToken);
 
-        return await saveProductResult.Match<Task<OneOf<Guid, ProblemDetailsException>>>(
+        return await saveProductResult.Match<ValueTask<OneOf<Guid, ProblemDetailsException>>>(
             async _ =>
             {
                 var productPrimitives = newProduct.ToPrimitives();
-
                 var productCreatedEvent = new ProductCreatedEvent { Product = productPrimitives.Id };
+                
                 await _publisher.Publish(productCreatedEvent, cancellationToken);
 
                 return productPrimitives.Id;
             },
-            async problemDetailsException => await Task.FromResult(problemDetailsException)
+            async p => p
         );
     }
 }

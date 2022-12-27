@@ -15,7 +15,7 @@ public sealed class ProductUpdaterService : IProductUpdaterService
     {
         var getProductByIdResult = await _productRepository.GetById(id, cancellationToken);
 
-        return await getProductByIdResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
+        return await getProductByIdResult.Match<ValueTask<OneOf<byte, ProblemDetailsException>>>(
             async currentProductPrimitives =>
             {
                 Product updatedProduct;
@@ -30,24 +30,24 @@ public sealed class ProductUpdaterService : IProductUpdaterService
                         Price = new ProductPrice(command.Price ?? currentProductPrimitives.Price)
                     };
                 }
-                catch (ProblemDetailsException problemDetailsException)
+                catch (ProblemDetailsException p)
                 {
-                    return problemDetailsException;
+                    return p;
                 }
 
                 var updateProductResult = await _productRepository.Update(updatedProduct, cancellationToken);
 
-                return await updateProductResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
+                return await updateProductResult.Match<ValueTask<OneOf<byte, ProblemDetailsException>>>(
                     async _ =>
                     {
                         await _publisher.Publish(new ProductUpdatedEvent { Product = id }, cancellationToken);
 
                         return default;
                     },
-                    async problemDetailsException => await Task.FromResult(problemDetailsException)
+                    async p => p
                 );
             },
-            async problemDetailsException => await Task.FromResult(problemDetailsException)
+            async p => p
         );
     }
 }

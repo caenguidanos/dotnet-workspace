@@ -15,14 +15,14 @@ public sealed class ProductRemoverService : IProductRemoverService
     {
         var deleteProductResult = await _productRepository.Delete(id, cancellationToken);
 
-        return await deleteProductResult.Match<Task<OneOf<byte, ProblemDetailsException>>>(
+        return await deleteProductResult.Match<ValueTask<OneOf<byte, ProblemDetailsException>>>(
             async _ =>
             {
                 await _publisher.Publish(new ProductRemovedEvent { Product = id }, cancellationToken);
 
                 return default;
             },
-            async problemDetailsException => await Task.FromResult(problemDetailsException)
+            async p => p
         );
     }
 }

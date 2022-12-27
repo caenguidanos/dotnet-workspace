@@ -25,11 +25,10 @@ public sealed class UpdateProductEndpoint : IUpdateProductEndpoint
 
         return result.Match(
             _ => Results.Accepted(),
-            exception =>
+            p =>
             {
-                exception.SetInstance(context.Request.Path);
-                exception.AsProblemDetails(out var problemDetails);
-
+                p.SetInstance(context.Request.Path);
+                p.AsProblemDetails(out var problemDetails);
                 return Results.Problem(problemDetails);
             }
         );

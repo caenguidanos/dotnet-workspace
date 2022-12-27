@@ -16,12 +16,11 @@ public sealed class GetProductsEndpoint : IGetProductsEndpoint
         var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(
-            products => Results.Json(products, options: Json.HttpSerializerOptions),
-            exception =>
+            data => Results.Json(data, options: Json.HttpSerializerOptions),
+            p =>
             {
-                exception.SetInstance(context.Request.Path);
-                exception.AsProblemDetails(out var problemDetails);
-
+                p.SetInstance(context.Request.Path);
+                p.AsProblemDetails(out var problemDetails);
                 return Results.Problem(problemDetails);
             }
         );
