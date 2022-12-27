@@ -9,9 +9,9 @@ public sealed class HttpStatusTextUnitTest
         Assert.Multiple(() =>
         {
             Assert.That(HttpStatusText.From(HttpStatusCode.OK), Is.EqualTo("OK"));
-            
+
             Assert.That(HttpStatusText.From(HttpStatusCode.Accepted), Is.EqualTo("Accepted"));
-            
+
             Assert.That(HttpStatusText.From(HttpStatusCode.BadRequest), Is.EqualTo("BadRequest"));
         });
     }

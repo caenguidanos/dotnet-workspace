@@ -20,7 +20,7 @@ public sealed class DbSeed : IDbSeed
 
         // Ensure deleted database table data
         await conn.ExecuteAsync(@"TRUNCATE product");
-        
+
         // Add new data to ecommerce.product table
         await conn.ExecuteAsync(@"
             INSERT INTO product (id, title, description, price, status)
