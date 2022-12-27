@@ -8,6 +8,12 @@
 
 ![Visualization of the codebase](./Public/diagram.svg)
 
+### Dashboard
+
+![screenshot](./Public/admin.png)
+
+### Scripts
+
 ```make
 check:
 	dotnet clean
