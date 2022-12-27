@@ -1,13 +1,19 @@
 namespace Common_UnitTesting.Application;
 
+[Category("JSON")]
 public sealed class JsonUnitTest
 {
+    /// <summary>
+    ///     Given a json string minified as default,
+    ///         when create indented json string and minify on runtime,
+    ///             then return the same value.
+    /// </summary>
     [Test]
-    public void GivenStringAsJson_WhenMinify_ThenReturnCoincidence()
+    public void Minify_I()
     {
-        var s0 = """"{"a":7,"b":{"c":true,"d":null},"e":89,"f":[7,null,false,56,{"uu":"uu"}]}"""";
+        const string minifiedAtDefault = """"{"a":7,"b":{"c":true,"d":null},"e":89,"f":[7,null,false,56,{"uu":"uu"}]}"""";
 
-        var s1 = Json.MinifyString("""
+        var minifiedAtRuntime = Json.MinifyString("""
             {
                 "a": 7,
                 "b": {
@@ -27,6 +33,6 @@ public sealed class JsonUnitTest
             }
         """);
 
-        Assert.That(s0, Is.EqualTo(s1));
+        Assert.That(minifiedAtDefault, Is.EqualTo(minifiedAtRuntime));
     }
 }

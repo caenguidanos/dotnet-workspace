@@ -1,9 +1,15 @@
 namespace Common_UnitTesting.Domain;
 
+[Category("ValueObject")]
 public sealed class ValueOfUnitTest
 {
+    /// <summary>
+    ///     Given a string value object,
+    ///         when create instance,
+    ///             then throws `ArgumentNotFoundException`.
+    /// </summary>
     [Test]
-    public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenThrowsArgumentOutOfRangeException()
+    public void ValueObject_I()
     {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
         {
@@ -11,8 +17,13 @@ public sealed class ValueOfUnitTest
         });
     }
 
+    /// <summary>
+    ///     Given a string value object,
+    ///         when create instance,
+    ///             then throws `ArgumentOutOfRangeException`.
+    /// </summary>
     [Test]
-    public void GivenStringPrimitiveWithValidation_WhenCreateInstance_ThenNotThrowArgumentOutOfRangeException()
+    public void ValueObject_II()
     {
         Assert.DoesNotThrow(() =>
         {
@@ -20,12 +31,19 @@ public sealed class ValueOfUnitTest
         });
     }
 
+    /// <summary>
+    ///     Given a string value object,
+    ///         when create instance and return value,
+    ///             then is the same value.
+    /// </summary>
     [Test]
-    public void GivenStringPrimitiveWithValidation_WhenGetValue_ThenReturnsSameValue()
+    public void ValueObject_III()
     {
-        var valueObject = new StringWithValidation("123499");
+        const string value = "123499";
 
-        Assert.That(valueObject.GetValue(), Is.EqualTo("123499"));
+        var valueObject = new StringWithValidation(value);
+
+        Assert.That(valueObject.GetValue(), Is.EqualTo(value));
     }
 
     private sealed record StringWithValidation : ValueOf<string>
