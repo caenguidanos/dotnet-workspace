@@ -53,7 +53,7 @@ public sealed record ProductDescription : ValueOf<string>
 
 public sealed record ProductStatus : ValueOf<string>
 {
-    private readonly string[] _values = { "closed", "published" };
+    private readonly string[] _values = { "draft", "published" };
 
     public ProductStatus(string value) : base(value)
     {

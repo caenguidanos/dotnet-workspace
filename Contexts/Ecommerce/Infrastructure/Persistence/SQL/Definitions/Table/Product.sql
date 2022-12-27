@@ -1,38 +1,21 @@
-CREATE TYPE product_status AS ENUM ('closed', 'published');
+-- TYPE
+CREATE DOMAIN product_title AS text;
+CREATE DOMAIN product_description AS text;
+CREATE DOMAIN product_price AS integer CHECK (value > 0);
+CREATE TYPE product_status AS ENUM ('draft', 'published');
 
+-- TABLE
 CREATE TABLE product
 (
-    title       text UNIQUE    NOT NULL,
-    description text           NOT NULL,
-    price       integer        NOT NULL,
-    status      product_status NOT NULL,
+    title       product_title UNIQUE NOT NULL,
+    description product_description  NOT NULL,
+    price       product_price        NOT NULL,
+    status      product_status       NOT NULL,
     PRIMARY KEY (id)
 ) INHERITS (base);
 
--- CONSTRAINTS
-ALTER TABLE product
-    ADD CONSTRAINT check_title_length
-        CHECK (
-                    length(title) >= 5 AND
-                    length(title) <= 256
-            );
-
-ALTER TABLE product
-    ADD CONSTRAINT check_description_length
-        CHECK (
-                    length(description) >= 5 AND
-                    length(description) <= 600
-            );
-
-ALTER TABLE product
-    ADD CONSTRAINT check_price_range
-        CHECK (
-                    price >= 100 AND
-                    price <= 100000000
-            );
-
 -- INDEX
-CREATE INDEX product_by_id ON product (id);
+CREATE INDEX product_by_price ON product (price);
 CREATE INDEX product_by_status ON product (status);
 
 -- TRIGGERS

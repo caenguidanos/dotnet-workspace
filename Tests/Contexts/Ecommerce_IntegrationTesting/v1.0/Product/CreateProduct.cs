@@ -43,7 +43,7 @@ public sealed class CreateProductIntegrationTest
                     "title": "Samsung TV 55",
                     "description": "Perfect for movies",
                     "price": 70000,
-                    "status": "closed"
+                    "status": "draft"
                 }
              """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -68,7 +68,7 @@ public sealed class CreateProductIntegrationTest
                     "title": "Samsung TV 55",
                     "description": "Perfect for movies",
                     "price": 70000,
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -150,7 +150,7 @@ public sealed class CreateProductIntegrationTest
                     "title": "a",
                     "description": "Perfect for movies",
                     "price": 70000,
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -189,7 +189,7 @@ public sealed class CreateProductIntegrationTest
                     "title": 89,
                     "description": "Perfect for movies",
                     "price": 70000,
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -226,7 +226,7 @@ public sealed class CreateProductIntegrationTest
                     "title": "Samsung TV 55",
                     "description": "e",
                     "price": 70000,
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -265,7 +265,7 @@ public sealed class CreateProductIntegrationTest
                     "title": "Samsung TV 55",
                     "description": 899,
                     "price": 70000,
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -302,7 +302,7 @@ public sealed class CreateProductIntegrationTest
                     "title": "Samsung TV 55",
                     "description": "Perfect for movies",
                     "price": 1,
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -341,7 +341,7 @@ public sealed class CreateProductIntegrationTest
                     "title": "Samsung TV 55",
                     "description": "Perfect for movies",
                     "price": "super price",
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 

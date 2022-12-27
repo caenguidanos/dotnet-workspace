@@ -394,7 +394,7 @@ public sealed class UpdateProductIntegrationTest
 
         var response = await _httpClient.PutAsync("/product/092cc0ea-a54f-48a3-87ed-0e7f43c023f1", new StringContent("""
                 {
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -409,7 +409,7 @@ public sealed class UpdateProductIntegrationTest
                 "title": "American Professional II Stratocaster",
                 "description": "Great guitar",
                 "price": 219900,
-                "status": "closed"
+                "status": "draft"
             }
         """)));
     }
@@ -503,7 +503,7 @@ public sealed class UpdateProductIntegrationTest
                 {
                     "title": "American Professional IV Stratocaster",
                     "price": 269900,
-                    "status": "closed"
+                    "status": "draft"
                 }
             """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
@@ -518,7 +518,7 @@ public sealed class UpdateProductIntegrationTest
                 "title": "American Professional IV Stratocaster",
                 "description": "Great guitar",
                 "price": 269900,
-                "status": "closed"
+                "status": "draft"
             }
         """)));
     }
