@@ -3,6 +3,7 @@
 
 pnpm build
 dotnet build
+
 pnpm format
 
 git add .
