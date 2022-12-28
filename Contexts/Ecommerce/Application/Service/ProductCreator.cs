@@ -43,7 +43,7 @@ public sealed class ProductCreatorService : IProductCreatorService
 
                 return productPrimitives.Id;
             },
-            async p => p
+            async p => await ValueTask.FromResult(p)
         );
     }
 }

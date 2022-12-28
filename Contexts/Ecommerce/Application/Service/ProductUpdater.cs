@@ -44,10 +44,10 @@ public sealed class ProductUpdaterService : IProductUpdaterService
 
                         return default;
                     },
-                    async p => p
+                    async p => await ValueTask.FromResult(p)
                 );
             },
-            async p => p
+            async p => await ValueTask.FromResult(p)
         );
     }
 }
