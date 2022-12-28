@@ -3,6 +3,9 @@
 - .NET 7
 - Dapper
 - Postgres 15
+- Solid.js
+- Tailwindcss
+- Playwright
 
 > Docker and k6 are required for development and testing purposes
 
