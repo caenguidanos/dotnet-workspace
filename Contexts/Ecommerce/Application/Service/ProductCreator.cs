@@ -38,7 +38,7 @@ public sealed class ProductCreatorService : IProductCreatorService
             {
                 var productPrimitives = newProduct.ToPrimitives();
                 var productCreatedEvent = new ProductCreatedEvent { Product = productPrimitives.Id };
-                
+
                 await _publisher.Publish(productCreatedEvent, cancellationToken);
 
                 return productPrimitives.Id;
