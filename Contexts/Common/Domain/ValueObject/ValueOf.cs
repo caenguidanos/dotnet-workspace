@@ -13,10 +13,7 @@ public record ValueOf<T>
 
     protected virtual void TryValidation() => throw new NotImplementedException();
 
-    private void CheckValueObjectIntegrity()
-    {
-        TryValidation();
-    }
+    private void CheckValueObjectIntegrity() => TryValidation();
 
     public T GetValue() => Value;
 }

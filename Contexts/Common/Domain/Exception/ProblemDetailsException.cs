@@ -4,10 +4,7 @@ public class ProblemDetailsException : Exception
 {
     private readonly ProblemDetails _problemDetails = new();
 
-    public void AsProblemDetails(out ProblemDetails problemDetails)
-    {
-        problemDetails = _problemDetails;
-    }
+    public void AsProblemDetails(out ProblemDetails problemDetails) => problemDetails = _problemDetails;
 
     protected void SetTitle(string title) => _problemDetails.Title = title;
 

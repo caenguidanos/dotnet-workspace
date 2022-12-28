@@ -15,7 +15,7 @@ public sealed record Product : IAggregateRoot<Product, ProductPrimitives>
             Title = Title.GetValue(),
             Description = Description.GetValue(),
             Status = Status.GetValue(),
-            Price = Price.GetValue(),
+            Price = Price.GetValue()
         };
 
     public static Product FromPrimitives(ProductPrimitives productPrimitives) =>
@@ -25,7 +25,7 @@ public sealed record Product : IAggregateRoot<Product, ProductPrimitives>
             Title = new ProductTitle(productPrimitives.Title),
             Description = new ProductDescription(productPrimitives.Description),
             Status = new ProductStatus(productPrimitives.Status),
-            Price = new ProductPrice(productPrimitives.Price),
+            Price = new ProductPrice(productPrimitives.Price)
         };
 }
 

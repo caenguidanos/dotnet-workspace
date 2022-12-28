@@ -408,3 +408,13 @@ ASALocalRun/
 # Build
 /build
 out
+
+# Frontend
+node_modules
+dist
+test-results
+playwright-report
+playwright/.cache/
+pnpm-lock.yaml
+package-lock.json
+yarn.lock

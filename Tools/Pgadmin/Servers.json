@@ -1,13 +1,13 @@
 {
-  "Servers": {
-    "1": {
-      "Group": "Servers",
-      "Name": "Ecommerce",
-      "Host": "postgres-ecommerce",
-      "Port": 5432,
-      "Username": "root",
-      "SSLMode": "prefer",
-      "MaintenanceDB": "postgres"
+    "Servers": {
+        "1": {
+            "Group": "Servers",
+            "Name": "Ecommerce",
+            "Host": "postgres-ecommerce",
+            "Port": 5432,
+            "Username": "root",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres"
+        }
     }
-  }
 }

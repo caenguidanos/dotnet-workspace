@@ -35,6 +35,6 @@ public sealed class JsonUnitTest
             }
         """);
 
-        Assert.That(minifiedAtDefault, Is.EqualTo(minifiedAtRuntime));
+        Assert.That(minifiedAtRuntime, Is.EqualTo(minifiedAtDefault));
     }
 }

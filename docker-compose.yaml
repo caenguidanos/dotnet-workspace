@@ -1,26 +1,26 @@
 services:
-  postgres-ecommerce:
-    container_name: postgres-ecommerce
-    image: postgres:15-alpine
-    restart: always
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./Contexts/Ecommerce/Infrastructure/Persistence/SQL/Definitions:/var/lib/sql/definitions
-      - ./Contexts/Ecommerce/Infrastructure/Persistence/SQL/Init.sh:/docker-entrypoint-initdb.d/init.sh
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:latest
-    depends_on:
-      - postgres-ecommerce
-    restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: root
-    ports:
-      - "5050:80"
-    volumes:
-      - ./Tools/Pgadmin/Servers.json:/pgadmin4/servers.json
+    postgres-ecommerce:
+        container_name: postgres-ecommerce
+        image: postgres:15-alpine
+        restart: always
+        environment:
+            POSTGRES_USER: root
+            POSTGRES_PASSWORD: root
+        ports:
+            - "5432:5432"
+        volumes:
+            - ./Contexts/Ecommerce/Infrastructure/Persistence/SQL/Definitions:/var/lib/sql/definitions
+            - ./Contexts/Ecommerce/Infrastructure/Persistence/SQL/Init.sh:/docker-entrypoint-initdb.d/init.sh
+    pgadmin:
+        container_name: pgadmin
+        image: dpage/pgadmin4:latest
+        depends_on:
+            - postgres-ecommerce
+        restart: always
+        environment:
+            PGADMIN_DEFAULT_EMAIL: admin@admin.com
+            PGADMIN_DEFAULT_PASSWORD: root
+        ports:
+            - "5050:80"
+        volumes:
+            - ./Tools/Pgadmin/Servers.json:/pgadmin4/servers.json

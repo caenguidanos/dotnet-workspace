@@ -118,8 +118,7 @@ public sealed class CreateProductIntegrationTest
                     "price": 70000,
                     "status": "published"
                 }
-            """
-            , new MediaTypeHeaderValue("application/json", "utf-8")));
+            """, new MediaTypeHeaderValue("application/json", "utf-8")));
 
         var responseBody = await response.Content.ReadAsStringAsync();
 

@@ -1,0 +1,12 @@
+{
+    "name": "dotnet-workspace",
+    "version": "1.0.0",
+    "scripts": {
+        "format": "prettier --write '**/*.{ts,tsx,js,jsx,vue,json,css,sass,scss,yaml,yml,svelte,html}'"
+    },
+    "author": "Cristian A. Enguídanos Nebot",
+    "license": "MIT",
+    "devDependencies": {
+        "prettier": "2.8.1"
+    }
+}
