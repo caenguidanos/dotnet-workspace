@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "prepare": "husky install",
+        "build": "pnpm --filter '*' build",
         "format": "prettier --write '**/*.{ts,tsx,js,jsx,vue,json,css,sass,scss,yaml,yml,svelte,html}'"
     },
     "author": "Cristian A. Enguídanos Nebot",
