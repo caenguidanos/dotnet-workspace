@@ -1,8 +1,8 @@
 # dotnet
 
--   .NET 7
--   Dapper
--   Postgres 15
+- .NET 7
+- Dapper
+- Postgres 15
 
 > Docker and k6 are required for development and testing purposes
 
