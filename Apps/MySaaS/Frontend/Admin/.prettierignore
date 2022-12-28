@@ -3,10 +3,5 @@ package-lock.json
 yarn.lock
 
 dist
-
-# intellij
-.idea
-
-# csharp
-obj
-bin
+build
+playwright-report

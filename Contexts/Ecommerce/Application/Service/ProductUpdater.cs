@@ -30,9 +30,9 @@ public sealed class ProductUpdaterService : IProductUpdaterService
                         Price = new ProductPrice(command.Price ?? currentProductPrimitives.Price)
                     };
                 }
-                catch (ProblemDetailsException p)
+                catch (ProblemDetailsException error)
                 {
-                    return p;
+                    return error;
                 }
 
                 var updateProductResult = await _productRepository.Update(updatedProduct, cancellationToken);
@@ -44,10 +44,10 @@ public sealed class ProductUpdaterService : IProductUpdaterService
 
                         return default;
                     },
-                    async p => await ValueTask.FromResult(p)
+                    async error => await ValueTask.FromResult(error)
                 );
             },
-            async p => await ValueTask.FromResult(p)
+            async error => await ValueTask.FromResult(error)
         );
     }
 }

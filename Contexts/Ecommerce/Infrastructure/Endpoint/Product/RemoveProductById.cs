@@ -11,18 +11,15 @@ public sealed class RemoveProductByIdEndpoint : IRemoveProductByIdEndpoint
 
     public async Task<IResult> HandleAsync(HttpContext context, [FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
+        var instance = context.Request.Path;
+
         var command = new RemoveProductCommand { Id = id };
 
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
             _ => Results.Accepted(),
-            p =>
-            {
-                p.SetInstance(context.Request.Path);
-                p.AsProblemDetails(out var problemDetails);
-                return Results.Problem(problemDetails);
-            }
+            error => Results.Problem(error.ToProblemDetails(instance))
         );
     }
 }

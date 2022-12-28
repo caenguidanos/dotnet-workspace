@@ -24,7 +24,17 @@ builder.WebHost.ConfigureKestrel(serverOptions =>
 
 builder.Configuration.AddEnvironmentVariables();
 
-builder.Services.AddCors();
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .WithHeaders("x-api-version")
+            .WithMethods("GET", "OPTIONS")
+            .AllowAnyOrigin();
+    });
+});
+
 builder.Services.AddProblemDetails();
 builder.Services.AddMediator();
 
@@ -40,10 +50,10 @@ if (app.Environment.IsDevelopment())
     app.UseEcommerceSeed();
 }
 
+app.UseCors();
+
 app.UseStatusCodePages();
 
 app.MapEcommerceEndpoints();
-
-app.UseCors();
 
 app.Run();

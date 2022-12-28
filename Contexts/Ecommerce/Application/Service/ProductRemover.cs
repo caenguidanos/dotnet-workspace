@@ -22,7 +22,7 @@ public sealed class ProductRemoverService : IProductRemoverService
 
                 return default;
             },
-            async p => await ValueTask.FromResult(p)
+            async error => await ValueTask.FromResult(error)
         );
     }
 }

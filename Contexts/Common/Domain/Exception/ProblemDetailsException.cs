@@ -4,7 +4,11 @@ public class ProblemDetailsException : Exception
 {
     private readonly ProblemDetails _problemDetails = new();
 
-    public void AsProblemDetails(out ProblemDetails problemDetails) => problemDetails = _problemDetails;
+    public ProblemDetails ToProblemDetails(string instance)
+    {
+        SetInstance(instance);
+        return _problemDetails;
+    }
 
     protected void SetTitle(string title) => _problemDetails.Title = title;
 
@@ -12,5 +16,5 @@ public class ProblemDetailsException : Exception
 
     protected void SetStatusCode(HttpStatusCode status) => _problemDetails.Status = (int)status;
 
-    public void SetInstance(string instance) => _problemDetails.Instance = instance;
+    private void SetInstance(string instance) => _problemDetails.Instance = instance;
 }

@@ -6,6 +6,9 @@ module.exports = {
     darkMode: "class",
     theme: {
         extend: {
+            colors: {
+                "google-blue": "#3367d6",
+            },
             fontFamily: {
                 mono: ["Chivo Mono", ...defaultTheme.fontFamily.mono],
                 sans: ["Inter", ...defaultTheme.fontFamily.sans],

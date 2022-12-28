@@ -11,6 +11,8 @@ public sealed class CreateProductEndpoint : ICreateProductEndpoint
 
     public async Task<IResult> HandleAsync(HttpContext context, [FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
+        var instance = context.Request.Path;
+
         var command = new CreateProductCommand
         {
             Id = body.Id,
@@ -24,12 +26,7 @@ public sealed class CreateProductEndpoint : ICreateProductEndpoint
 
         return result.Match(
             _ => Results.Accepted(),
-            p =>
-            {
-                p.SetInstance(context.Request.Path);
-                p.AsProblemDetails(out var problemDetails);
-                return Results.Problem(problemDetails);
-            }
+            error => Results.Problem(error.ToProblemDetails(instance))
         );
     }
 }

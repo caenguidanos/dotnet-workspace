@@ -15,7 +15,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            "~/": root("src", "core", "context"),
+            "~": root("src", "core", "context"),
         },
     },
 });

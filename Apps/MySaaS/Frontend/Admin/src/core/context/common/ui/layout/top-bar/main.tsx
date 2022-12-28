@@ -54,8 +54,8 @@ export const LayoutTopBar: Component = () => {
                                     {(item) => (
                                         <Link href={item.path}>
                                             <div
+                                                class="border-transparent w-full border-l-[3px] p-2 hover:bg-slate-100 active:bg-slate-200 text-left grid data-[active=true]:border-blue-500 data-[active=true]:bg-blue-50 data-[active=true]:hover:bg-blue-50"
                                                 data-active={location.pathname === item.path}
-                                                class="border-l-[3px] border-transparent w-full p-2 hover:bg-slate-100 active:bg-slate-200 text-left grid data-[active=true]:border-blue-500 data-[active=true]:bg-blue-50 data-[active=true]:hover:bg-blue-50"
                                                 onClick={() => navigate(item.path)}
                                             >
                                                 <span class="font-medium">{item.title}</span>

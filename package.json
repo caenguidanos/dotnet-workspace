@@ -4,12 +4,11 @@
     "scripts": {
         "prepare": "husky install",
         "build": "pnpm --filter '*' build",
-        "format": "prettier --write '**/*.{ts,tsx,js,jsx,vue,json,css,sass,scss,yaml,yml,svelte,html}'"
+        "format": "pnpm --filter '*' format"
     },
     "author": "Cristian A. Enguídanos Nebot",
     "license": "MIT",
     "devDependencies": {
-        "husky": "8.0.2",
-        "prettier": "2.8.1"
+        "husky": "8.0.2"
     }
 }

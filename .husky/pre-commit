@@ -1,9 +1,16 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# TypeScript
 pnpm build
+
+# CSharp
+dotnet clean
+dotnet restore
 dotnet build
 
+# TypeScript
 pnpm format
 
+# Add changes
 git add .
