@@ -5,20 +5,18 @@ public static class EcommerceModule
     public static void RegisterEcommerceModule(this IServiceCollection services)
     {
         services.AddSingleton<IDbContext, DbContext>();
-
         services.AddTransient<IDbSeed, DbSeed>();
 
         services.AddSingleton<IProductRepository, ProductRepository>();
-
         services.AddSingleton<IProductCreatorService, ProductCreatorService>();
         services.AddSingleton<IProductUpdaterService, ProductUpdaterService>();
         services.AddSingleton<IProductRemoverService, ProductRemoverService>();
 
-        services.AddSingleton<IGetProductsEndpoint, GetProductsEndpoint>();
-        services.AddSingleton<IGetProductByIdEndpoint, GetProductByIdEndpoint>();
-        services.AddSingleton<ICreateProductEndpoint, CreateProductEndpoint>();
-        services.AddSingleton<IRemoveProductByIdEndpoint, RemoveProductByIdEndpoint>();
-        services.AddSingleton<IUpdateProductEndpoint, UpdateProductEndpoint>();
+        services.AddSingleton<GetProductsHttpHandler>();
+        services.AddSingleton<GetProductByIdHttpHandler>();
+        services.AddSingleton<CreateProductHttpHandler>();
+        services.AddSingleton<RemoveProductByIdHttpHandler>();
+        services.AddSingleton<UpdateProductHttpHandler>();
     }
 
     public static void MapEcommerceEndpoints(this WebApplication app)
@@ -27,11 +25,11 @@ public static class EcommerceModule
             .NewVersionedApi()
             .HasApiVersion(new ApiVersion(majorVersion: 1, minorVersion: 0));
 
-        router.MapGet("/product", router.ServiceProvider.GetRequiredService<IGetProductsEndpoint>().HandleAsync);
-        router.MapGet("/product/{id:guid}", router.ServiceProvider.GetRequiredService<IGetProductByIdEndpoint>().HandleAsync);
-        router.MapPost("/product", router.ServiceProvider.GetRequiredService<ICreateProductEndpoint>().HandleAsync);
-        router.MapDelete("/product/{id:guid}", router.ServiceProvider.GetRequiredService<IRemoveProductByIdEndpoint>().HandleAsync);
-        router.MapPut("/product/{id:guid}", router.ServiceProvider.GetRequiredService<IUpdateProductEndpoint>().HandleAsync);
+        router.MapGet("/product", router.ServiceProvider.GetRequiredService<GetProductsHttpHandler>().HandleAsync);
+        router.MapGet("/product/{id:guid}", router.ServiceProvider.GetRequiredService<GetProductByIdHttpHandler>().HandleAsync);
+        router.MapPost("/product", router.ServiceProvider.GetRequiredService<CreateProductHttpHandler>().HandleAsync);
+        router.MapDelete("/product/{id:guid}", router.ServiceProvider.GetRequiredService<RemoveProductByIdHttpHandler>().HandleAsync);
+        router.MapPut("/product/{id:guid}", router.ServiceProvider.GetRequiredService<UpdateProductHttpHandler>().HandleAsync);
     }
 
     public static void UseEcommerceSeed(this IHost host)

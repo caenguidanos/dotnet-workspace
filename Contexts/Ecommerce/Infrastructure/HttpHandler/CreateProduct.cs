@@ -1,22 +1,21 @@
 namespace Ecommerce.Infrastructure;
 
-public sealed class UpdateProductEndpoint : IUpdateProductEndpoint
+public sealed class CreateProductHttpHandler
 {
     private ISender _sender { get; }
 
-    public UpdateProductEndpoint(ISender sender)
+    public CreateProductHttpHandler(ISender sender)
     {
         _sender = sender;
     }
 
-    public async Task<IResult> HandleAsync(HttpContext context, [FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body,
-        CancellationToken cancellationToken)
+    public async Task<IResult> HandleAsync(HttpContext context, [FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
         var instance = context.Request.Path;
 
-        var command = new UpdateProductCommand
+        var command = new CreateProductCommand
         {
-            Id = id,
+            Id = body.Id,
             Title = body.Title,
             Description = body.Description,
             Price = body.Price,

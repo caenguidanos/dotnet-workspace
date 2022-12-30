@@ -1,10 +1,10 @@
 namespace Ecommerce.Infrastructure;
 
-public sealed class RemoveProductByIdEndpoint : IRemoveProductByIdEndpoint
+public sealed class RemoveProductByIdHttpHandler
 {
     private ISender _sender { get; }
 
-    public RemoveProductByIdEndpoint(ISender sender)
+    public RemoveProductByIdHttpHandler(ISender sender)
     {
         _sender = sender;
     }

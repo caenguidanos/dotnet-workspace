@@ -1,10 +1,10 @@
 namespace Ecommerce.Infrastructure;
 
-public sealed class GetProductsEndpoint : IGetProductsEndpoint
+public sealed class GetProductsHttpHandler
 {
     private ISender _sender { get; }
 
-    public GetProductsEndpoint(ISender sender)
+    public GetProductsHttpHandler(ISender sender)
     {
         _sender = sender;
     }
