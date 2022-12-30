@@ -4,29 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44bf0baa-941c-4545-bc89-a962384ab0eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dotnet-workspace.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Contexts/IAM/Domain/Repository/User.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Contexts/IAM/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Contexts/IAM/mod.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.work" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Endpoint/Product/CreateProduct.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Endpoint/Product/GetProductById.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Endpoint/Product/GetProducts.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Endpoint/Product/RemoveProductById.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Endpoint/Product/UpdateProduct.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Service/Product/ProductCreator.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Service/Product/ProductRemover.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Domain/Service/Product/ProductUpdater.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/EcommerceModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/Ecommerce/EcommerceModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Infrastructure/Endpoint/Product/CreateProduct.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Infrastructure/Endpoint/Product/GetProductById.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Infrastructure/Endpoint/Product/GetProducts.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Infrastructure/Endpoint/Product/RemoveProductById.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/Ecommerce/Infrastructure/Endpoint/Product/UpdateProduct.cs" beforeDir="false" />
-    </list>
+    <list default="true" id="44bf0baa-941c-4545-bc89-a962384ab0eb" name="Changes" comment="feature: add iam context in golang" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,25 +24,56 @@
     <option name="showLibraryContents" value="true" />
     <option name="sortByType" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/caenguidanos/Repositories/github.com/caenguidanos/dotnet-workspace",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/caenguidanos/Repositories/github.com/caenguidanos/dotnet-workspace&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;
   }
-}]]></component>
+}</component>
+  <component name="RunManager">
+    <configuration name="go build dotnet-workspace/Apps/MySaaS/Backend/IAM" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotnet-workspace" />
+      <working_directory value="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM" />
+      <kind value="PACKAGE" />
+      <package value="dotnet-workspace/Apps/MySaaS/Backend/IAM" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM/main.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build dotnet-workspace/Apps/MySaaS/Backend/IAM" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feature: add iam context in golang" />
+    <option name="LAST_COMMIT_MESSAGE" value="feature: add iam context in golang" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
