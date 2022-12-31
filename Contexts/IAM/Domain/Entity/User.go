@@ -24,11 +24,9 @@ func NewUser(id string, email string, role string) (User, error) {
 	if err := ValueObject.NewUserId(id, &newUserId); err != nil {
 		return newUser, err
 	}
-
 	if err := ValueObject.NewUserEmail(email, &newUserEmail); err != nil {
 		return newUser, err
 	}
-
 	if err := ValueObject.NewUserRole(role, &newUserRole); err != nil {
 		return newUser, err
 	}

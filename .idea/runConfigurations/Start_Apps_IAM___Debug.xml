@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Start Apps/IAM - Debug" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="dotnet-workspace" />
+    <working_directory value="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM" />
+    <go_parameters value="-race -gcflags &quot;-m&quot;" />
+    <envs>
+      <env name="APP_MODE" value="DEBUG" />
+    </envs>
+    <kind value="PACKAGE" />
+    <package value="dotnet-workspace/Apps/MySaaS/Backend/IAM" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

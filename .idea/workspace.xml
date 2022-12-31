@@ -4,11 +4,29 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44bf0baa-941c-4545-bc89-a962384ab0eb" name="Changes" comment="feature: add iam context in golang" />
+    <list default="true" id="44bf0baa-941c-4545-bc89-a962384ab0eb" name="Changes" comment="docs: update">
+      <change afterPath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/IHttpHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Application/Service/UserCreator.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Application/Service/UserCreator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Domain/Entity/User.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Domain/Entity/User.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Domain/Service/UserCreator.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Domain/Service/UserCreator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Domain/ValueObject/User.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Domain/ValueObject/User.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/CreateUser.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/CreateUser.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Contexts/IAM/mod.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/mod.go" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
   </component>
   <component name="GOROOT" url="file:///usr/local/go" />
   <component name="Git.Settings">
@@ -18,43 +36,38 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2JebCb2St8eI6k2FgeqiGBNSUew" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="autoscrollToSource" value="true" />
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
     <option name="sortByType" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/caenguidanos/Repositories/github.com/caenguidanos/dotnet-workspace&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/caenguidanos/Repositories/github.com/caenguidanos/dotnet-workspace",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm"
   }
-}</component>
-  <component name="RunManager">
-    <configuration name="go build dotnet-workspace/Apps/MySaaS/Backend/IAM" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="dotnet-workspace" />
-      <working_directory value="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM" />
-      <kind value="PACKAGE" />
-      <package value="dotnet-workspace/Apps/MySaaS/Backend/IAM" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM/main.go" />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Go Build.go build dotnet-workspace/Apps/MySaaS/Backend/IAM" />
-      </list>
-    </recent_temporary>
+}]]></component>
+  <component name="RunManager" selected="Go Build.Start Apps/IAM - Debug">
+    <list>
+      <item itemvalue="Go Build.Start Apps/IAM - Debug" />
+      <item itemvalue="Go Build.Start Apps/IAM - Release" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
@@ -73,7 +86,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feature: add iam context in golang" />
-    <option name="LAST_COMMIT_MESSAGE" value="feature: add iam context in golang" />
+    <MESSAGE value="docs: update" />
+    <option name="LAST_COMMIT_MESSAGE" value="docs: update" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

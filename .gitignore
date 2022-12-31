@@ -79,9 +79,6 @@ $RECYCLE.BIN/
 *.userosscache
 *.sln.docstates
 
-# User-specific files (MonoDevelop/Xamarin Studio)
-*.userprefs
-
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -418,3 +415,6 @@ playwright/.cache/
 pnpm-lock.yaml
 package-lock.json
 yarn.lock
+
+# Go
+trace.out

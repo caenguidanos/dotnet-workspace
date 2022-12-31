@@ -11,11 +11,15 @@ import (
 )
 
 type service struct {
-	repository Repository.IUserRepository
+	userRepository *Repository.IUserRepository
 }
 
-func NewCreatorService(repository Repository.IUserRepository) Service.IUserCreatorService {
-	return &service{repository}
+func NewCreatorService() Service.IUserCreatorService {
+	return &service{}
+}
+
+func (s *service) AddSingleton(userRepository *Repository.IUserRepository) {
+	s.userRepository = userRepository
 }
 
 func (s *service) AddNewUser(ctx context.Context, email string, role string) error {
@@ -24,7 +28,7 @@ func (s *service) AddNewUser(ctx context.Context, email string, role string) err
 		return err
 	}
 
-	if err := s.repository.Save(ctx, &user); err != nil {
+	if err := (*s.userRepository).Save(ctx, &user); err != nil {
 		return err
 	}
 

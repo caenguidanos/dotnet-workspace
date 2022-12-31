@@ -9,15 +9,20 @@ import (
 )
 
 type httpHandler struct {
-	userCreatorService Service.IUserCreatorService
+	IHttpHandler
+	userCreatorService *Service.IUserCreatorService
 }
 
-func NewCreateUserHttpHandler(userCreatorService Service.IUserCreatorService) *httpHandler {
-	return &httpHandler{userCreatorService}
+func NewCreateUserHttpHandler() httpHandler {
+	return httpHandler{}
+}
+
+func (h *httpHandler) AddSingleton(userCreatorService *Service.IUserCreatorService) {
+	h.userCreatorService = userCreatorService
 }
 
 func (h *httpHandler) Handle(c echo.Context) error {
-	if err := h.userCreatorService.AddNewUser(c.Request().Context(), "email@gmail.com", "admin"); err != nil {
+	if err := (*h.userCreatorService).AddNewUser(c.Request().Context(), "email@gmail.com", "admin"); err != nil {
 		return c.String(http.StatusBadRequest, http.StatusText(http.StatusBadRequest))
 	}
 

@@ -8,12 +8,14 @@ import (
 	"dotnet-workspace/Contexts/IAM/Infrastructure/Repository"
 )
 
-func MapHttpHandlers(server *echo.Echo) {
-	var userRepository = Repository.NewUserRepository()
+func RegisterModule(server *echo.Echo) {
+	userRepository := Repository.NewUserRepository()
 
-	var userCreatorService = Service.NewCreatorService(userRepository)
+	userCreatorService := Service.NewCreatorService()
+	userCreatorService.AddSingleton(&userRepository)
 
-	var createUserHttpHandler = HttpHandler.NewCreateUserHttpHandler(userCreatorService)
+	createUserHttpHandler := HttpHandler.NewCreateUserHttpHandler()
+	createUserHttpHandler.AddSingleton(&userCreatorService)
 
 	router := server.Group("/user")
 	router.GET("/", createUserHttpHandler.Handle)

@@ -15,7 +15,7 @@ import (
 func main() {
 	e := echo.New()
 
-	IAM.MapHttpHandlers(e)
+	IAM.RegisterModule(e)
 
 	go func() {
 		if err := e.Start(":8080"); err != nil && err != http.ErrServerClosed {
