@@ -2,7 +2,7 @@ namespace Common.Core;
 
 public static partial class Json
 {
-    public static string MinifyString(string src)
+    public static string MinifyString(in string src)
     {
         return SearchSpacesRegExp().Replace(src, "$1");
     }

@@ -19,7 +19,10 @@ public sealed class GetProductByIdHttpHandler
 
         return result.Match(
             data => Results.Json(data, options: Json.OutHttpJsonSerializerOptions),
-            error => Results.Problem(error.ToProblemDetails(context.Request.Path))
-        );
+            error =>
+            {
+                ref readonly var problemDetails = ref error.ToProblemDetails(in context);
+                return Results.Problem(problemDetails);
+            });
     }
 }

@@ -4,11 +4,11 @@ public class ProblemDetailsException : Exception
 {
     private readonly ProblemDetails _problemDetails = new();
 
-    public ProblemDetails ToProblemDetails(in string instance)
+    public ref readonly ProblemDetails ToProblemDetails(in HttpContext context)
     {
-        SetInstance(instance);
+        SetInstance(context.Request.Path);
 
-        return _problemDetails;
+        return ref _problemDetails;
     }
 
     protected void SetTitle(in string title) => _problemDetails.Title = title;

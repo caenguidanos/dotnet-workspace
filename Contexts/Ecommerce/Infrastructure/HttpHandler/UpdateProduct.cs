@@ -28,7 +28,10 @@ public sealed class UpdateProductHttpHandler
 
         return result.Match(
             _ => Results.Accepted(),
-            error => Results.Problem(error.ToProblemDetails(context.Request.Path))
-        );
+            error =>
+            {
+                ref readonly var problemDetails = ref error.ToProblemDetails(in context);
+                return Results.Problem(problemDetails);
+            });
     }
 }
