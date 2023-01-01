@@ -8,5 +8,3 @@ global using Microsoft.AspNetCore.Routing;
 global using Microsoft.Extensions.DependencyInjection;
 
 global using Asp.Versioning;
-
-global using Common.Application;

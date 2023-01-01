@@ -1,4 +1,4 @@
-namespace Ecommerce.Infrastructure;
+namespace Ecommerce.Infrastructure.Persistence;
 
 public interface IDbSeed
 {

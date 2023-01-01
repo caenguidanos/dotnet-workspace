@@ -1,4 +1,6 @@
-namespace Ecommerce.Infrastructure;
+namespace Ecommerce.Infrastructure.HttpHandler;
+
+using Ecommerce.Application.Query;
 
 public sealed class GetProductByIdHttpHandler
 {
@@ -11,15 +13,13 @@ public sealed class GetProductByIdHttpHandler
 
     public async Task<IResult> HandleAsync(HttpContext context, [FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
-        var instance = context.Request.Path;
-
         var query = new GetProductQuery { Id = id };
 
         var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(
-            data => Results.Json(data, options: Json.HttpSerializerOptions),
-            error => Results.Problem(error.ToProblemDetails(instance))
+            data => Results.Json(data, options: Json.OutHttpJsonSerializerOptions),
+            error => Results.Problem(error.ToProblemDetails(context.Request.Path))
         );
     }
 }

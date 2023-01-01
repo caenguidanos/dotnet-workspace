@@ -1,4 +1,7 @@
-namespace Ecommerce.Infrastructure;
+namespace Ecommerce.Infrastructure.HttpHandler;
+
+using Ecommerce.Application.Command;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public sealed class UpdateProductHttpHandler
 {
@@ -12,8 +15,6 @@ public sealed class UpdateProductHttpHandler
     public async Task<IResult> HandleAsync(HttpContext context, [FromRoute(Name = "id")] Guid id, [FromBody] UpdateProductHttpRequestBody body,
         CancellationToken cancellationToken)
     {
-        var instance = context.Request.Path;
-
         var command = new UpdateProductCommand
         {
             Id = id,
@@ -27,7 +28,7 @@ public sealed class UpdateProductHttpHandler
 
         return result.Match(
             _ => Results.Accepted(),
-            error => Results.Problem(error.ToProblemDetails(instance))
+            error => Results.Problem(error.ToProblemDetails(context.Request.Path))
         );
     }
 }

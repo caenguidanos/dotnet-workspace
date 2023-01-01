@@ -1,19 +1,24 @@
-namespace Ecommerce.Infrastructure;
+namespace Ecommerce.Infrastructure.Repository;
+
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Exception;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Infrastructure.Persistence;
 
 public sealed class ProductRepository : IProductRepository
 {
-    private IDbContext _dbContext { get; }
+    private string _connectionString { get; }
 
     public ProductRepository(IDbContext dbContext)
     {
-        _dbContext = dbContext;
+        _connectionString = dbContext.GetConnectionString();
     }
 
     public async Task<OneOf<IEnumerable<ProductPrimitives>, ProblemDetailsException>> Get(CancellationToken cancellationToken)
     {
         try
         {
-            await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+            await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
@@ -39,7 +44,7 @@ public sealed class ProductRepository : IProductRepository
     {
         try
         {
-            await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+            await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
@@ -70,7 +75,7 @@ public sealed class ProductRepository : IProductRepository
     {
         try
         {
-            await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+            await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
@@ -103,7 +108,7 @@ public sealed class ProductRepository : IProductRepository
     {
         try
         {
-            await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+            await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"
@@ -130,7 +135,7 @@ public sealed class ProductRepository : IProductRepository
     {
         try
         {
-            await using var conn = new NpgsqlConnection(_dbContext.GetConnectionString());
+            await using var conn = new NpgsqlConnection(_connectionString);
             await conn.OpenAsync(cancellationToken);
 
             const string sql = @"

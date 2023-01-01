@@ -17,9 +17,4 @@ global using Npgsql;
 
 global using OneOf;
 
-global using Common.Application;
-global using Common.Domain;
-
-global using Ecommerce.Application;
-global using Ecommerce.Domain;
-global using Ecommerce.Infrastructure;
+global using Common.Core;

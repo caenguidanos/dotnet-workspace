@@ -1,4 +1,6 @@
-namespace Ecommerce.Application;
+namespace Ecommerce.Application.Command;
+
+using Ecommerce.Domain.Service;
 
 public readonly struct RemoveProductCommand : IRequest<OneOf<byte, ProblemDetailsException>>
 {

@@ -1,4 +1,8 @@
-namespace Ecommerce.Application;
+namespace Ecommerce.Application.Service;
+
+using Ecommerce.Application.Event;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.Service;
 
 public sealed class ProductRemoverService : IProductRemoverService
 {

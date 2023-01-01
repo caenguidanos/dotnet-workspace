@@ -4,18 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="44bf0baa-941c-4545-bc89-a962384ab0eb" name="Changes" comment="docs: update">
-      <change afterPath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/IHttpHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/Apps/MySaaS/Backend/IAM/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Application/Service/UserCreator.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Application/Service/UserCreator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Domain/Entity/User.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Domain/Entity/User.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Domain/Service/UserCreator.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Domain/Service/UserCreator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Domain/ValueObject/User.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Domain/ValueObject/User.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/CreateUser.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/CreateUser.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/IAM/mod.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/mod.go" afterDir="false" />
-    </list>
+    <list default="true" id="44bf0baa-941c-4545-bc89-a962384ab0eb" name="Changes" comment="refactor: golang impl" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -87,7 +76,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="feature: add iam context in golang" />
     <MESSAGE value="docs: update" />
-    <option name="LAST_COMMIT_MESSAGE" value="docs: update" />
+    <MESSAGE value="refactor: golang impl" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactor: golang impl" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

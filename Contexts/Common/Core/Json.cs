@@ -1,4 +1,4 @@
-namespace Common.Application;
+namespace Common.Core;
 
 public static partial class Json
 {
@@ -7,7 +7,7 @@ public static partial class Json
         return SearchSpacesRegExp().Replace(src, "$1");
     }
 
-    public static readonly JsonSerializerOptions HttpSerializerOptions = new()
+    public static readonly JsonSerializerOptions OutHttpJsonSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull

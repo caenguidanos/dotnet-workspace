@@ -13,4 +13,4 @@ global using Moq;
 global using Common;
 
 global using Ecommerce;
-global using Ecommerce.Infrastructure;
+global using Ecommerce.Infrastructure.Persistence;

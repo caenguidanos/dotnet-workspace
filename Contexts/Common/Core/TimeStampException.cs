@@ -1,4 +1,4 @@
-namespace Common.Domain;
+namespace Common.Core;
 
 public sealed class TimeStampException : ProblemDetailsException
 {

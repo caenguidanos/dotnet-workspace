@@ -1,4 +1,6 @@
-namespace Ecommerce.Infrastructure;
+namespace Ecommerce.Infrastructure.HttpHandler;
+
+using Ecommerce.Application.Query;
 
 public sealed class GetProductsHttpHandler
 {
@@ -11,15 +13,13 @@ public sealed class GetProductsHttpHandler
 
     public async Task<IResult> HandleAsync(HttpContext context, CancellationToken cancellationToken)
     {
-        var instance = context.Request.Path;
-
         var query = new GetProductsQuery();
 
         var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(
-            data => Results.Json(data, options: Json.HttpSerializerOptions),
-            error => Results.Problem(error.ToProblemDetails(instance))
+            data => Results.Json(data, options: Json.OutHttpJsonSerializerOptions),
+            error => Results.Problem(error.ToProblemDetails(context.Request.Path))
         );
     }
 }

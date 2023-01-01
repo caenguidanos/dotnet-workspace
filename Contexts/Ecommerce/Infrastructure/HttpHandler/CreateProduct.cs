@@ -1,4 +1,7 @@
-namespace Ecommerce.Infrastructure;
+namespace Ecommerce.Infrastructure.HttpHandler;
+
+using Ecommerce.Application.Command;
+using Ecommerce.Infrastructure.DataTransfer;
 
 public sealed class CreateProductHttpHandler
 {
@@ -11,8 +14,6 @@ public sealed class CreateProductHttpHandler
 
     public async Task<IResult> HandleAsync(HttpContext context, [FromBody] CreateProductHttpRequestBody body, CancellationToken cancellationToken)
     {
-        var instance = context.Request.Path;
-
         var command = new CreateProductCommand
         {
             Id = body.Id,
@@ -26,7 +27,7 @@ public sealed class CreateProductHttpHandler
 
         return result.Match(
             _ => Results.Accepted(),
-            error => Results.Problem(error.ToProblemDetails(instance))
+            error => Results.Problem(error.ToProblemDetails(context.Request.Path))
         );
     }
 }

@@ -1,4 +1,6 @@
-namespace Ecommerce.Infrastructure;
+namespace Ecommerce.Infrastructure.HttpHandler;
+
+using Ecommerce.Application.Command;
 
 public sealed class RemoveProductByIdHttpHandler
 {
@@ -11,15 +13,13 @@ public sealed class RemoveProductByIdHttpHandler
 
     public async Task<IResult> HandleAsync(HttpContext context, [FromRoute(Name = "id")] Guid id, CancellationToken cancellationToken)
     {
-        var instance = context.Request.Path;
-
         var command = new RemoveProductCommand { Id = id };
 
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(
             _ => Results.Accepted(),
-            error => Results.Problem(error.ToProblemDetails(instance))
+            error => Results.Problem(error.ToProblemDetails(context.Request.Path))
         );
     }
 }

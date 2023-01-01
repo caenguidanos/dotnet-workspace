@@ -1,4 +1,4 @@
-namespace Ecommerce.Application;
+namespace Ecommerce.Application.Event;
 
 public readonly struct ProductUpdatedEvent : INotification
 {

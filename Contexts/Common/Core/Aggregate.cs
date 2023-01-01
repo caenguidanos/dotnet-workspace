@@ -1,4 +1,4 @@
-namespace Common.Domain;
+namespace Common.Core;
 
 public interface IAggregateRoot<out TBase, TBasePrimitives>
 {

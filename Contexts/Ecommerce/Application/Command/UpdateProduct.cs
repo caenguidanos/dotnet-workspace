@@ -1,4 +1,6 @@
-namespace Ecommerce.Application;
+namespace Ecommerce.Application.Command;
+
+using Ecommerce.Domain.Service;
 
 public readonly struct UpdateProductCommand : IRequest<OneOf<byte, ProblemDetailsException>>
 {

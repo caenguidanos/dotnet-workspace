@@ -1,4 +1,7 @@
-namespace Ecommerce.Application;
+namespace Ecommerce.Application.Query;
+
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Repository;
 
 public readonly struct GetProductsQuery : IRequest<OneOf<IEnumerable<ProductPrimitives>, ProblemDetailsException>>
 {

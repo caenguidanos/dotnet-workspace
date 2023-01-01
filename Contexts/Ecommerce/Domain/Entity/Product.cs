@@ -1,4 +1,6 @@
-namespace Ecommerce.Domain;
+namespace Ecommerce.Domain.Entity;
+
+using Ecommerce.Domain.ValueObject;
 
 public sealed record Product : IAggregateRoot<Product, ProductPrimitives>
 {
@@ -18,7 +20,7 @@ public sealed record Product : IAggregateRoot<Product, ProductPrimitives>
             Price = Price.GetValue()
         };
 
-    public static Product FromPrimitives(ProductPrimitives productPrimitives) =>
+    public static Product FromPrimitives(in ProductPrimitives productPrimitives) =>
         new()
         {
             Id = new ProductId(productPrimitives.Id),

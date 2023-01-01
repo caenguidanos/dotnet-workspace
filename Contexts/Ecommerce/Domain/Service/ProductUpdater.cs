@@ -1,4 +1,6 @@
-namespace Ecommerce.Domain;
+namespace Ecommerce.Domain.Service;
+
+using Ecommerce.Application.Command;
 
 public interface IProductUpdaterService
 {

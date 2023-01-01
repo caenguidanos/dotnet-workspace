@@ -1,4 +1,11 @@
-namespace Ecommerce.Application;
+namespace Ecommerce.Application.Service;
+
+using Ecommerce.Application.Command;
+using Ecommerce.Application.Event;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.Service;
+using Ecommerce.Domain.ValueObject;
 
 public sealed class ProductUpdaterService : IProductUpdaterService
 {

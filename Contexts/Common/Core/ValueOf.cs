@@ -1,10 +1,10 @@
-namespace Common.Domain;
+namespace Common.Core;
 
 public record ValueOf<T>
 {
     protected T Value { get; }
 
-    protected ValueOf(T value)
+    protected ValueOf(in T value)
     {
         Value = value;
 

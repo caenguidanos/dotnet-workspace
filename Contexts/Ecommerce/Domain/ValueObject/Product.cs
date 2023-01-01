@@ -1,8 +1,10 @@
-namespace Ecommerce.Domain;
+namespace Ecommerce.Domain.ValueObject;
+
+using Ecommerce.Domain.Exception;
 
 public sealed record ProductId : ValueOf<Guid>
 {
-    public ProductId(Guid id) : base(id)
+    public ProductId(Guid id) : base(in id)
     {
     }
 
@@ -17,7 +19,7 @@ public sealed record ProductId : ValueOf<Guid>
 
 public sealed record ProductPrice : ValueOf<int>
 {
-    public ProductPrice(int value) : base(value)
+    public ProductPrice(int value) : base(in value)
     {
     }
 
@@ -35,7 +37,7 @@ public sealed record ProductPrice : ValueOf<int>
 
 public sealed record ProductDescription : ValueOf<string>
 {
-    public ProductDescription(string value) : base(value)
+    public ProductDescription(string value) : base(in value)
     {
     }
 
@@ -55,7 +57,7 @@ public sealed record ProductStatus : ValueOf<string>
 {
     private readonly string[] _values = { "draft", "published" };
 
-    public ProductStatus(string value) : base(value)
+    public ProductStatus(string value) : base(in value)
     {
     }
 
@@ -70,7 +72,7 @@ public sealed record ProductStatus : ValueOf<string>
 
 public sealed record ProductTitle : ValueOf<string>
 {
-    public ProductTitle(string value) : base(value)
+    public ProductTitle(string value) : base(in value)
     {
     }
 

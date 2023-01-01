@@ -1,4 +1,4 @@
-namespace Ecommerce.Domain;
+namespace Ecommerce.Domain.Exception;
 
 public sealed class ProductNotFoundException : ProblemDetailsException
 {

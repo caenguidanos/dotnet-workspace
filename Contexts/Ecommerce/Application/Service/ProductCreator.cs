@@ -1,4 +1,10 @@
-namespace Ecommerce.Application;
+namespace Ecommerce.Application.Service;
+
+using Ecommerce.Application.Event;
+using Ecommerce.Domain.Entity;
+using Ecommerce.Domain.Repository;
+using Ecommerce.Domain.Service;
+using Ecommerce.Domain.ValueObject;
 
 public sealed class ProductCreatorService : IProductCreatorService
 {
