@@ -11,11 +11,11 @@ public readonly struct UpdateProductCommand : IRequest<OneOf<byte, ProblemDetail
     public string? Status { get; init; }
 }
 
-public sealed class UpdateProductHandler : IRequestHandler<UpdateProductCommand, OneOf<byte, ProblemDetailsException>>
+public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, OneOf<byte, ProblemDetailsException>>
 {
     private readonly IProductUpdaterService _productUpdaterService;
 
-    public UpdateProductHandler(IProductUpdaterService productUpdaterService)
+    public UpdateProductCommandHandler(IProductUpdaterService productUpdaterService)
     {
         _productUpdaterService = productUpdaterService;
     }

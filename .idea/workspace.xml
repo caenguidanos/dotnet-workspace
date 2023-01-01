@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="44bf0baa-941c-4545-bc89-a962384ab0eb" name="Changes" comment="refactor: golang impl">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/CreateUser.go" beforeDir="false" afterPath="$PROJECT_DIR$/Contexts/IAM/Infrastructure/HttpHandler/CreateUser.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +53,7 @@
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "pnpm",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "settings.editor.selected.configurable": "settings.sync"
   }
 }]]></component>
   <component name="RunManager" selected="Go Build.Start Apps/IAM - Debug">

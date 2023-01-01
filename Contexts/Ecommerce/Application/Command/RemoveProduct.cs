@@ -7,11 +7,11 @@ public readonly struct RemoveProductCommand : IRequest<OneOf<byte, ProblemDetail
     public required Guid Id { get; init; }
 }
 
-public sealed class RemoveProductHandler : IRequestHandler<RemoveProductCommand, OneOf<byte, ProblemDetailsException>>
+public sealed class RemoveProductCommandHandler : IRequestHandler<RemoveProductCommand, OneOf<byte, ProblemDetailsException>>
 {
     private readonly IProductRemoverService _productRemoverService;
 
-    public RemoveProductHandler(IProductRemoverService productRemoverService)
+    public RemoveProductCommandHandler(IProductRemoverService productRemoverService)
     {
         _productRemoverService = productRemoverService;
     }

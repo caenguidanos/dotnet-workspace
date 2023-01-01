@@ -8,11 +8,11 @@ public readonly struct GetProductQuery : IRequest<OneOf<ProductPrimitives, Probl
     public required Guid Id { get; init; }
 }
 
-public sealed class GetProductHandler : IRequestHandler<GetProductQuery, OneOf<ProductPrimitives, ProblemDetailsException>>
+public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, OneOf<ProductPrimitives, ProblemDetailsException>>
 {
     private readonly IProductRepository _productRepository;
 
-    public GetProductHandler(IProductRepository productRepository)
+    public GetProductQueryHandler(IProductRepository productRepository)
     {
         _productRepository = productRepository;
     }

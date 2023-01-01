@@ -7,12 +7,11 @@ public readonly struct GetProductsQuery : IRequest<OneOf<IEnumerable<ProductPrim
 {
 }
 
-public sealed class
-    GetProductsHandler : IRequestHandler<GetProductsQuery, OneOf<IEnumerable<ProductPrimitives>, ProblemDetailsException>>
+public sealed class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, OneOf<IEnumerable<ProductPrimitives>, ProblemDetailsException>>
 {
     private readonly IProductRepository _productRepository;
 
-    public GetProductsHandler(IProductRepository productRepository)
+    public GetProductsQueryHandler(IProductRepository productRepository)
     {
         _productRepository = productRepository;
     }
